@@ -8,69 +8,70 @@ class MoveController(Node):
 
     def __init__(self):
         super().__init__('move_controller')
-        #self.publisher = self.create_publisher(Twist, '/equipe-102/cmd_vel', 10)
-        self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
-        self.movement_subscription = self.create_subscription(String, '/movement', self.movement_callback, 10)
-        
+        self.declare_parameter('robot_id', 'robot1_102')
+        self.robot_id = self.get_parameter('robot_id').value
+
+        movement_topic = f'/{self.robot_id}/movement'
+        self.movement_subscription = self.create_subscription(
+            String,
+            movement_topic,
+            self.movement_callback,
+            10
+        )
+
+        cmd_vel_topic = f'/{self.robot_id}/cmd_vel'
+        self.publisher = self.create_publisher(Twist, cmd_vel_topic, 10)
+
+        self.feedback_publisher = self.create_publisher(String, '/feedback', 10)
+        self.feedback_timer = self.create_timer(1.0, self.publish_feedback)
+
         self.current_action = None
         self.action_start_time = None
         self.mission_active = False
         self.action_duration = 0
         self.current_speed = 0.0
         self.current_angular = 0.0
-
-        # Variables ajoutées pour le feedback
-        self.current_position = {"x": 0.0, "y": 0.0}  # Valeur fictive, à remplacer par la position réelle
-        self.battery_level = 100                      # Valeur fictive, à remplacer par le niveau de batterie réel
-
-        # Publisher pour le feedback (robot → serveur)
-        self.feedback_publisher = self.create_publisher(String, '/feedback', 10)
-        # Timer pour publier périodiquement le feedback (toutes les 1 seconde ici)
-        self.feedback_timer = self.create_timer(1.0, self.publish_feedback)
+        self.current_position = {"x": 0.0, "y": 0.0}
+        self.battery_level = 100
 
     def movement_callback(self, msg):
         try:
             command = json.loads(msg.data)
-            self.get_logger().info(f"Received movement command: {command}")
-            
+            self.get_logger().info(f"Commande reçue sur {self.robot_id}: {command}")
+
             if command['action'] == 'move':
                 self._cancel_current_action()
                 self.current_speed = command.get('speed', 0.0)
                 self.current_angular = 0.0
                 self.action_duration = command.get('duration', 0.0)
                 self.start_action_timer()
-
             elif command['action'] == 'turn':
                 self._cancel_current_action()
                 self.current_speed = 0.0
                 self.current_angular = command.get('speed', 0.0)
                 self.action_duration = command.get('duration', 0.0)
                 self.start_action_timer()
-
             elif command['action'] == 'start_mission':
                 self._cancel_current_action()
                 self.current_speed = 0.0
                 self.current_angular = 1.0
                 self.action_duration = 3000
                 self.start_action_timer()
-
             elif command['action'] == 'end_mission':
-                self.mission_active = False  # Stop turning
+                self.mission_active = False
                 self.stop()
-
             elif command['action'] == 'stop':
                 self.stop()
             else:
-                self.get_logger().warn(f"Unknown command: {command['action']}")
-
+                self.get_logger().warn(f"Commande inconnue: {command['action']}")
         except Exception as e:
-            self.get_logger().error(f"Error processing movement command: {str(e)}")
+            self.get_logger().error(f"Erreur dans le traitement de la commande: {str(e)}")
 
     def _mission_turn_loop(self):
         if self.mission_active:
             twist = Twist()
             twist.linear.x = 0.0
-            twist.angular.z = 1.0  # Adjust for desired turning speed
+            twist.angular.z = 1.0
             self.publisher.publish(twist)
 
     def start_action_timer(self):
@@ -79,7 +80,6 @@ class MoveController(Node):
 
     def _execute_action(self):
         elapsed = (self.get_clock().now() - self.action_start_time).nanoseconds / 1e9
-        
         if elapsed < self.action_duration:
             twist = Twist()
             twist.linear.x = self.current_speed
@@ -101,36 +101,26 @@ class MoveController(Node):
         self.current_angular = 0.0
 
     def publish_feedback(self):
-        # Période du timer (ici 1 seconde)
-        dt = 1.0  
-        # Mise à jour de la position en ajoutant la distance parcourue (vitesse * temps)
+        dt = 1.0
         self.current_position["x"] += self.current_speed * dt
-
-        # Prépare un dictionnaire de feedback incluant la vitesse, l'angle, la position et le niveau de batterie
         feedback = {
             "speed": self.current_speed,
             "angular": self.current_angular,
             "position": self.current_position,
-            "battery": self.battery_level
+            "battery": self.battery_level,
+            "robot_id": self.robot_id
         }
-        # Convertit le feedback en chaîne JSON
         new_feedback_str = json.dumps(feedback)
-
-        # Initialisation de self.last_feedback si elle n'existe pas encore
         if not hasattr(self, 'last_feedback'):
             self.last_feedback = ""
-
-        # Ne publie que si le nouveau feedback diffère du précédent
         if new_feedback_str != self.last_feedback:
             feedback_msg = String()
             feedback_msg.data = new_feedback_str
             self.feedback_publisher.publish(feedback_msg)
-            self.get_logger().info(f"Feedback published: {feedback_msg.data}")
-            # Met à jour la variable last_feedback
+            self.get_logger().info(f"Feedback publié: {feedback_msg.data}")
             self.last_feedback = new_feedback_str
         else:
-            self.get_logger().debug("Feedback unchanged, not publishing.")
-
+            self.get_logger().debug("Feedback inchangé, non publié.")
 
 def main(args=None):
     rclpy.init(args=args)

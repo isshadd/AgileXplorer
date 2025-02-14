@@ -1,34 +1,20 @@
-Commands :
-
 Run no machine : /usr/NX/bin/nxplayer
 
-create a new ros package (cd src/limo_ros2) : 
-1. cd src/limo_ros2
-2. ros2 pkg create ros_gz_modules --build-type ament_python --dependencies rclpy
+create a new ros package : ros2 pkg create ros_gz_modules --build-type ament_python --dependencies rclpy
 
 add source humble to bash : echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 
-
-debug :
 Get permission from ttyTHS1 : sudo chmod 666 /dev/ttyTHS1
-Get permission from ttyUSB0 : sudo chmod 666 /dev/ttyUSB0
 
-Get lidar : Git clone https://github.com/YDLIDAR/YDLidar-SDK.git 
-mkdir -p YDLidar-SDK/build && \
-cd YDLidar-SDK/build &&\
-cmake ..&&\
-make &&\
-sudo make install &&\
-cd .. &&\
-cd .. && rm -rf YDLidar-SDK
-
-Make lidar test :
-sudo chmod 666 /dev/ttyTHS1
-sudo chmod 666 /dev/ttyUSB0
-ros2 launch limo_bringup limo_start.launch.py
-ros2 launch limo_bringup cartographer.launch.py
-
-# autre
 Supprimer tous les .identifer : sudo find . -name "*.Identifier" -type f -delete
-mettre un .sh en unix style : dos2unix file.sh
+
+mettre un script sh en unix style : dos2unix file.sh
+
+publier sur un topic : ros2 topic pub /robot2_102/messages std_msgs/msg/String '{data: "{\"action\": \"start_mission\"}"}' -1
+
+envoyer un http au serveur : curl -X POST http://localhost:3000/robots/robot1_102/mission/start
+
+kill le port 3000 : sudo lsof -i :3000
+
+
 

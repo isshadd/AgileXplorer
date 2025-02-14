@@ -1,10 +1,11 @@
 .configuration-container {
-    padding: 1rem;
+    padding: 1.5rem;
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
     height: calc(100vh - 64px);
     overflow-y: auto;
+    background-color: #0f172a;
 }
 
 .wheel-mode-section {
@@ -19,23 +20,24 @@
 }
 
 .robot-config-item {
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    background-color: #1e293b;
+    border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #334155;
 }
 
 .robot-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .robot-header h3 {
     margin: 0;
     font-size: 1.2rem;
     font-weight: 500;
+    color: #38bdf8;
 }
 
 .robot-status {
@@ -43,14 +45,14 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.25rem 0.75rem;
-    border-radius: 16px;
-    background-color: #e0e0e0;
-    color: #666;
+    border-radius: 8px;
+    background-color: #334155;
+    color: #94a3b8;
 }
 
 .robot-status.active {
-    background-color: #e8f5e9;
-    color: #2e7d32;
+    background-color: rgba(16, 185, 129, 0.2);
+    color: #10b981;
 }
 
 .wheel-mode-select {
@@ -60,18 +62,19 @@
 
 .current-mode-info {
     margin-top: 1rem;
-    padding: 0.5rem;
-    background-color: #fff;
-    border-radius: 4px;
+    padding: 1rem;
+    background-color: #334155;
+    border-radius: 8px;
+    border: 1px solid #475569;
 }
 
 .current-mode-info p {
     margin: 0;
-    color: #666;
+    color: #94a3b8;
 }
 
 .current-mode-info strong {
-    color: #1976d2;
+    color: #38bdf8;
 }
 
 .info-section {
@@ -83,14 +86,14 @@
 }
 
 .mode-info h4 {
-    color: #1976d2;
-    margin: 0 0 0.5rem 0;
+    color: #38bdf8;
+    margin: 0 0 0.75rem 0;
 }
 
 .mode-info p {
     margin: 0;
-    color: #666;
-    line-height: 1.5;
+    color: #94a3b8;
+    line-height: 1.6;
 }
 
 /* Animation pour les changements de mode */
@@ -146,5 +149,6 @@
 
 .robot-config-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-color: #475569;
 }

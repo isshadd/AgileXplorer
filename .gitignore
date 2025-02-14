@@ -7,3 +7,7 @@ robot/limo/log/
 robot/robot/build/
 robot/robot/install/
 robot/robot/log/
+robot/build/
+robot/install/
+robot/log/
+robot/src/

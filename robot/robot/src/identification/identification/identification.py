@@ -7,16 +7,16 @@ import os
 class IdentifyNode(Node):
     def __init__(self):
         super().__init__('identify_node')
-        # Souscription sur le topic /identify (de type Empty, par exemple)
-        self.subscription = self.create_subscription(Empty, '/identify', self.identify_callback, 10)
-        self.get_logger().info("Identify node started, waiting for /identify messages.")
+        self.declare_parameter('robot_id', 'robot1_102')
+        self.robot_id = self.get_parameter('robot_id').value
+    
+        identify_topic = f'/{self.robot_id}/identify'
+        self.subscription = self.create_subscription(Empty, identify_topic, self.identify_callback, 10)
 
     def identify_callback(self, msg):
-        self.get_logger().info("Identification demandée : lancement du son.")
-        # Chemin absolu vers le fichier audio (adapté à votre installation)
+        self.get_logger().info(f"Identification demandée pour {self.robot_id} : lancement du son.")
         sound_file = '/home/equipe102/Desktop/INF3995-102/robot/common/son_identification.wav'
         if os.path.exists(sound_file):
-            # Lancement de la commande pour jouer le son (ici, 'aplay' est utilisé pour Linux)
             subprocess.Popen(['aplay', sound_file])
         else:
             self.get_logger().error(f"Fichier son introuvable: {sound_file}")

@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { MissionModule } from './mission.module'; //Makes  MissionModule available to the whole application. The API should be available at: GET http://localhost:3000/missions/status POST http://localhost:3000/missions/send
+import { RobotController } from 'src/controllers/robot.controller';
+import { MissionModule } from './mission/mission.module';  // Ensure the path is correct
+
 @Module({
-  imports: [MissionModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [MissionModule],  // Import MissionModule
+  controllers: [RobotController],
 })
 export class AppModule {}

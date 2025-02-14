@@ -1,63 +1,72 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-import { Robot, WheelMode } from '../../models/robot.model';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatOptionModule } from '@angular/material/core';
 import { RobotService } from '../../services/robot.service';
+import { NotificationService } from '../../services/notification.service';
+import { Robot, WheelMode } from '../../models/robot.model';
 
 @Component({
-    selector: 'app-configuration',
-    standalone: true,
-    imports: [
-        CommonModule,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        FormsModule
-    ],
-    templateUrl: './configuration.component.html',
-    styleUrl: './configuration.component.css'
+  selector: 'app-configuration',
+  templateUrl: './configuration.component.html',
+  styleUrls: ['./configuration.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatIconModule,
+    MatButtonModule,
+    MatOptionModule
+  ]
 })
 export class ConfigurationComponent implements OnInit, OnDestroy {
-    robots: Robot[] = [];
-    private destroy$ = new Subject<void>();
+  robots: Robot[] = [];
+  private robotsSubscription!: Subscription;
 
-    wheelModes: { value: WheelMode['type']; label: string }[] = [
-        { value: 'ackerman', label: 'Mode Ackerman' },
-        { value: 'differential', label: 'Mode Différentiel' }
-    ];
+  wheelModes: { value: WheelMode; label: string }[] = [
+    { value: 'ackerman', label: 'Ackerman' },
+    { value: 'differential', label: 'Différentiel' }
+  ];
 
-    constructor(private robotService: RobotService) {}
+  constructor(
+    private robotService: RobotService,
+    private notificationService: NotificationService
+  ) {}
 
-    ngOnInit() {
-        this.robotService.getRobots()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(robots => {
-                this.robots = robots;
-            });
+  ngOnInit(): void {
+    this.robotsSubscription = this.robotService.getRobots()
+      .subscribe(robotStates => {
+        this.robots = robotStates.map(state => ({
+          id: state.id,
+          name: state.name,
+          state: state
+        }));
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.robotsSubscription) {
+      this.robotsSubscription.unsubscribe();
     }
+  }
 
-    ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
+  onWheelModeChange(robotId: string, mode: WheelMode): void {
+    this.robotService.setWheelMode(robotId, mode);
+    this.notificationService.wheelModeChanged(`Robot ${robotId}`, mode);
+  }
 
-    onWheelModeChange(robotId: string, mode: WheelMode['type']) {
-        this.robotService.setWheelMode(robotId, { type: mode });
-    }
+  getCurrentWheelMode(robot: Robot): WheelMode {
+    return robot.state.wheelMode.type;
+  }
 
-    getCurrentWheelMode(robot: Robot): WheelMode['type'] {
-        return robot.state.wheelMode.type;
-    }
-
-    getWheelModeLabel(mode: WheelMode['type']): string {
-        return this.wheelModes.find(m => m.value === mode)?.label || mode;
-    }
+  getWheelModeLabel(mode: WheelMode): string {
+    return this.wheelModes.find(wm => wm.value === mode)?.label || mode;
+  }
 }

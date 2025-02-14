@@ -1,103 +1,28 @@
-<div class="dashboard-container">
-    <!-- Panneau latéral avec la liste des robots -->
-    <mat-card class="robots-panel">
+<div class="robots-container">
+    <mat-card *ngFor="let robotId of ['robot1_102', 'robot2_102']" class="robot-card">
         <mat-card-header>
-            <mat-card-title>Robots</mat-card-title>
+            <mat-card-title>Contrôle du {{ robotId }}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div class="robot-list">
-                <div *ngFor="let robot of robots" class="robot-item">
-                    <div class="robot-header">
-                        <span class="robot-name">{{robot.name}}</span>
-                        <mat-icon [class]="getRobotStatusClass(robot)">
-                            {{robot.state.status === 'on_mission' ? 'play_circle' : 
-                              robot.state.status === 'returning' ? 'home' : 
-                              robot.state.status === 'charging' ? 'battery_charging_full' : 'pause_circle'}}
-                        </mat-icon>
-                    </div>
-
-                    <div class="robot-details">
-                        <div class="battery-indicator" [class]="getBatteryClass(robot.state.batteryLevel)">
-                            <mat-icon>battery_std</mat-icon>
-                            <span>{{robot.state.batteryLevel}}%</span>
-                        </div>
-
-                        <div class="wheel-mode-selector">
-                            <mat-select [value]="robot.state.wheelMode.type"
-                                      (selectionChange)="setWheelMode(robot.id, $event.value)">
-                                <mat-option value="ackerman">Ackerman</mat-option>
-                                <mat-option value="differential">Différentiel</mat-option>
-                            </mat-select>
-                        </div>
-
-                        <div class="robot-position">
-                            <small>X: {{robot.state.position.x.toFixed(2)}}</small>
-                            <small>Y: {{robot.state.position.y.toFixed(2)}}</small>
-                        </div>
-
-                        <div *ngIf="robot.state.isFarthest" class="farthest-indicator">
-                            <mat-icon color="accent">signal_cellular_alt</mat-icon>
-                            <span>Plus éloigné</span>
-                        </div>
-
-                        <button mat-stroked-button color="primary"
-                                (click)="identifyRobot(robot.id)">
-                            <mat-icon>search</mat-icon>
-                            Identifier
-                        </button>
-                    </div>
-                </div>
+            <div class="mission-controls">
+                <button mat-raised-button
+                        color="primary"
+                        (click)="startMission(robotId)"
+                        [disabled]="robotStates[robotId].isMissionActive || !robotStates[robotId].isIdentified">
+                    Démarrer Mission
+                </button>
+                <button mat-raised-button 
+                        color="warn" 
+                        (click)="stopMission(robotId)" 
+                        [disabled]="!robotStates[robotId].isMissionActive">
+                    Arrêter Mission
+                </button>
+                <button mat-raised-button
+                        color="primary"
+                        (click)="identify(robotId)">
+                    Identifier
+                </button>
             </div>
         </mat-card-content>
     </mat-card>
-
-    <!-- Zone principale avec la carte et les contrôles -->
-    <div class="main-content">
-        <!-- Contrôles principaux -->
-        <mat-card class="controls-panel">
-            <mat-card-content class="controls-container">
-                <div class="mission-controls">
-                    <button mat-raised-button color="primary"
-                            [disabled]="isMissionActive"
-                            (click)="startMission()">
-                        <mat-icon>play_arrow</mat-icon>
-                        Lancer Mission
-                    </button>
-
-                    <button mat-raised-button color="warn"
-                            [disabled]="!isMissionActive"
-                            (click)="stopMission()">
-                        <mat-icon>stop</mat-icon>
-                        Terminer Mission
-                    </button>
-
-                    <button mat-raised-button color="accent"
-                            [disabled]="!isMissionActive"
-                            (click)="returnToBase()">
-                        <mat-icon>home</mat-icon>
-                        Retour à la Base
-                    </button>
-                </div>
-
-                <div class="p2p-control">
-                    <button mat-raised-button
-                            [color]="isP2PEnabled ? 'accent' : 'default'"
-                            (click)="toggleP2P()">
-                        <mat-icon>{{isP2PEnabled ? 'link' : 'link_off'}}</mat-icon>
-                        Communication P2P
-                    </button>
-                </div>
-            </mat-card-content>
-        </mat-card>
-
-        <!-- Zone de la carte -->
-        <mat-card class="map-container">
-            <mat-card-content>
-                <!-- La carte sera ajoutée ici par un autre composant -->
-                <div class="map-placeholder">
-                    Carte en cours de chargement...
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </div>
 </div>

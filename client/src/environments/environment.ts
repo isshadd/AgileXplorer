@@ -1,5 +1,4 @@
 export const environment = {
     production: false,
-    wsUrl: 'ws://localhost:3000/ws',
-    apiUrl: 'http://localhost:3000/api'
+    apiUrl: 'http://192.168.0.115:3000' // À changer selon l'adresse ubuntu ou localhost (celui qui marche mieux)
 };

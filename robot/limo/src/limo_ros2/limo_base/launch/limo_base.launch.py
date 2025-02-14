@@ -10,8 +10,12 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    # use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='false',
-    #                                          description='Use simulation clock if true')
+
+    id_arg = DeclareLaunchArgument(
+        'id',
+        default_value='102robot1',
+        description='Namespace ID for the robot'
+    )
 
     port_name_arg = DeclareLaunchArgument('port_name', default_value='ttyTHS1',
                                          description='usb bus name, e.g. ttyTHS1')
@@ -39,6 +43,16 @@ def generate_launch_description():
         executable='limo_base',  #foxy executable='limo_base',
         output='screen',
         emulate_tty=True,
+        namespace=LaunchConfiguration('id'),
+        remappings=[
+            ('/cmd_vel', [ '/', LaunchConfiguration('id'), '/cmd_vel']),
+            ('/imu', [ '/', LaunchConfiguration('id'), '/imu']),
+            ('/limo_status', [ '/', LaunchConfiguration('id'), '/limo_status']),
+            ('/odom', [ '/', LaunchConfiguration('id'), '/odom']),
+            ('/parameter_events', [ '/', LaunchConfiguration('id'), '/parameter_events']),
+            ('/rosout', [ '/', LaunchConfiguration('id'), '/rosout']),
+            ('/tf', [ '/', LaunchConfiguration('id'), '/tf']),
+        ],
         parameters=[{
                 # 'use_sim_time': launch.substitutions.LaunchConfiguration('use_sim_time'),
                 'port_name': launch.substitutions.LaunchConfiguration('port_name'),                
@@ -53,7 +67,7 @@ def generate_launch_description():
         }])
 
     return LaunchDescription([
-        # use_sim_time_arg,
+        id_arg,
         port_name_arg,        
         odom_frame_arg,
         base_link_frame_arg,

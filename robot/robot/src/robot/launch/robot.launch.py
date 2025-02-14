@@ -5,6 +5,12 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
 
+    id_arg = DeclareLaunchArgument(
+        'id',
+        default_value='robot1_102',
+        description='Namespace ID for the robot'
+    )
+
     robot_speed_arg = DeclareLaunchArgument(
         'robot_speed',
         default_value='0.5', 
@@ -15,20 +21,24 @@ def generate_launch_description():
         executable='move_controller',
         name='move_controller',
         output='screen',
-        parameters=[{'speed': LaunchConfiguration('robot_speed')}],
-        remappings=[('/cmd_vel', '/cmd_vel')]
+        parameters=[{'speed': LaunchConfiguration('robot_speed')}, {'robot_id': LaunchConfiguration('id')}],
+        remappings=[('/cmd_vel', [ '/', LaunchConfiguration('id'), '/cmd_vel'])]
     )
     communication_controller_node = Node(
         package='communication',
         executable='communication_controller',
         name='communication_controller',
-        output='screen'
+        output='screen',
+        parameters=[{'robot_id': LaunchConfiguration('id')}],
+        remappings=[('/messages', [ '/', LaunchConfiguration('id'), '/messages'])]
     )
     identify_node = Node(
         package='identification',
         executable='identify_node',
         name='identify_node',
-        output='screen'
+        output='screen',
+        parameters=[{'robot_id': LaunchConfiguration('id')}],
+        remappings=[('/identify', [ '/', LaunchConfiguration('id'), '/identify'])]
     )
     
     ld = LaunchDescription()

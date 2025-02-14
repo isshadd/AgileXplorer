@@ -1,20 +1,18 @@
-export interface Position {
-    x: number;
-    y: number;
-}
-
-export interface WheelMode {
-    type: 'ackerman' | 'differential';
-}
-
 export interface RobotState {
     id: string;
+    name: string;
+    status: 'idle' | 'on_mission' | 'returning' | 'charging' | 'error';
     batteryLevel: number;
-    position: Position;
-    status: 'waiting' | 'on_mission' | 'returning' | 'charging';
-    wheelMode: WheelMode;
-    isP2PEnabled: boolean;
-    isFarthest: boolean;
+    position: {
+        x: number;
+        y: number;
+        z?: number;
+    };
+    wheelMode: {
+        type: 'ackerman' | 'differential'
+    };
+    isFarthest?: boolean;
+    p2pEnabled?: boolean;
 }
 
 export interface Robot {
@@ -22,3 +20,5 @@ export interface Robot {
     name: string;
     state: RobotState;
 }
+
+export type WheelMode = 'ackerman' | 'differential';

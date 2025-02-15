@@ -1,0 +1,330 @@
+[0.982s] DEBUG:colcon:Command line arguments: ['/usr/local/bin/colcon', 'build', '--cmake-args', '-DBUILD_TESTING=ON']
+[0.982s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=8, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, cmake_args=['-DBUILD_TESTING=ON'], cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7fed2b4fdc90>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7fed2b4fd750>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7fed2b4fd750>>)
+[1.680s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[1.681s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[1.681s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[1.681s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[1.681s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[1.681s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[1.681s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/isshadd/INF3995-102/robot/gazebo2'
+[1.681s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[1.682s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[1.725s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[1.725s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[1.725s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[1.725s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[1.726s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[1.726s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[1.726s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[1.726s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[1.727s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[1.727s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[1.727s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[1.728s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[1.728s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[1.728s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[1.728s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[1.728s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[1.728s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[1.729s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[1.729s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[1.729s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[1.729s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[1.729s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[1.729s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[1.730s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[1.730s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[1.730s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[1.730s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[1.730s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[1.730s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extensions ['ignore', 'ignore_ament_install']
+[1.730s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extension 'ignore'
+[1.731s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extension 'ignore_ament_install'
+[1.731s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extensions ['colcon_pkg']
+[1.731s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extension 'colcon_pkg'
+[1.731s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extensions ['colcon_meta']
+[1.731s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extension 'colcon_meta'
+[1.731s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extensions ['ros']
+[1.731s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_application) by extension 'ros'
+[1.757s] DEBUG:colcon.colcon_core.package_identification:Package 'src/ros_gz_example_application' with type 'ros.ament_cmake' and name 'ros_gz_example_application'
+[1.758s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extensions ['ignore', 'ignore_ament_install']
+[1.758s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extension 'ignore'
+[1.759s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extension 'ignore_ament_install'
+[1.759s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extensions ['colcon_pkg']
+[1.759s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extension 'colcon_pkg'
+[1.760s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extensions ['colcon_meta']
+[1.760s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extension 'colcon_meta'
+[1.760s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extensions ['ros']
+[1.760s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_bringup) by extension 'ros'
+[1.764s] DEBUG:colcon.colcon_core.package_identification:Package 'src/ros_gz_example_bringup' with type 'ros.ament_cmake' and name 'ros_gz_example_bringup'
+[1.765s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extensions ['ignore', 'ignore_ament_install']
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extension 'ignore'
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extension 'ignore_ament_install'
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extensions ['colcon_pkg']
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extension 'colcon_pkg'
+[1.767s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extensions ['colcon_meta']
+[1.767s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extension 'colcon_meta'
+[1.767s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extensions ['ros']
+[1.767s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_description) by extension 'ros'
+[1.770s] DEBUG:colcon.colcon_core.package_identification:Package 'src/ros_gz_example_description' with type 'ros.ament_cmake' and name 'ros_gz_example_description'
+[1.771s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extensions ['ignore', 'ignore_ament_install']
+[1.772s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extension 'ignore'
+[1.772s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extension 'ignore_ament_install'
+[1.773s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extensions ['colcon_pkg']
+[1.773s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extension 'colcon_pkg'
+[1.773s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extensions ['colcon_meta']
+[1.773s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extension 'colcon_meta'
+[1.774s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extensions ['ros']
+[1.774s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros_gz_example_gazebo) by extension 'ros'
+[1.781s] DEBUG:colcon.colcon_core.package_identification:Package 'src/ros_gz_example_gazebo' with type 'ros.ament_cmake' and name 'ros_gz_example_gazebo'
+[1.782s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[1.782s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[1.785s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[1.786s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[1.786s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'cmake_args' from command line to '['-DBUILD_TESTING=ON']'
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'cmake_target' from command line to 'None'
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'cmake_clean_cache' from command line to 'False'
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'cmake_clean_first' from command line to 'False'
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'cmake_force_configure' from command line to 'False'
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'ament_cmake_args' from command line to 'None'
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'catkin_cmake_args' from command line to 'None'
+[2.117s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_application' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.117s] DEBUG:colcon.colcon_core.verb:Building package 'ros_gz_example_application' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DBUILD_TESTING=ON'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application', 'merge_install': False, 'path': '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_application', 'symlink_install': False, 'test_result_base': None}
+[2.119s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'cmake_args' from command line to '['-DBUILD_TESTING=ON']'
+[2.119s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'cmake_target' from command line to 'None'
+[2.119s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.119s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'cmake_clean_cache' from command line to 'False'
+[2.119s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'cmake_clean_first' from command line to 'False'
+[2.120s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'cmake_force_configure' from command line to 'False'
+[2.120s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'ament_cmake_args' from command line to 'None'
+[2.120s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'catkin_cmake_args' from command line to 'None'
+[2.120s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_description' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.120s] DEBUG:colcon.colcon_core.verb:Building package 'ros_gz_example_description' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DBUILD_TESTING=ON'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description', 'merge_install': False, 'path': '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_description', 'symlink_install': False, 'test_result_base': None}
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'cmake_args' from command line to '['-DBUILD_TESTING=ON']'
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'cmake_target' from command line to 'None'
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'cmake_clean_cache' from command line to 'False'
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'cmake_clean_first' from command line to 'False'
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'cmake_force_configure' from command line to 'False'
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'ament_cmake_args' from command line to 'None'
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'catkin_cmake_args' from command line to 'None'
+[2.121s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_gazebo' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.121s] DEBUG:colcon.colcon_core.verb:Building package 'ros_gz_example_gazebo' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DBUILD_TESTING=ON'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo', 'merge_install': False, 'path': '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_gazebo', 'symlink_install': False, 'test_result_base': None}
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'cmake_args' from command line to '['-DBUILD_TESTING=ON']'
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'cmake_target' from command line to 'None'
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'cmake_clean_cache' from command line to 'False'
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'cmake_clean_first' from command line to 'False'
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'cmake_force_configure' from command line to 'False'
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'ament_cmake_args' from command line to 'None'
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'catkin_cmake_args' from command line to 'None'
+[2.122s] Level 5:colcon.colcon_core.verb:set package 'ros_gz_example_bringup' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.122s] DEBUG:colcon.colcon_core.verb:Building package 'ros_gz_example_bringup' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DBUILD_TESTING=ON'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup', 'merge_install': False, 'path': '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_bringup', 'symlink_install': False, 'test_result_base': None}
+[2.122s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[2.125s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[2.128s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_description' with build type 'ament_cmake'
+[2.129s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_description'
+[2.140s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[2.141s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.141s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.171s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_application' with build type 'ament_cmake'
+[2.173s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_application'
+[2.174s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.174s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.202s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_description -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description
+[2.240s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_application -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application
+[6.669s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_description -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description
+[6.670s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description -- -j8 -l8
+[6.695s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_application -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application
+[6.698s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application -- -j8 -l8
+[6.738s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description -- -j8 -l8
+[6.761s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description
+[6.772s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application -- -j8 -l8
+[6.773s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application
+[6.812s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros_gz_example_application)
+[6.816s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application
+[6.852s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application' for CMake module files
+[6.854s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application' for CMake config files
+[6.854s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros_gz_example_application', 'cmake_prefix_path')
+[6.855s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/hook/cmake_prefix_path.ps1'
+[6.858s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/hook/cmake_prefix_path.dsv'
+[6.863s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/hook/cmake_prefix_path.sh'
+[6.869s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/bin'
+[6.869s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/lib/pkgconfig/ros_gz_example_application.pc'
+[6.872s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/lib/python3.10/site-packages'
+[6.872s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/bin'
+[6.874s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.ps1'
+[6.879s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.dsv'
+[6.883s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.sh'
+[6.889s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.bash'
+[6.895s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.zsh'
+[6.899s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/colcon-core/packages/ros_gz_example_application)
+[6.905s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros_gz_example_application)
+[6.906s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application' for CMake module files
+[6.907s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application' for CMake config files
+[6.907s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros_gz_example_application', 'cmake_prefix_path')
+[6.907s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/hook/cmake_prefix_path.ps1'
+[6.909s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/hook/cmake_prefix_path.dsv'
+[6.912s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/hook/cmake_prefix_path.sh'
+[6.914s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/bin'
+[6.915s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/lib/pkgconfig/ros_gz_example_application.pc'
+[6.916s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/lib/python3.10/site-packages'
+[6.916s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/bin'
+[6.917s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.ps1'
+[6.920s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.dsv'
+[6.923s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.sh'
+[6.925s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.bash'
+[6.928s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.zsh'
+[6.931s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/colcon-core/packages/ros_gz_example_application)
+[13.567s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros_gz_example_description)
+[13.568s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description' for CMake module files
+[13.569s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description
+[13.570s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description' for CMake config files
+[13.570s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros_gz_example_description', 'cmake_prefix_path')
+[13.571s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/hook/cmake_prefix_path.ps1'
+[13.573s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/hook/cmake_prefix_path.dsv'
+[13.575s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/hook/cmake_prefix_path.sh'
+[13.577s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/bin'
+[13.577s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/lib/pkgconfig/ros_gz_example_description.pc'
+[13.578s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/lib/python3.10/site-packages'
+[13.578s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/bin'
+[13.579s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.ps1'
+[13.580s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.dsv'
+[13.581s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.sh'
+[13.583s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.bash'
+[13.584s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.zsh'
+[13.585s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/colcon-core/packages/ros_gz_example_description)
+[13.587s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros_gz_example_description)
+[13.588s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description' for CMake module files
+[13.589s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description' for CMake config files
+[13.590s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros_gz_example_description', 'cmake_prefix_path')
+[13.591s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/hook/cmake_prefix_path.ps1'
+[13.593s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/hook/cmake_prefix_path.dsv'
+[13.594s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/hook/cmake_prefix_path.sh'
+[13.596s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/bin'
+[13.597s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/lib/pkgconfig/ros_gz_example_description.pc'
+[13.597s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/lib/python3.10/site-packages'
+[13.597s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/bin'
+[13.598s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.ps1'
+[13.601s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.dsv'
+[13.602s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.sh'
+[13.604s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.bash'
+[13.606s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.zsh'
+[13.608s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/colcon-core/packages/ros_gz_example_description)
+[13.609s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_gazebo' with build type 'ament_cmake'
+[13.609s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_gazebo'
+[13.610s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[13.610s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[13.736s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake /home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_gazebo -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo
+[34.651s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo' returned '0': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake /home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_gazebo -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo
+[34.657s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake --build /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo -- -j8 -l8
+[34.725s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo' returned '0': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake --build /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo -- -j8 -l8
+[34.731s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake --install /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo
+[34.763s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros_gz_example_gazebo)
+[34.764s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo' for CMake module files
+[34.765s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo' returned '0': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake --install /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo
+[34.766s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo' for CMake config files
+[34.766s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros_gz_example_gazebo', 'cmake_prefix_path')
+[34.767s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/hook/cmake_prefix_path.ps1'
+[34.769s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/hook/cmake_prefix_path.dsv'
+[34.770s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/hook/cmake_prefix_path.sh'
+[34.772s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/bin'
+[34.772s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/pkgconfig/ros_gz_example_gazebo.pc'
+[34.772s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/python3.10/site-packages'
+[34.773s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/bin'
+[34.773s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.ps1'
+[34.774s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.dsv'
+[34.776s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.sh'
+[34.778s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.bash'
+[34.779s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.zsh'
+[34.781s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/colcon-core/packages/ros_gz_example_gazebo)
+[34.784s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros_gz_example_gazebo)
+[34.784s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo' for CMake module files
+[34.785s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo' for CMake config files
+[34.786s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros_gz_example_gazebo', 'cmake_prefix_path')
+[34.786s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/hook/cmake_prefix_path.ps1'
+[34.788s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/hook/cmake_prefix_path.dsv'
+[34.789s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/hook/cmake_prefix_path.sh'
+[34.793s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/bin'
+[34.793s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/pkgconfig/ros_gz_example_gazebo.pc'
+[34.794s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/python3.10/site-packages'
+[34.794s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/bin'
+[34.796s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.ps1'
+[34.798s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.dsv'
+[34.800s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.sh'
+[34.802s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.bash'
+[34.804s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.zsh'
+[34.808s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/colcon-core/packages/ros_gz_example_gazebo)
+[34.809s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_bringup' with build type 'ament_cmake'
+[34.824s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_bringup'
+[34.825s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[34.825s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[34.970s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_PLUGIN_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake /home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_bringup -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup
+[37.622s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup' returned '0': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_PLUGIN_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake /home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_bringup -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup
+[37.627s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_PLUGIN_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake --build /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup -- -j8 -l8
+[37.708s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup' returned '0': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_PLUGIN_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake --build /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup -- -j8 -l8
+[37.715s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_PLUGIN_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake --install /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup
+[37.746s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros_gz_example_bringup)
+[37.748s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup' for CMake module files
+[37.748s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup' returned '0': AMENT_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble IGN_GAZEBO_PLUGIN_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo IGN_GAZEBO_RESOURCE_PATH=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models /usr/bin/cmake --install /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup
+[37.752s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup' for CMake config files
+[37.760s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros_gz_example_bringup', 'cmake_prefix_path')
+[37.761s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/hook/cmake_prefix_path.ps1'
+[37.763s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/hook/cmake_prefix_path.dsv'
+[37.766s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/hook/cmake_prefix_path.sh'
+[37.768s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/bin'
+[37.770s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/lib/pkgconfig/ros_gz_example_bringup.pc'
+[37.771s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/lib/python3.10/site-packages'
+[37.772s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/bin'
+[37.774s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.ps1'
+[37.776s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.dsv'
+[37.778s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.sh'
+[37.783s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.bash'
+[37.786s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.zsh'
+[37.793s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/colcon-core/packages/ros_gz_example_bringup)
+[37.797s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros_gz_example_bringup)
+[37.798s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup' for CMake module files
+[37.804s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup' for CMake config files
+[37.805s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros_gz_example_bringup', 'cmake_prefix_path')
+[37.808s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/hook/cmake_prefix_path.ps1'
+[37.810s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/hook/cmake_prefix_path.dsv'
+[37.812s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/hook/cmake_prefix_path.sh'
+[37.814s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/bin'
+[37.815s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/lib/pkgconfig/ros_gz_example_bringup.pc'
+[37.816s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/lib/python3.10/site-packages'
+[37.817s] Level 1:colcon.colcon_core.environment:checking '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/bin'
+[37.819s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.ps1'
+[37.821s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.dsv'
+[37.824s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.sh'
+[37.826s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.bash'
+[37.852s] INFO:colcon.colcon_core.shell:Creating package script '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.zsh'
+[37.853s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/colcon-core/packages/ros_gz_example_bringup)
+[37.854s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[37.856s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[37.857s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[37.858s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[37.999s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[37.999s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[38.000s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[38.000s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[38.003s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.FileNotFound: Failed to connect to socket /run/user/1000/bus: No such file or directory
+[38.003s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[38.004s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/isshadd/INF3995-102/robot/gazebo2/install/local_setup.ps1'
+[38.009s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/isshadd/INF3995-102/robot/gazebo2/install/_local_setup_util_ps1.py'
+[38.017s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/isshadd/INF3995-102/robot/gazebo2/install/setup.ps1'
+[38.021s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/isshadd/INF3995-102/robot/gazebo2/install/local_setup.sh'
+[38.024s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/isshadd/INF3995-102/robot/gazebo2/install/_local_setup_util_sh.py'
+[38.026s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/isshadd/INF3995-102/robot/gazebo2/install/setup.sh'
+[38.031s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/isshadd/INF3995-102/robot/gazebo2/install/local_setup.bash'
+[38.035s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/isshadd/INF3995-102/robot/gazebo2/install/setup.bash'
+[38.039s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/isshadd/INF3995-102/robot/gazebo2/install/local_setup.zsh'
+[38.042s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/isshadd/INF3995-102/robot/gazebo2/install/setup.zsh'

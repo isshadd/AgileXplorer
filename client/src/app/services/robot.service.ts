@@ -22,4 +22,14 @@ export class RobotService {
   identify(robotId: string): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/${robotId}/identify`, {});
   }
+
+  // Méthode globale pour démarrer la mission de tous les robots
+  startAllMissions(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/mission/start_all`, {});
+  }
+
+  // Méthode globale pour arrêter la mission de tous les robots
+  stopAllMissions(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/mission/stop_all`, {});
+  }
 }

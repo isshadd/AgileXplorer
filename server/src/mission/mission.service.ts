@@ -94,4 +94,43 @@ export class MissionService {
     this.logger.log(`Message d’identification publié sur /${robotId}/messages`);
     return { message: `Signal d’identification envoyé pour ${robotId}` };
   }
+
+  async startMissionsAll(): Promise<{ message: string }> {
+    await this.initPromise;
+    this.logger.log(`Démarrage de la mission pour tous les robots`);
+    const responses: string[] = [];
+    // Itérer sur tous les publishers de mission
+    this.publishers.forEach((publisher, key) => {
+      if (key.endsWith('_mission')) {
+        // Récupérer l'identifiant du robot (la partie avant "_mission")
+        const robotId = key.split('_mission')[0];
+        const message = {
+          data: JSON.stringify({ action: 'start_mission', robot_id: robotId })
+        };
+        publisher.publish(message);
+        this.logger.log(`Message start_mission publié sur /${robotId}/messages`);
+        responses.push(`Mission démarrée pour ${robotId}`);
+      }
+    });
+    return { message: responses.join(' | ') };
+  }
+  
+  async stopMissionsAll(): Promise<{ message: string }> {
+    await this.initPromise;
+    this.logger.log(`Arrêt de la mission pour tous les robots`);
+    const responses: string[] = [];
+    this.publishers.forEach((publisher, key) => {
+      if (key.endsWith('_mission')) {
+        const robotId = key.split('_mission')[0];
+        const message = {
+          data: JSON.stringify({ action: 'end_mission', robot_id: robotId })
+        };
+        publisher.publish(message);
+        this.logger.log(`Message end_mission publié sur /${robotId}/messages`);
+        responses.push(`Mission arrêtée pour ${robotId}`);
+      }
+    });
+    return { message: responses.join(' | ') };
+  }
+  
 }

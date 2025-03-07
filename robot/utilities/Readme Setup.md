@@ -24,7 +24,7 @@ sudo apt-get update \
     software-properties-common \
     python3-pip
 
-sudo apt install ros-humble-gazebo-* # TODO : à changer pour l'ancien gazeboo -> gazebo ignition fortress
+sudo apt install ros-humble-gazebo-*
 sudo apt-get install ros-humble-joint-state-publisher-gui 
 sudo apt-get install ros-humble-rqt-robot-steering 
 

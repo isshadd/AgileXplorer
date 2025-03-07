@@ -1,0 +1,9 @@
+controller_server:
+  ros__parameters:
+    controller_frequency: 10.0
+planner_server:
+  ros__parameters:
+    expected_planner_frequency: 1.0
+smoother_server:
+  ros__parameters:
+    smoother_frequency: 10.0

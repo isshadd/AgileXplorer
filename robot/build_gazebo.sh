@@ -1,6 +1,5 @@
 # /bin/bash
-cd gazebo2
-export LIBGL_ALWAYS_SOFTWARE=1
+cd gazebo
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 colcon build --cmake-args -DBUILD_TESTING=ON

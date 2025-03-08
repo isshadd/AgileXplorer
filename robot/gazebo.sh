@@ -4,7 +4,7 @@ export ROS_DOMAIN_ID=102
 
 # Build Gazebo
 (
-  cd gazebo || exit 1
+  cd gazebo2 || exit 1
   export LIBGL_ALWAYS_SOFTWARE=1
   source /opt/ros/humble/setup.bash
   source install/setup.bash

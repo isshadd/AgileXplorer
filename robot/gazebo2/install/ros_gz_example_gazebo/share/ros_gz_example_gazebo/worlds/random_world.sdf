@@ -1,0 +1,227 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="demo">
+    <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics"/>
+    <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster"/>
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands"/>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="limo">
+      <self_collide>true</self_collide>
+      <pose>0 -1 0.35 0 0 0</pose>
+      <include merge="true">
+        <uri>package://ros_gz_example_description/models/limo_diff_drive</uri>
+      </include>
+    </model>
+    <model name="limo2">
+      <self_collide>true</self_collide>
+      <pose>0 1 0.35 0 0 0</pose>
+      <include merge="true">
+        <uri>package://ros_gz_example_description/models/limo_diff_drive</uri>
+      </include>
+    </model>
+    <!-- Murs fixes formant un carré de 4 m de côté -->
+    <!-- Mur fixe au nord -->
+    <model name="fixed_wall_north">
+      <static>true</static>
+      <link name="link">
+        <!-- Placé en (0, 2) -->
+        <pose>0 2 0 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>4 0.1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>4 0.1 1</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Mur fixe au sud -->
+    <model name="fixed_wall_south">
+      <static>true</static>
+      <link name="link">
+        <!-- Placé en (0, -2) -->
+        <pose>0 -2 0 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>4 0.1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>4 0.1 1</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Mur fixe à l'est -->
+    <model name="fixed_wall_east">
+      <static>true</static>
+      <link name="link">
+        <!-- Placé en (2, 0), rotation 90° -->
+        <pose>2 0 0 0 0 1.5708</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>4 0.1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>4 0.1 1</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Mur fixe à l'ouest -->
+    <model name="fixed_wall_west">
+      <static>true</static>
+      <link name="link">
+        <!-- Placé en (-2, 0), rotation 90° -->
+        <pose>-2 0 0 0 0 1.5708</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>4 0.1 1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>4 0.1 1</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    
+    <model name="random_wall_0">
+      <static>true</static>
+      <link name="link">
+        <!-- pose: x y z roll pitch yaw -->
+        <pose>0.71 -0.58 0 0 0 2.03</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1.5 0.1 0.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1.5 0.1 0.8</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+        
+    <model name="random_wall_1">
+      <static>true</static>
+      <link name="link">
+        <!-- pose: x y z roll pitch yaw -->
+        <pose>-0.41 -0.51 0 0 0 2.97</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1.5 0.1 0.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1.5 0.1 0.8</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+        
+    <model name="random_wall_2">
+      <static>true</static>
+      <link name="link">
+        <!-- pose: x y z roll pitch yaw -->
+        <pose>-0.68 -0.05 0 0 0 1.95</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1.5 0.1 0.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1.5 0.1 0.8</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+        
+  </world>
+</sdf>

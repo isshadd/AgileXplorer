@@ -1,4 +1,8 @@
-<div class="robots-container">
+<div class="dashboard-container">
+  <div class="map-container">
+    <app-map></app-map>
+  </div>
+  <div class="robots-container">
     <mat-card *ngFor="let robotId of ['robot1_102', 'robot2_102']" class="robot-card">
         <mat-card-header>
             <mat-card-title>Contrôle du {{ robotId }}</mat-card-title>

@@ -8,6 +8,7 @@ import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
 import { MissionHistoryComponent } from '../mission-history/mission-history.component';
+import { MapComponent } from '../map/map.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,6 +19,7 @@ import { MissionHistoryComponent } from '../mission-history/mission-history.comp
         MatCardModule,
         MatDialogModule,
         MissionHistoryComponent
+        MapComponent
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'

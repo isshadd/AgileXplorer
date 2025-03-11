@@ -5,6 +5,8 @@ import { RobotModule } from './robot/robot.module';
 import { LogsModule } from './logs/logs.module';
 import { MissionModule } from './mission/mission.module';
 import { config } from 'dotenv';
+import { RobotController } from 'src/controllers/robot.controller';
+import { GatewayModule } from './gateways/gateway.module';
 
 config(); // Load environment variables
 
@@ -14,7 +16,9 @@ config(); // Load environment variables
     ScheduleModule.forRoot(),
     RobotModule,
     LogsModule,
-    MissionModule,
   ],
+    MissionModule,
+  controllers: [RobotController],
+  imports: [MissionModule, GatewayModule],
 })
 export class AppModule {}

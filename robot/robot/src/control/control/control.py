@@ -93,13 +93,17 @@ class MoveController(Node):
 
     def publish_feedback(self):
         dt = 1.0
-        self.current_position["x"] += self.current_speed * dt
+        # Calcul de la nouvelle position en tenant compte de la rotation
+        self.current_position["x"] += self.current_speed * dt * (1 if abs(self.current_angular) < 0.1 else 0)
+        self.current_position["y"] += self.current_speed * dt * (1 if abs(self.current_angular) >= 0.1 else 0)
+        
         feedback = {
             "speed": self.current_speed,
             "angular": self.current_angular,
             "position": self.current_position,
             "battery": self.battery_level,
-            "robot_id": self.robot_id
+            "robot_id": self.robot_id,
+            "timestamp": self.get_clock().now().nanoseconds / 1e9
         }
         new_feedback_str = json.dumps(feedback)
         if not hasattr(self, 'last_feedback'):

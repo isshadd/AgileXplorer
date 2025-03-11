@@ -1,0 +1,14 @@
+<div class="map-container">
+  <canvas #mapCanvas class="map-canvas"></canvas>
+  <div class="map-controls">
+    <button (click)="zoomIn()" class="control-button">+</button>
+    <button (click)="zoomOut()" class="control-button">-</button>
+    <button (click)="resetView()" class="control-button">Reset</button>
+  </div>
+  <div class="map-legend">
+    <div *ngFor="let trail of robotTrails | keyvalue" class="legend-item">
+      <div class="legend-color" [style.background-color]="trail.value.color"></div>
+      <span>{{ trail.value.robotId }}</span>
+    </div>
+  </div>
+</div>

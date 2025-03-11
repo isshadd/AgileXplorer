@@ -1,0 +1,6 @@
+[0.019s] Invoking command in '/home/issam/Bureau/INF3995-102/robot/gazebo2/build/ros_gz_example_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/issam/Bureau/INF3995-102/robot/gazebo2/build/ros_gz_example_description -- -j8 -l8
+[0.027s] [0mCMake Error: The current CMakeCache.txt directory /home/issam/Bureau/INF3995-102/robot/gazebo2/build/ros_gz_example_description/CMakeCache.txt is different than the directory /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt[0m
+[0.039s] [0mCMake Error: The source directory "/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_description" does not exist.
+[0.039s] Specify --help for usage, or press the help button on the CMake GUI.[0m
+[0.044s] gmake: *** [Makefile:226 : cmake_check_build_system] Erreur 1
+[0.047s] Invoked command in '/home/issam/Bureau/INF3995-102/robot/gazebo2/build/ros_gz_example_description' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/issam/Bureau/INF3995-102/robot/gazebo2/build/ros_gz_example_description -- -j8 -l8

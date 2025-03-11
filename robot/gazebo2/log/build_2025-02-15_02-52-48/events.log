@@ -1,0 +1,769 @@
+[0.000000] (-) TimerEvent: {}
+[0.004306] (ros_gz_example_application) JobQueued: {'identifier': 'ros_gz_example_application', 'dependencies': OrderedDict()}
+[0.004600] (ros_gz_example_description) JobQueued: {'identifier': 'ros_gz_example_description', 'dependencies': OrderedDict()}
+[0.004669] (ros_gz_example_gazebo) JobQueued: {'identifier': 'ros_gz_example_gazebo', 'dependencies': OrderedDict([('ros_gz_example_description', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description')])}
+[0.004734] (ros_gz_example_bringup) JobQueued: {'identifier': 'ros_gz_example_bringup', 'dependencies': OrderedDict([('ros_gz_example_description', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description'), ('ros_gz_example_gazebo', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo')])}
+[0.004799] (ros_gz_example_description) JobStarted: {'identifier': 'ros_gz_example_description'}
+[0.047322] (ros_gz_example_application) JobStarted: {'identifier': 'ros_gz_example_application'}
+[0.067547] (ros_gz_example_description) JobProgress: {'identifier': 'ros_gz_example_description', 'progress': 'cmake'}
+[0.073389] (ros_gz_example_description) Command: {'cmd': ['/usr/bin/cmake', '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_description', '-DBUILD_TESTING=ON', '-DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.095901] (ros_gz_example_application) JobProgress: {'identifier': 'ros_gz_example_application', 'progress': 'cmake'}
+[0.098869] (-) TimerEvent: {}
+[0.103474] (ros_gz_example_application) Command: {'cmd': ['/usr/bin/cmake', '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_application', '-DBUILD_TESTING=ON', '-DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.199064] (-) TimerEvent: {}
+[0.299709] (-) TimerEvent: {}
+[0.400672] (-) TimerEvent: {}
+[0.501480] (-) TimerEvent: {}
+[0.602098] (-) TimerEvent: {}
+[0.702829] (-) TimerEvent: {}
+[0.803460] (-) TimerEvent: {}
+[0.904193] (-) TimerEvent: {}
+[0.995628] (ros_gz_example_application) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.996150] (ros_gz_example_description) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[1.004288] (-) TimerEvent: {}
+[1.104921] (-) TimerEvent: {}
+[1.206099] (-) TimerEvent: {}
+[1.307219] (-) TimerEvent: {}
+[1.407906] (-) TimerEvent: {}
+[1.508513] (-) TimerEvent: {}
+[1.609137] (-) TimerEvent: {}
+[1.710492] (-) TimerEvent: {}
+[1.811321] (-) TimerEvent: {}
+[1.916202] (-) TimerEvent: {}
+[2.016822] (-) TimerEvent: {}
+[2.117467] (-) TimerEvent: {}
+[2.128462] (ros_gz_example_application) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[2.217390] (ros_gz_example_description) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[2.217861] (-) TimerEvent: {}
+[2.318325] (-) TimerEvent: {}
+[2.418960] (-) TimerEvent: {}
+[2.519627] (-) TimerEvent: {}
+[2.620327] (-) TimerEvent: {}
+[2.721130] (-) TimerEvent: {}
+[2.744164] (ros_gz_example_application) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[2.746814] (ros_gz_example_description) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[2.821397] (-) TimerEvent: {}
+[2.922092] (-) TimerEvent: {}
+[3.022848] (-) TimerEvent: {}
+[3.059892] (ros_gz_example_application) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[3.061557] (ros_gz_example_description) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[3.081659] (ros_gz_example_application) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[3.082447] (ros_gz_example_description) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[3.083737] (ros_gz_example_description) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[3.084171] (ros_gz_example_application) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[3.086961] (ros_gz_example_description) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[3.087570] (ros_gz_example_application) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[3.106088] (ros_gz_example_application) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[3.106880] (ros_gz_example_description) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[3.122938] (-) TimerEvent: {}
+[3.225272] (-) TimerEvent: {}
+[3.325796] (-) TimerEvent: {}
+[3.420315] (ros_gz_example_application) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[3.429428] (-) TimerEvent: {}
+[3.436130] (ros_gz_example_description) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[3.440576] (ros_gz_example_application) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[3.441011] (ros_gz_example_application) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[3.442359] (ros_gz_example_application) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[3.444044] (ros_gz_example_description) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[3.444873] (ros_gz_example_description) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[3.446803] (ros_gz_example_description) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[3.459804] (ros_gz_example_description) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[3.460399] (ros_gz_example_application) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[3.529514] (-) TimerEvent: {}
+[3.630009] (-) TimerEvent: {}
+[3.730812] (-) TimerEvent: {}
+[3.831514] (-) TimerEvent: {}
+[3.905738] (ros_gz_example_application) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[3.907227] (ros_gz_example_description) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[3.931679] (-) TimerEvent: {}
+[4.032508] (-) TimerEvent: {}
+[4.133283] (-) TimerEvent: {}
+[4.215149] (ros_gz_example_description) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[4.233419] (-) TimerEvent: {}
+[4.334009] (-) TimerEvent: {}
+[4.434751] (-) TimerEvent: {}
+[4.470260] (ros_gz_example_application) StdoutLine: {'line': b'-- Configuring done\n'}
+[4.470801] (ros_gz_example_description) StdoutLine: {'line': b'-- Configuring done\n'}
+[4.503625] (ros_gz_example_description) StdoutLine: {'line': b'-- Generating done\n'}
+[4.505898] (ros_gz_example_application) StdoutLine: {'line': b'-- Generating done\n'}
+[4.510067] (ros_gz_example_description) StdoutLine: {'line': b'-- Build files have been written to: /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description\n'}
+[4.515874] (ros_gz_example_application) StdoutLine: {'line': b'-- Build files have been written to: /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application\n'}
+[4.544636] (ros_gz_example_description) CommandEnded: {'returncode': 0}
+[4.545325] (-) TimerEvent: {}
+[4.545555] (ros_gz_example_description) JobProgress: {'identifier': 'ros_gz_example_description', 'progress': 'build'}
+[4.545623] (ros_gz_example_description) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description', '--', '-j8', '-l8'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[4.569581] (ros_gz_example_application) CommandEnded: {'returncode': 0}
+[4.571207] (ros_gz_example_application) JobProgress: {'identifier': 'ros_gz_example_application', 'progress': 'build'}
+[4.571437] (ros_gz_example_application) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application', '--', '-j8', '-l8'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[4.612656] (ros_gz_example_description) CommandEnded: {'returncode': 0}
+[4.625948] (ros_gz_example_description) JobProgress: {'identifier': 'ros_gz_example_description', 'progress': 'install'}
+[4.636604] (ros_gz_example_description) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_description'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[4.646883] (ros_gz_example_application) CommandEnded: {'returncode': 0}
+[4.647740] (-) TimerEvent: {}
+[4.648005] (ros_gz_example_application) JobProgress: {'identifier': 'ros_gz_example_application', 'progress': 'install'}
+[4.648086] (ros_gz_example_application) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_application'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[4.649819] (ros_gz_example_description) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[4.650138] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models\n'}
+[4.652794] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_ackerman\n'}
+[4.655132] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_ackerman/model.config\n'}
+[4.656130] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_ackerman/model.sdf\n'}
+[4.660899] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_ackerman/meshes\n'}
+[4.661814] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_ackerman/meshes/limo_wheel.dae\n'}
+[4.662715] (ros_gz_example_application) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[4.666114] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ament_index/resource_index/package_run_dependencies/ros_gz_example_application\n'}
+[4.666970] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ament_index/resource_index/parent_prefix_path/ros_gz_example_application\n'}
+[4.669934] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/environment/ament_prefix_path.sh\n'}
+[4.670725] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/environment/ament_prefix_path.dsv\n'}
+[4.671363] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/environment/path.sh\n'}
+[4.673024] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/environment/path.dsv\n'}
+[4.674495] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/local_setup.bash\n'}
+[4.675317] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/local_setup.sh\n'}
+[4.677790] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/local_setup.zsh\n'}
+[4.678791] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/local_setup.dsv\n'}
+[4.679544] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.dsv\n'}
+[4.679878] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ament_index/resource_index/packages/ros_gz_example_application\n'}
+[4.680589] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/cmake/ros_gz_example_applicationConfig.cmake\n'}
+[4.681634] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/cmake/ros_gz_example_applicationConfig-version.cmake\n'}
+[4.682048] (ros_gz_example_application) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_application/share/ros_gz_example_application/package.xml\n'}
+[4.687901] (ros_gz_example_application) CommandEnded: {'returncode': 0}
+[4.749053] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_ackerman/meshes/limo_base.stl\n'}
+[4.751277] (-) TimerEvent: {}
+[4.807388] (ros_gz_example_application) JobEnded: {'identifier': 'ros_gz_example_application', 'rc': 0}
+[4.851731] (-) TimerEvent: {}
+[4.952367] (-) TimerEvent: {}
+[5.052940] (-) TimerEvent: {}
+[5.153726] (-) TimerEvent: {}
+[5.254295] (-) TimerEvent: {}
+[5.354875] (-) TimerEvent: {}
+[5.455716] (-) TimerEvent: {}
+[5.559090] (-) TimerEvent: {}
+[5.659448] (-) TimerEvent: {}
+[5.759911] (-) TimerEvent: {}
+[5.860409] (-) TimerEvent: {}
+[5.961449] (-) TimerEvent: {}
+[6.062436] (-) TimerEvent: {}
+[6.163052] (-) TimerEvent: {}
+[6.263727] (-) TimerEvent: {}
+[6.364757] (-) TimerEvent: {}
+[6.465395] (-) TimerEvent: {}
+[6.481743] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_ackerman/meshes/limo_base.dae\n'}
+[6.565528] (-) TimerEvent: {}
+[6.666113] (-) TimerEvent: {}
+[6.766578] (-) TimerEvent: {}
+[6.867129] (-) TimerEvent: {}
+[6.967748] (-) TimerEvent: {}
+[7.071166] (-) TimerEvent: {}
+[7.172029] (-) TimerEvent: {}
+[7.459189] (-) TimerEvent: {}
+[7.559953] (-) TimerEvent: {}
+[7.660541] (-) TimerEvent: {}
+[7.761070] (-) TimerEvent: {}
+[7.836417] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_ackerman/meshes/limo_wheel.stl\n'}
+[7.861244] (-) TimerEvent: {}
+[7.962720] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_diff_drive\n'}
+[7.963300] (-) TimerEvent: {}
+[7.965385] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_diff_drive/model.config\n'}
+[7.966038] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_diff_drive/model.sdf\n'}
+[7.966669] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_diff_drive/meshes\n'}
+[7.967843] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_diff_drive/meshes/limo_wheel.dae\n'}
+[8.063479] (-) TimerEvent: {}
+[8.163988] (-) TimerEvent: {}
+[8.239138] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_diff_drive/meshes/limo_base.stl\n'}
+[8.264199] (-) TimerEvent: {}
+[8.364669] (-) TimerEvent: {}
+[8.465473] (-) TimerEvent: {}
+[8.566051] (-) TimerEvent: {}
+[8.666662] (-) TimerEvent: {}
+[8.767371] (-) TimerEvent: {}
+[8.867833] (-) TimerEvent: {}
+[8.975855] (-) TimerEvent: {}
+[9.077235] (-) TimerEvent: {}
+[9.178177] (-) TimerEvent: {}
+[9.279340] (-) TimerEvent: {}
+[9.380430] (-) TimerEvent: {}
+[9.481127] (-) TimerEvent: {}
+[9.581940] (-) TimerEvent: {}
+[9.682446] (-) TimerEvent: {}
+[9.755317] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_diff_drive/meshes/limo_base.dae\n'}
+[9.782603] (-) TimerEvent: {}
+[9.883138] (-) TimerEvent: {}
+[9.983825] (-) TimerEvent: {}
+[10.084551] (-) TimerEvent: {}
+[10.185281] (-) TimerEvent: {}
+[10.285986] (-) TimerEvent: {}
+[10.395876] (-) TimerEvent: {}
+[10.497502] (-) TimerEvent: {}
+[10.598636] (-) TimerEvent: {}
+[10.699187] (-) TimerEvent: {}
+[10.799740] (-) TimerEvent: {}
+[10.900233] (-) TimerEvent: {}
+[11.000831] (-) TimerEvent: {}
+[11.101275] (-) TimerEvent: {}
+[11.201797] (-) TimerEvent: {}
+[11.302472] (-) TimerEvent: {}
+[11.332232] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models/limo_diff_drive/meshes/limo_wheel.stl\n'}
+[11.402620] (-) TimerEvent: {}
+[11.412643] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/environment/ros_gz_example_description.dsv\n'}
+[11.413532] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/environment/ros_gz_example_description.sh\n'}
+[11.416439] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ament_index/resource_index/package_run_dependencies/ros_gz_example_description\n'}
+[11.418585] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ament_index/resource_index/parent_prefix_path/ros_gz_example_description\n'}
+[11.420523] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/environment/ament_prefix_path.sh\n'}
+[11.422481] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/environment/ament_prefix_path.dsv\n'}
+[11.423429] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/environment/path.sh\n'}
+[11.424695] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/environment/path.dsv\n'}
+[11.425659] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/local_setup.bash\n'}
+[11.427217] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/local_setup.sh\n'}
+[11.429461] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/local_setup.zsh\n'}
+[11.430340] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/local_setup.dsv\n'}
+[11.431439] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.dsv\n'}
+[11.434463] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ament_index/resource_index/packages/ros_gz_example_description\n'}
+[11.434956] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/cmake/ros_gz_example_descriptionConfig.cmake\n'}
+[11.435606] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/cmake/ros_gz_example_descriptionConfig-version.cmake\n'}
+[11.437041] (ros_gz_example_description) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/package.xml\n'}
+[11.443392] (ros_gz_example_description) CommandEnded: {'returncode': 0}
+[11.484536] (ros_gz_example_description) JobEnded: {'identifier': 'ros_gz_example_description', 'rc': 0}
+[11.488584] (ros_gz_example_gazebo) JobStarted: {'identifier': 'ros_gz_example_gazebo'}
+[11.503120] (-) TimerEvent: {}
+[11.599898] (ros_gz_example_gazebo) JobProgress: {'identifier': 'ros_gz_example_gazebo', 'progress': 'cmake'}
+[11.602761] (ros_gz_example_gazebo) Command: {'cmd': ['/usr/bin/cmake', '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_gazebo', '-DBUILD_TESTING=ON', '-DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('IGN_GAZEBO_RESOURCE_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble')]), 'shell': False}
+[11.612307] (-) TimerEvent: {}
+[11.712993] (-) TimerEvent: {}
+[11.814111] (-) TimerEvent: {}
+[11.914657] (-) TimerEvent: {}
+[11.953877] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[12.014936] (-) TimerEvent: {}
+[12.115652] (-) TimerEvent: {}
+[12.216446] (-) TimerEvent: {}
+[12.316947] (-) TimerEvent: {}
+[12.418006] (-) TimerEvent: {}
+[12.518604] (-) TimerEvent: {}
+[12.531079] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[12.618696] (-) TimerEvent: {}
+[12.719118] (-) TimerEvent: {}
+[12.819674] (-) TimerEvent: {}
+[12.920235] (-) TimerEvent: {}
+[12.963435] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[13.020373] (-) TimerEvent: {}
+[13.120906] (-) TimerEvent: {}
+[13.221582] (-) TimerEvent: {}
+[13.227722] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[13.244429] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[13.246089] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[13.248044] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[13.258695] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[13.321763] (-) TimerEvent: {}
+[13.422412] (-) TimerEvent: {}
+[13.518339] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[13.522719] (-) TimerEvent: {}
+[13.547471] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[13.548268] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[13.555298] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[13.556069] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[13.622877] (-) TimerEvent: {}
+[13.723488] (-) TimerEvent: {}
+[13.824245] (-) TimerEvent: {}
+[13.924960] (-) TimerEvent: {}
+[13.993440] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[14.025135] (-) TimerEvent: {}
+[14.125734] (-) TimerEvent: {}
+[14.226340] (-) TimerEvent: {}
+[14.268072] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found ros_gz_example_description: 0.0.0 (/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/cmake)\n'}
+[14.322274] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-plugin1 -- found version 1.4.0\n'}
+[14.324161] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-plugin1\n'}
+[14.326519] (-) TimerEvent: {}
+[14.327062] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-plugin1> component [register]\n'}
+[14.332293] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-plugin1-register -- found version 1.4.0\n'}
+[14.333234] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-plugin1-register\n'}
+[14.342489] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4 -- found version 4.7.0\n'}
+[14.344285] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-common4\n'}
+[14.411079] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for dlfcn.h - found\n'}
+[14.426689] (-) TimerEvent: {}
+[14.527369] (-) TimerEvent: {}
+[14.607247] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for libdl - found\n'}
+[14.608919] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found DL: TRUE  \n'}
+[14.627499] (-) TimerEvent: {}
+[14.628089] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'uuid'\n"}
+[14.727735] (-) TimerEvent: {}
+[14.749422] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found uuid, version 2.37.2\n'}
+[14.827905] (-) TimerEvent: {}
+[14.848842] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found UUID: TRUE  \n'}
+[14.854364] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-common4> component [profiler]\n'}
+[14.860807] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4-profiler -- found version 4.7.0\n'}
+[14.861892] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-common4-profiler\n'}
+[14.886443] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-gazebo6 -- found version 6.17.0\n'}
+[14.887293] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-gazebo6\n'}
+[14.894599] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for sdformat12 -- found version 12.8.0\n'}
+[14.895939] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of sdformat12\n'}
+[14.905425] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'tinyxml2'\n"}
+[14.928063] (-) TimerEvent: {}
+[14.941296] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found tinyxml2, version 9.0.0\n'}
+[15.014721] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[15.015730] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-math6\n'}
+[15.022052] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-utils1 -- found version 1.5.1\n'}
+[15.022874] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-utils1\n'}
+[15.027123] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-plugin1 -- found version 1.4.0\n'}
+[15.027904] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-plugin1\n'}
+[15.028220] (-) TimerEvent: {}
+[15.028670] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-plugin1> component [loader]\n'}
+[15.033386] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-plugin1-loader -- found version 1.4.0\n'}
+[15.034298] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-plugin1-loader\n'}
+[15.036624] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-plugin1> component [register]\n'}
+[15.044817] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-transport11 -- found version 11.4.1\n'}
+[15.045514] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-transport11\n'}
+[15.128403] (-) TimerEvent: {}
+[15.229123] (-) TimerEvent: {}
+[15.329714] (-) TimerEvent: {}
+[15.430254] (-) TimerEvent: {}
+[15.530867] (-) TimerEvent: {}
+[15.674857] (-) TimerEvent: {}
+[15.775348] (-) TimerEvent: {}
+[15.875910] (-) TimerEvent: {}
+[15.976383] (-) TimerEvent: {}
+[16.076936] (-) TimerEvent: {}
+[16.177550] (-) TimerEvent: {}
+[16.278136] (-) TimerEvent: {}
+[16.378648] (-) TimerEvent: {}
+[16.479486] (-) TimerEvent: {}
+[16.580093] (-) TimerEvent: {}
+[16.680992] (-) TimerEvent: {}
+[16.782608] (-) TimerEvent: {}
+[16.883377] (-) TimerEvent: {}
+[16.984178] (-) TimerEvent: {}
+[17.089229] (-) TimerEvent: {}
+[17.198084] (-) TimerEvent: {}
+[17.300278] (-) TimerEvent: {}
+[17.400883] (-) TimerEvent: {}
+[17.501452] (-) TimerEvent: {}
+[17.602024] (-) TimerEvent: {}
+[17.703305] (-) TimerEvent: {}
+[17.803836] (-) TimerEvent: {}
+[17.904616] (-) TimerEvent: {}
+[18.005261] (-) TimerEvent: {}
+[18.050346] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") \n'}
+[18.105529] (-) TimerEvent: {}
+[18.206402] (-) TimerEvent: {}
+[18.307040] (-) TimerEvent: {}
+[18.407619] (-) TimerEvent: {}
+[18.508330] (-) TimerEvent: {}
+[18.608809] (-) TimerEvent: {}
+[18.709347] (-) TimerEvent: {}
+[18.810004] (-) TimerEvent: {}
+[18.910938] (-) TimerEvent: {}
+[19.011428] (-) TimerEvent: {}
+[19.112001] (-) TimerEvent: {}
+[19.212730] (-) TimerEvent: {}
+[19.313368] (-) TimerEvent: {}
+[19.414170] (-) TimerEvent: {}
+[19.514707] (-) TimerEvent: {}
+[19.615345] (-) TimerEvent: {}
+[19.690844] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Config-file not installed for ZeroMQ -- checking for pkg-config\n'}
+[19.699656] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'libzmq >= 4'\n"}
+[19.715528] (-) TimerEvent: {}
+[19.728932] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found libzmq , version 4.3.4\n'}
+[19.794382] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found ZeroMQ: TRUE (Required is at least version "4") \n'}
+[19.815776] (-) TimerEvent: {}
+[19.916927] (-) TimerEvent: {}
+[19.948764] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-utils1 -- found version 1.5.1\n'}
+[19.950185] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-utils1\n'}
+[19.951006] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-utils1> component [cli]\n'}
+[19.954836] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-utils1-cli -- found version 1.5.1\n'}
+[19.956069] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-utils1-cli\n'}
+[19.963890] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-msgs8 -- found version 8.7.0\n'}
+[19.964703] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-msgs8\n'}
+[20.016996] (-) TimerEvent: {}
+[20.117936] (-) TimerEvent: {}
+[20.218735] (-) TimerEvent: {}
+[20.319917] (-) TimerEvent: {}
+[20.420601] (-) TimerEvent: {}
+[20.521419] (-) TimerEvent: {}
+[20.622170] (-) TimerEvent: {}
+[20.722706] (-) TimerEvent: {}
+[20.823338] (-) TimerEvent: {}
+[20.923882] (-) TimerEvent: {}
+[21.024819] (-) TimerEvent: {}
+[21.125649] (-) TimerEvent: {}
+[21.226260] (-) TimerEvent: {}
+[21.326705] (-) TimerEvent: {}
+[21.427361] (-) TimerEvent: {}
+[21.527996] (-) TimerEvent: {}
+[21.555583] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found suitable version "3.12.4", minimum required is "3") \n'}
+[21.560398] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[21.628101] (-) TimerEvent: {}
+[21.654750] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-transport11> component [log]\n'}
+[21.664549] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-transport11-log -- found version 11.4.1\n'}
+[21.665553] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-transport11-log\n'}
+[21.668041] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-transport11> component [parameters]\n'}
+[21.672357] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-transport11-parameters -- found version 11.4.1\n'}
+[21.673432] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-transport11-parameters\n'}
+[21.676467] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-msgs8 -- found version 8.7.0\n'}
+[21.677353] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4 -- found version 4.7.0\n'}
+[21.678248] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-common4\n'}
+[21.678536] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for dlfcn.h - found\n'}
+[21.678697] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for libdl - found\n'}
+[21.724915] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-common4> component [profiler]\n'}
+[21.725694] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-common4> component [events]\n'}
+[21.728261] (-) TimerEvent: {}
+[21.730275] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4-events -- found version 4.7.0\n'}
+[21.734823] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-common4-events\n'}
+[21.735313] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[21.736750] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-common4> component [av]\n'}
+[21.747350] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4-av -- found version 4.7.0\n'}
+[21.748868] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-common4-av\n'}
+[21.759010] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'libswscale'\n"}
+[21.782525] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found libswscale, version 5.9.100\n'}
+[21.828466] (-) TimerEvent: {}
+[21.866668] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found SWSCALE: TRUE  \n'}
+[21.876866] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'libavdevice >= 56.4.100'\n"}
+[21.900654] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found libavdevice , version 58.13.100\n'}
+[21.928570] (-) TimerEvent: {}
+[21.974732] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found AVDEVICE: TRUE (Required is at least version "56.4.100") \n'}
+[21.985146] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'libavformat'\n"}
+[22.004724] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found libavformat, version 58.76.100\n'}
+[22.028750] (-) TimerEvent: {}
+[22.097971] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found AVFORMAT: TRUE  \n'}
+[22.110049] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'libavcodec'\n"}
+[22.128985] (-) TimerEvent: {}
+[22.132536] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found libavcodec, version 58.134.100\n'}
+[22.201861] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found AVCODEC: TRUE  \n'}
+[22.216537] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'libavutil'\n"}
+[22.229057] (-) TimerEvent: {}
+[22.235989] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found libavutil, version 56.70.100\n'}
+[22.301002] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found AVUTIL: TRUE  \n'}
+[22.326448] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-fuel_tools7 -- found version 7.3.1\n'}
+[22.328975] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-fuel_tools7\n'}
+[22.329252] (-) TimerEvent: {}
+[22.429582] (-) TimerEvent: {}
+[22.530170] (-) TimerEvent: {}
+[22.630804] (-) TimerEvent: {}
+[22.731382] (-) TimerEvent: {}
+[22.832274] (-) TimerEvent: {}
+[22.932987] (-) TimerEvent: {}
+[23.033725] (-) TimerEvent: {}
+[23.134382] (-) TimerEvent: {}
+[23.235089] (-) TimerEvent: {}
+[23.335783] (-) TimerEvent: {}
+[23.436573] (-) TimerEvent: {}
+[23.537207] (-) TimerEvent: {}
+[23.637906] (-) TimerEvent: {}
+[23.738604] (-) TimerEvent: {}
+[23.839183] (-) TimerEvent: {}
+[23.939727] (-) TimerEvent: {}
+[24.040254] (-) TimerEvent: {}
+[24.140817] (-) TimerEvent: {}
+[24.241605] (-) TimerEvent: {}
+[24.339161] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found CURL: /usr/lib/x86_64-linux-gnu/libcurl.so (found version "7.81.0")  \n'}
+[24.341831] (-) TimerEvent: {}
+[24.360308] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'jsoncpp'\n"}
+[24.398099] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found jsoncpp, version 1.9.5\n'}
+[24.442037] (-) TimerEvent: {}
+[24.480486] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found JSONCPP: TRUE  \n'}
+[24.502408] (ros_gz_example_gazebo) StdoutLine: {'line': b"-- Checking for module 'libzip'\n"}
+[24.535958] (ros_gz_example_gazebo) StdoutLine: {'line': b'--   Found libzip, version 1.7.3\n'}
+[24.542364] (-) TimerEvent: {}
+[24.613648] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found ZIP: TRUE  \n'}
+[24.615945] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4 -- found version 4.7.0\n'}
+[24.618021] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[24.620075] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-msgs8 -- found version 8.7.0\n'}
+[24.636722] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-gui6 -- found version 6.8.0\n'}
+[24.638935] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-gui6\n'}
+[24.642550] (-) TimerEvent: {}
+[24.743158] (-) TimerEvent: {}
+[24.843826] (-) TimerEvent: {}
+[24.944583] (-) TimerEvent: {}
+[25.045671] (-) TimerEvent: {}
+[25.146372] (-) TimerEvent: {}
+[25.246905] (-) TimerEvent: {}
+[25.347477] (-) TimerEvent: {}
+[25.447980] (-) TimerEvent: {}
+[25.548577] (-) TimerEvent: {}
+[25.655907] (-) TimerEvent: {}
+[25.756465] (-) TimerEvent: {}
+[25.857043] (-) TimerEvent: {}
+[25.957738] (-) TimerEvent: {}
+[26.058825] (-) TimerEvent: {}
+[26.159833] (-) TimerEvent: {}
+[26.260746] (-) TimerEvent: {}
+[26.288107] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[26.289109] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4 -- found version 4.7.0\n'}
+[26.290029] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-plugin1 -- found version 1.4.0\n'}
+[26.290880] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-transport11 -- found version 11.4.1\n'}
+[26.301291] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-rendering6 -- found version 6.6.3\n'}
+[26.302466] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-rendering6\n'}
+[26.303052] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[26.304015] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-math6\n'}
+[26.304393] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-math6> component [eigen3]\n'}
+[26.310575] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6-eigen3 -- found version 6.15.1\n'}
+[26.311774] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-math6-eigen3\n'}
+[26.325552] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4 -- found version 4.7.0\n'}
+[26.326627] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-common4\n'}
+[26.327393] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for dlfcn.h - found\n'}
+[26.327703] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for libdl - found\n'}
+[26.361007] (-) TimerEvent: {}
+[26.385204] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-common4> component [graphics]\n'}
+[26.389570] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4-graphics -- found version 4.7.0\n'}
+[26.390685] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-common4-graphics\n'}
+[26.391301] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[26.392112] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-utils1 -- found version 1.5.1\n'}
+[26.394871] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-common4> component [events]\n'}
+[26.396517] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-plugin1 -- found version 1.4.0\n'}
+[26.397428] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-plugin1\n'}
+[26.398170] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-plugin1> component [all]\n'}
+[26.402331] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for all libraries of ignition-plugin1 -- found version 1.4.0\n'}
+[26.403412] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-plugin1 -- found version 1.4.0\n'}
+[26.416397] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-msgs8 -- found version 8.7.0\n'}
+[26.461331] (-) TimerEvent: {}
+[26.561956] (-) TimerEvent: {}
+[26.662570] (-) TimerEvent: {}
+[26.667368] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-physics5 -- found version 5.3.2\n'}
+[26.668500] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-physics5\n'}
+[26.669551] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[26.670539] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-plugin1 -- found version 1.4.0\n'}
+[26.671812] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-utils1 -- found version 1.5.1\n'}
+[26.675718] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-physics5> component [heightmap]\n'}
+[26.684184] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-physics5-heightmap -- found version 5.3.2\n'}
+[26.685402] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-physics5-heightmap\n'}
+[26.686949] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4 -- found version 4.7.0\n'}
+[26.688353] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-physics5> component [mesh]\n'}
+[26.693342] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-physics5-mesh -- found version 5.3.2\n'}
+[26.694358] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-physics5-mesh\n'}
+[26.695002] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4 -- found version 4.7.0\n'}
+[26.696933] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-physics5> component [sdf]\n'}
+[26.702228] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-physics5-sdf -- found version 5.3.2\n'}
+[26.703295] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-physics5-sdf\n'}
+[26.704091] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for sdformat12 -- found version 12.8.0\n'}
+[26.713208] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6 -- found version 6.8.1\n'}
+[26.714274] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6\n'}
+[26.769072] (-) TimerEvent: {}
+[26.869829] (-) TimerEvent: {}
+[26.970568] (-) TimerEvent: {}
+[27.071501] (-) TimerEvent: {}
+[27.172373] (-) TimerEvent: {}
+[27.275315] (-) TimerEvent: {}
+[27.376145] (-) TimerEvent: {}
+[27.476990] (-) TimerEvent: {}
+[27.577897] (-) TimerEvent: {}
+[27.678613] (-) TimerEvent: {}
+[27.779204] (-) TimerEvent: {}
+[27.879935] (-) TimerEvent: {}
+[27.984412] (-) TimerEvent: {}
+[28.086114] (-) TimerEvent: {}
+[28.186854] (-) TimerEvent: {}
+[28.288570] (-) TimerEvent: {}
+[28.389315] (-) TimerEvent: {}
+[28.490044] (-) TimerEvent: {}
+[28.590710] (-) TimerEvent: {}
+[28.695970] (-) TimerEvent: {}
+[28.796624] (-) TimerEvent: {}
+[28.897339] (-) TimerEvent: {}
+[28.997944] (-) TimerEvent: {}
+[29.087980] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so (found version "3.12.4") \n'}
+[29.090258] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[29.093415] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-common4 -- found version 4.7.0\n'}
+[29.093799] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-transport11 -- found version 11.4.1\n'}
+[29.105934] (-) TimerEvent: {}
+[29.110761] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-rendering6 -- found version 6.6.3\n'}
+[29.126625] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-msgs8 -- found version 8.7.0\n'}
+[29.129536] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for sdformat12 -- found version 12.8.0\n'}
+[29.139479] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [air_pressure]\n'}
+[29.148328] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-air_pressure -- found version 6.8.1\n'}
+[29.152681] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-air_pressure\n'}
+[29.162021] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [altimeter]\n'}
+[29.169282] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-altimeter -- found version 6.8.1\n'}
+[29.172243] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-altimeter\n'}
+[29.179154] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [imu]\n'}
+[29.185642] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-imu -- found version 6.8.1\n'}
+[29.188177] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-imu\n'}
+[29.193358] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [force_torque]\n'}
+[29.199431] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-force_torque -- found version 6.8.1\n'}
+[29.201848] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-force_torque\n'}
+[29.205828] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [logical_camera]\n'}
+[29.206676] (-) TimerEvent: {}
+[29.216256] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-logical_camera -- found version 6.8.1\n'}
+[29.218820] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-logical_camera\n'}
+[29.223668] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [magnetometer]\n'}
+[29.238930] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-magnetometer -- found version 6.8.1\n'}
+[29.241591] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-magnetometer\n'}
+[29.246377] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [navsat]\n'}
+[29.251923] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-navsat -- found version 6.8.1\n'}
+[29.254131] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-navsat\n'}
+[29.258029] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [rendering]\n'}
+[29.299234] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-rendering -- found version 6.8.1\n'}
+[29.299512] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-rendering\n'}
+[29.306907] (-) TimerEvent: {}
+[29.324534] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [lidar]\n'}
+[29.330986] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-lidar -- found version 6.8.1\n'}
+[29.332251] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-lidar\n'}
+[29.333303] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6 -- found version 6.8.1\n'}
+[29.336087] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [gpu_lidar]\n'}
+[29.407234] (-) TimerEvent: {}
+[29.413954] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-gpu_lidar -- found version 6.8.1\n'}
+[29.417252] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-gpu_lidar\n'}
+[29.419178] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6 -- found version 6.8.1\n'}
+[29.429210] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [camera]\n'}
+[29.440633] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-camera -- found version 6.8.1\n'}
+[29.443300] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-camera\n'}
+[29.452456] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6 -- found version 6.8.1\n'}
+[29.457215] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [boundingbox_camera]\n'}
+[29.466243] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-boundingbox_camera -- found version 6.8.1\n'}
+[29.468903] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-boundingbox_camera\n'}
+[29.475536] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [segmentation_camera]\n'}
+[29.484757] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-segmentation_camera -- found version 6.8.1\n'}
+[29.487321] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-segmentation_camera\n'}
+[29.502175] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [depth_camera]\n'}
+[29.508130] (-) TimerEvent: {}
+[29.509433] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-depth_camera -- found version 6.8.1\n'}
+[29.514725] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-depth_camera\n'}
+[29.517715] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6 -- found version 6.8.1\n'}
+[29.523852] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [rgbd_camera]\n'}
+[29.541605] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-rgbd_camera -- found version 6.8.1\n'}
+[29.545379] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-rgbd_camera\n'}
+[29.546986] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6 -- found version 6.8.1\n'}
+[29.556398] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for <ignition-sensors6> component [thermal_camera]\n'}
+[29.568333] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6-thermal_camera -- found version 6.8.1\n'}
+[29.569316] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Searching for dependencies of ignition-sensors6-thermal_camera\n'}
+[29.570037] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-sensors6 -- found version 6.8.1\n'}
+[29.575136] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-rendering6 -- found version 6.6.3\n'}
+[29.578840] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-math6 -- found version 6.15.1\n'}
+[29.585431] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Looking for ignition-utils1 -- found version 1.5.1\n'}
+[29.608372] (-) TimerEvent: {}
+[29.709377] (-) TimerEvent: {}
+[29.809966] (-) TimerEvent: {}
+[29.910528] (-) TimerEvent: {}
+[30.011169] (-) TimerEvent: {}
+[30.112311] (-) TimerEvent: {}
+[30.212953] (-) TimerEvent: {}
+[30.313536] (-) TimerEvent: {}
+[30.414519] (-) TimerEvent: {}
+[30.515232] (-) TimerEvent: {}
+[30.615899] (-) TimerEvent: {}
+[30.716618] (-) TimerEvent: {}
+[30.817225] (-) TimerEvent: {}
+[30.917915] (-) TimerEvent: {}
+[31.018489] (-) TimerEvent: {}
+[31.119086] (-) TimerEvent: {}
+[31.219945] (-) TimerEvent: {}
+[31.320672] (-) TimerEvent: {}
+[31.421250] (-) TimerEvent: {}
+[31.521769] (-) TimerEvent: {}
+[31.593423] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[31.621971] (-) TimerEvent: {}
+[31.722609] (-) TimerEvent: {}
+[31.786494] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Configuring done\n'}
+[31.801945] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Generating done\n'}
+[31.811380] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Build files have been written to: /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo\n'}
+[31.822799] (-) TimerEvent: {}
+[31.840517] (ros_gz_example_gazebo) CommandEnded: {'returncode': 0}
+[31.842935] (ros_gz_example_gazebo) JobProgress: {'identifier': 'ros_gz_example_gazebo', 'progress': 'build'}
+[31.844246] (ros_gz_example_gazebo) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo', '--', '-j8', '-l8'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('IGN_GAZEBO_RESOURCE_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble')]), 'shell': False}
+[31.913958] (ros_gz_example_gazebo) CommandEnded: {'returncode': 0}
+[31.915859] (ros_gz_example_gazebo) JobProgress: {'identifier': 'ros_gz_example_gazebo', 'progress': 'install'}
+[31.920590] (ros_gz_example_gazebo) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('IGN_GAZEBO_RESOURCE_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_gazebo'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble')]), 'shell': False}
+[31.923020] (-) TimerEvent: {}
+[31.934746] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[31.935268] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds\n'}
+[31.936871] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds/diff_drive.sdf\n'}
+[31.939429] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/environment/ros_gz_example_gazebo.dsv\n'}
+[31.940487] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/environment/ros_gz_example_gazebo.sh\n'}
+[31.943482] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ament_index/resource_index/package_run_dependencies/ros_gz_example_gazebo\n'}
+[31.944215] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ament_index/resource_index/parent_prefix_path/ros_gz_example_gazebo\n'}
+[31.944665] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/environment/ament_prefix_path.sh\n'}
+[31.945152] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/environment/ament_prefix_path.dsv\n'}
+[31.945675] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/environment/path.sh\n'}
+[31.946469] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/environment/path.dsv\n'}
+[31.946819] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/local_setup.bash\n'}
+[31.947084] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/local_setup.sh\n'}
+[31.947788] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/local_setup.zsh\n'}
+[31.948011] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/local_setup.dsv\n'}
+[31.948173] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.dsv\n'}
+[31.948697] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ament_index/resource_index/packages/ros_gz_example_gazebo\n'}
+[31.949516] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/cmake/ros_gz_example_gazeboConfig.cmake\n'}
+[31.950052] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/cmake/ros_gz_example_gazeboConfig-version.cmake\n'}
+[31.950265] (ros_gz_example_gazebo) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/package.xml\n'}
+[31.953781] (ros_gz_example_gazebo) CommandEnded: {'returncode': 0}
+[31.999856] (ros_gz_example_gazebo) JobEnded: {'identifier': 'ros_gz_example_gazebo', 'rc': 0}
+[32.000739] (ros_gz_example_bringup) JobStarted: {'identifier': 'ros_gz_example_bringup'}
+[32.024994] (-) TimerEvent: {}
+[32.126301] (-) TimerEvent: {}
+[32.147392] (ros_gz_example_bringup) JobProgress: {'identifier': 'ros_gz_example_bringup', 'progress': 'cmake'}
+[32.153722] (ros_gz_example_bringup) Command: {'cmd': ['/usr/bin/cmake', '/home/isshadd/INF3995-102/robot/gazebo2/src/ros_gz_example_bringup', '-DBUILD_TESTING=ON', '-DCMAKE_INSTALL_PREFIX=/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('IGN_GAZEBO_RESOURCE_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('IGN_GAZEBO_PLUGIN_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo'), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble')]), 'shell': False}
+[32.226480] (-) TimerEvent: {}
+[32.327017] (-) TimerEvent: {}
+[32.374709] (ros_gz_example_bringup) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[32.427202] (-) TimerEvent: {}
+[32.527888] (-) TimerEvent: {}
+[32.628580] (-) TimerEvent: {}
+[32.729760] (-) TimerEvent: {}
+[32.830286] (-) TimerEvent: {}
+[32.931065] (-) TimerEvent: {}
+[33.031879] (-) TimerEvent: {}
+[33.094086] (ros_gz_example_bringup) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[33.132038] (-) TimerEvent: {}
+[33.232537] (-) TimerEvent: {}
+[33.333113] (-) TimerEvent: {}
+[33.433642] (-) TimerEvent: {}
+[33.504996] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[33.533909] (-) TimerEvent: {}
+[33.634624] (-) TimerEvent: {}
+[33.735181] (-) TimerEvent: {}
+[33.756437] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[33.771379] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[33.771879] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[33.772525] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[33.779157] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[33.835351] (-) TimerEvent: {}
+[33.935968] (-) TimerEvent: {}
+[34.026501] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[34.036307] (-) TimerEvent: {}
+[34.040156] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[34.040721] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[34.041379] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[34.045549] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[34.136422] (-) TimerEvent: {}
+[34.237788] (-) TimerEvent: {}
+[34.338455] (-) TimerEvent: {}
+[34.405950] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[34.438566] (-) TimerEvent: {}
+[34.539321] (-) TimerEvent: {}
+[34.613537] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Found ros_gz_example_description: 0.0.0 (/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/cmake)\n'}
+[34.614132] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Found ros_gz_example_gazebo: 0.0.0 (/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/cmake)\n'}
+[34.616116] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[34.639559] (-) TimerEvent: {}
+[34.740070] (-) TimerEvent: {}
+[34.780572] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Configuring done\n'}
+[34.791364] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Generating done\n'}
+[34.796142] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Build files have been written to: /home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup\n'}
+[34.811705] (ros_gz_example_bringup) CommandEnded: {'returncode': 0}
+[34.813395] (ros_gz_example_bringup) JobProgress: {'identifier': 'ros_gz_example_bringup', 'progress': 'build'}
+[34.815665] (ros_gz_example_bringup) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup', '--', '-j8', '-l8'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('IGN_GAZEBO_RESOURCE_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('IGN_GAZEBO_PLUGIN_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo'), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble')]), 'shell': False}
+[34.840339] (-) TimerEvent: {}
+[34.896590] (ros_gz_example_bringup) CommandEnded: {'returncode': 0}
+[34.902462] (ros_gz_example_bringup) JobProgress: {'identifier': 'ros_gz_example_bringup', 'progress': 'install'}
+[34.903260] (ros_gz_example_bringup) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup'], 'cwd': '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'isshadd'), ('GIT_ASKPASS', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LIBGL_ALWAYS_SOFTWARE', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/isshadd'), ('OLDPWD', '/home/isshadd/INF3995-102/robot'), ('TERM_PROGRAM_VERSION', '1.97.2'), ('NVM_BIN', '/home/isshadd/.nvm/versions/node/v22.14.0/bin'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-aacbec34-6779-41d0-b4bf-9b6eddf843f8.sock'), ('NVM_INC', '/home/isshadd/.nvm/versions/node/v22.14.0/include/node'), ('DEBUGPY_ADAPTER_ENDPOINTS', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-4aa1cbccdef389f7.txt'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/node'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('BUNDLED_DEBUGPY_PATH', '/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/libs/debugpy'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('NVM_DIR', '/home/isshadd/.nvm'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'isshadd'), ('NAME', 'DESKTOP-U4NUKI5'), ('WSL_INTEROP', '/run/WSL/14337_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/isshadd/.vscode-server/bin/e54c774e0add60467559eb0d1e229c6452cf8447/bin/remote-cli:/home/isshadd/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Aldec/Active-HDL-Student-Edition/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Admin/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Admin/AppData/Local/gitkraken/bin:/mnt/c/Users/Admin/AppData/Local/Microsoft/WinGet/Packages/Schniz.fnm_Microsoft.Winget.Source_8wekyb3d8bbwe:/mnt/c/Users/Admin/AppData/Roaming/npm:/snap/bin:/home/isshadd/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/isshadd/.vscode-server/extensions/ms-python.debugpy-2025.0.1-linux-x64/bundled/scripts/noConfigScripts'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-43050e4be8.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('IGN_GAZEBO_RESOURCE_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/share/ros_gz_example_gazebo/worlds:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description/share/ros_gz_example_description/models'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('IGN_GAZEBO_PLUGIN_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo/lib/ros_gz_example_gazebo'), ('PWD', '/home/isshadd/INF3995-102/robot/gazebo2/build/ros_gz_example_bringup'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up'), ('CMAKE_PREFIX_PATH', '/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_gazebo:/home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_description:/opt/ros/humble')]), 'shell': False}
+[34.917058] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[34.917641] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/launch\n'}
+[34.918513] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/launch/diff_drive.launch.py\n'}
+[34.919093] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/config\n'}
+[34.920063] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/config/diff_drive.rviz\n'}
+[34.920806] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/config/limo_diff_drive.rviz\n'}
+[34.921288] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/config/ros_gz_example_bridge.yaml\n'}
+[34.921985] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/config/cartographer_2d.lua\n'}
+[34.924107] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ament_index/resource_index/package_run_dependencies/ros_gz_example_bringup\n'}
+[34.924996] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ament_index/resource_index/parent_prefix_path/ros_gz_example_bringup\n'}
+[34.925741] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/environment/ament_prefix_path.sh\n'}
+[34.926299] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/environment/ament_prefix_path.dsv\n'}
+[34.926662] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/environment/path.sh\n'}
+[34.927210] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/environment/path.dsv\n'}
+[34.927702] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/local_setup.bash\n'}
+[34.927870] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/local_setup.sh\n'}
+[34.928813] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/local_setup.zsh\n'}
+[34.929203] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/local_setup.dsv\n'}
+[34.929611] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.dsv\n'}
+[34.930321] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ament_index/resource_index/packages/ros_gz_example_bringup\n'}
+[34.932055] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/cmake/ros_gz_example_bringupConfig.cmake\n'}
+[34.932758] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/cmake/ros_gz_example_bringupConfig-version.cmake\n'}
+[34.933203] (ros_gz_example_bringup) StdoutLine: {'line': b'-- Installing: /home/isshadd/INF3995-102/robot/gazebo2/install/ros_gz_example_bringup/share/ros_gz_example_bringup/package.xml\n'}
+[34.936998] (ros_gz_example_bringup) CommandEnded: {'returncode': 0}
+[34.941870] (-) TimerEvent: {}
+[35.045249] (ros_gz_example_bringup) JobEnded: {'identifier': 'ros_gz_example_bringup', 'rc': 0}
+[35.049507] (-) TimerEvent: {}
+[35.049842] (-) EventReactorShutdown: {}

@@ -6,8 +6,9 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MissionService } from '../mission/mission.service';
+import * as rclnodejs from 'rclnodejs';
 import {
   MissionCommandMessage,
   WheelModeMessage,
@@ -35,37 +36,52 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private reconnectionAttempts: Map<string, number> = new Map();
   private readonly MAX_RECONNECTION_ATTEMPTS = 5;
   private robotPositions: Map<string, RobotPosition[]> = new Map();
-
-  private testInterval: NodeJS.Timeout;
+  private readonly logger = new Logger(RobotGateway.name);
+  private feedbackNode: rclnodejs.Node;
 
   constructor(private readonly missionService: MissionService) {
-    // this.startWebSocketTest();
+    this.initROS2();
   }
 
-  // private startWebSocketTest() {
-  //   console.log('Démarrage du test WebSocket...');
-  //   let x = 0;
-  //   let y = 0;
+  private async initROS2() {
+    try {
+      await rclnodejs.init();
+      this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
+      this.feedbackNode.createSubscription(
+        'std_msgs/msg/String',
+        '/feedback',
+        (msg: any) => {
+          try {
+            const feedbackData = JSON.parse(msg.data);
+            if (feedbackData.robot_id && feedbackData.position) {
+              this.handleRobotPosition(
+                feedbackData.robot_id,
+                feedbackData.position,
+              );
+              this.logger.debug(
+                `Position reçue pour ${feedbackData.robot_id}: ${JSON.stringify(feedbackData.position)}`,
+              );
+            }
+          } catch (error) {
+            this.logger.error(
+              'Erreur lors du traitement du message feedback:',
+              error,
+            );
+          }
+        },
+      );
 
-  //   this.testInterval = setInterval(() => {
-  //     // Simuler un mouvement en cercle
-  //     x = 2 * Math.cos(Date.now() / 1000);
-  //     y = 2 * Math.sin(Date.now() / 1000);
-
-  //     const testPosition: RobotPosition = {
-  //       x,
-  //       y,
-  //       timestamp: Date.now() / 1000
-  //     };
-
-  //     this.handleRobotPosition('robot1_102', testPosition);
-  //     console.log('Position test envoyée:', testPosition);
-  //   }, 1000); // Envoyer une nouvelle position chaque seconde
-  // }
+      rclnodejs.spin(this.feedbackNode);
+      this.logger.log('Subscriber ROS2 initialisé pour le topic /feedback');
+    } catch (error) {
+      this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
+    }
+  }
 
   ngOnDestroy() {
-    if (this.testInterval) {
-      clearInterval(this.testInterval);
+    if (this.feedbackNode) {
+      this.feedbackNode.destroy();
+      this.logger.log('Noeud ROS2 de feedback détruit');
     }
   }
 

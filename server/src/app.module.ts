@@ -1,9 +1,16 @@
 import { Module } from '@nestjs/common';
-import { RobotController } from 'src/controllers/robot.controller';
-import { MissionModule } from './mission/mission.module';  // Ensure the path is correct
+import { MongooseModule } from '@nestjs/mongoose';
+import { RobotModule } from './robot/robot.module';
+import { LogsModule } from './logs/logs.module';
+import { config } from 'dotenv';
+
+config(); // Load environment variables
 
 @Module({
-  imports: [MissionModule],  // Import MissionModule
-  controllers: [RobotController],
+  imports: [
+    MongooseModule.forRoot(process.env.MONGODB_URI),
+    RobotModule,
+    LogsModule
+  ],
 })
 export class AppModule {}

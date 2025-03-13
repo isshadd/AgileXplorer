@@ -1,136 +1,79 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Mission } from '../interfaces/mission.interface';
 import { v4 as uuidv4 } from 'uuid';
-import * as rclnodejs from 'rclnodejs';
+import { LogsService } from '../logs/logs.service';
 
 @Injectable()
 export class MissionService {
   private readonly logger = new Logger(MissionService.name);
-  private missions: Map<string, Mission> = new Map();
-  private currentMission: Mission | null = null;
-  // On stocke les noeuds et publishers dans des Maps
-  private nodes: Map<string, any> = new Map();
-  private publishers: Map<string, any> = new Map();
-  private initPromise: Promise<void>;
+  private activeMissionId: string | null = null;
 
-  constructor() {
-    // Initialiser rclnodejs une seule fois
-    this.initPromise = rclnodejs.init()
-      .then(() => {
-        // Liste des identifiants de robots à gérer
-        const robotIds = ['robot1_102', 'robot2_102'];
-        robotIds.forEach((robotId) => {
-          // Création du noeud et du publisher pour les missions
-          const missionNode = rclnodejs.createNode(`mission_service_node_${robotId}`);
-          const missionPublisher = missionNode.createPublisher('std_msgs/msg/String', `/${robotId}/messages`);
-          rclnodejs.spin(missionNode);
-          this.nodes.set(`${robotId}_mission`, missionNode);
-          this.publishers.set(`${robotId}_mission`, missionPublisher);
-          this.logger.log(`Noeud de mission créé pour ${robotId}`);
+  constructor(private readonly logsService: LogsService) {
+    this.logger.log('MissionService initialized');
+  }
 
-          // Création du noeud et du publisher pour l’identification
-          const identificationNode = rclnodejs.createNode(`identification_service_node_${robotId}`);
-          const identificationPublisher = identificationNode.createPublisher('std_msgs/msg/Empty', `/${robotId}/identify`);
-          rclnodejs.spin(identificationNode);
-          this.nodes.set(`${robotId}_identification`, identificationNode);
-          this.publishers.set(`${robotId}_identification`, identificationPublisher);
-          this.logger.log(`Noeud d’identification créé pour ${robotId}`);
-        });
-        this.logger.log('rclnodejs initialisé et tous les noeuds sont en exécution');
-      })
-      .catch((err) => {
-        this.logger.error('Échec de l’init de rclnodejs', err);
+  async startMission() {
+    this.activeMissionId = uuidv4();
+    this.logger.log(`Starting mission with ID: ${this.activeMissionId}`);
+    
+    try {
+      const log = await this.logsService.create({
+        type: 'MISSION_START',
+        message: 'Mission started',
+        missionId: this.activeMissionId,
+        data: {
+          timestamp: new Date().toISOString()
+        }
       });
-  }
-
-  async startMission(robotId: string): Promise<{ message: string }> {
-    await this.initPromise;
-    this.logger.log(`Démarrage de la mission pour ${robotId}`);
-    // Sélection du publisher de mission pour le robot concerné
-    const publisherKey = `${robotId}_mission`;
-    const publisher = this.publishers.get(publisherKey);
-    if (!publisher) {
-      this.logger.error(`Aucun publisher de mission trouvé pour ${robotId}`);
-      return { message: `Aucun publisher de mission trouvé pour ${robotId}` };
+      
+      this.logger.debug(`Created mission start log`);
+      return { missionId: this.activeMissionId };
+    } catch (error) {
+      this.logger.error(`Error creating mission start log: ${error.message}`, error.stack);
+      throw error;
     }
-    const message = {
-      data: JSON.stringify({ action: 'start_mission', robot_id: robotId }),
-    };
-    publisher.publish(message);
-    this.logger.log(`Message start_mission publié sur /${robotId}/messages`);
-    return { message: `Mission démarrée pour ${robotId}` };
   }
 
-  async stopMission(robotId: string): Promise<{ message: string }> {
-    await this.initPromise;
-    this.logger.log(`Arrêt de la mission pour ${robotId}`);
-    const publisherKey = `${robotId}_mission`;
-    const publisher = this.publishers.get(publisherKey);
-    if (!publisher) {
-      this.logger.error(`Aucun publisher de mission trouvé pour ${robotId}`);
-      return { message: `Aucun publisher de mission trouvé pour ${robotId}` };
-    }
-    const message = {
-      data: JSON.stringify({ action: 'end_mission', robot_id: robotId }),
-    };
-    publisher.publish(message);
-    this.logger.log(`Message end_mission publié sur /${robotId}/messages`);
-    return { message: `Mission arrêtée pour ${robotId}` };
-  }
-
-  async identify(robotId: string): Promise<{ message: string }> {
-    await this.initPromise;
-    this.logger.log(`Envoi du signal d’identification pour ${robotId}`);
-    const publisherKey = `${robotId}_identification`;
-    const publisher = this.publishers.get(publisherKey);
-    if (!publisher) {
-      this.logger.error(`Aucun publisher d’identification trouvé pour ${robotId}`);
-      return { message: `Aucun publisher d’identification trouvé pour ${robotId}` };
-    }
-    const message = {
-      data: JSON.stringify({ action: 'identify', robot_id: robotId }),
-    };
-    publisher.publish(message);
-    this.logger.log(`Message d’identification publié sur /${robotId}/messages`);
-    return { message: `Signal d’identification envoyé pour ${robotId}` };
-  }
-
-  async startMissionsAll(): Promise<{ message: string }> {
-    await this.initPromise;
-    this.logger.log(`Démarrage de la mission pour tous les robots`);
-    const responses: string[] = [];
-    // Itérer sur tous les publishers de mission
-    this.publishers.forEach((publisher, key) => {
-      if (key.endsWith('_mission')) {
-        // Récupérer l'identifiant du robot (la partie avant "_mission")
-        const robotId = key.split('_mission')[0];
-        const message = {
-          data: JSON.stringify({ action: 'start_mission', robot_id: robotId })
-        };
-        publisher.publish(message);
-        this.logger.log(`Message start_mission publié sur /${robotId}/messages`);
-        responses.push(`Mission démarrée pour ${robotId}`);
+  async stopMission() {
+    const stoppedMissionId = this.activeMissionId;
+    this.logger.log(`Stopping mission with ID: ${stoppedMissionId}`);
+    
+    if (stoppedMissionId) {
+      try {
+        const log = await this.logsService.create({
+          type: 'MISSION_STOP',
+          message: 'Mission stopped',
+          missionId: stoppedMissionId,
+          data: {
+            timestamp: new Date().toISOString()
+          }
+        });
+        
+        this.logger.debug(`Created mission stop log`);
+      } catch (error) {
+        this.logger.error(`Error creating mission stop log: ${error.message}`, error.stack);
+        throw error;
       }
-    });
-    return { message: responses.join(' | ') };
+    } else {
+      this.logger.warn('Attempted to stop mission but no active mission found');
+    }
+    
+    this.activeMissionId = null;
+    return { stoppedMissionId };
   }
-  
-  async stopMissionsAll(): Promise<{ message: string }> {
-    await this.initPromise;
-    this.logger.log(`Arrêt de la mission pour tous les robots`);
-    const responses: string[] = [];
-    this.publishers.forEach((publisher, key) => {
-      if (key.endsWith('_mission')) {
-        const robotId = key.split('_mission')[0];
-        const message = {
-          data: JSON.stringify({ action: 'end_mission', robot_id: robotId })
-        };
-        publisher.publish(message);
-        this.logger.log(`Message end_mission publié sur /${robotId}/messages`);
-        responses.push(`Mission arrêtée pour ${robotId}`);
-      }
-    });
-    return { message: responses.join(' | ') };
+
+  getActiveMissionId() {
+    return this.activeMissionId;
   }
-  
+
+  async getMissionLogs(missionId: string) {
+    this.logger.log(`Getting logs for mission ID: ${missionId}`);
+    try {
+      const logs = await this.logsService.findByMissionId(missionId);
+      this.logger.debug(`Found ${logs.length} logs for mission ID: ${missionId}`);
+      return logs;
+    } catch (error) {
+      this.logger.error(`Error getting logs for mission ID ${missionId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 }

@@ -1,1 +1,0 @@
-Invoking command in '/home/issam/Bureau/INF3995-102/robot/gazebo2/build/ros_gz_example_application': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/issam/Bureau/INF3995-102/robot/gazebo2/build/ros_gz_example_application -- -j8 -l8

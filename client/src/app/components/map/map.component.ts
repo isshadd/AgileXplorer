@@ -38,6 +38,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly ZOOM_FACTOR = 1.2;
   private readonly MIN_SCALE = 10;
   private readonly MAX_SCALE = 200;
+  private backgroundImage: HTMLImageElement | null = null;
 
   constructor(private websocketService: WebSocketService) {}
 
@@ -74,7 +75,13 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d')!;
     this.resizeCanvas();
-    this.startDrawLoop();
+
+    // Load background image
+    this.backgroundImage = new Image();
+    this.backgroundImage.src = '/map.png';
+    this.backgroundImage.onload = () => {
+      this.startDrawLoop();
+    };
   }
 
   ngOnDestroy(): void {
@@ -119,51 +126,25 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     const canvas = this.canvasRef.nativeElement;
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Dessiner la grille
-    this.drawGrid();
+    // Dessiner l'image de fond
+    if (this.backgroundImage) {
+      // Calculer la taille de l'image mise à l'échelle
+      const scaledWidth = canvas.width;
+      const scaledHeight = canvas.height;
+      
+      // Dessiner l'image centrée et mise à l'échelle
+      this.ctx.save();
+      this.ctx.translate(this.centerX, this.centerY);
+      this.ctx.scale(this.scale / 50, this.scale / 50); // Ajuster l'échelle relative à l'échelle par défaut
+      this.ctx.translate(-scaledWidth/2, -scaledHeight/2);
+      this.ctx.drawImage(this.backgroundImage, 0, 0, scaledWidth, scaledHeight);
+      this.ctx.restore();
+    }
 
     // Dessiner les parcours des robots
     this.robotTrails.forEach(trail => {
       this.drawRobotTrail(trail);
     });
-  }
-
-  private drawGrid(): void {
-    const canvas = this.canvasRef.nativeElement;
-    this.ctx.strokeStyle = '#CCCCCC';
-    this.ctx.lineWidth = 1;
-
-    // Lignes verticales
-    for (let x = this.centerX % this.scale; x < canvas.width; x += this.scale) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, 0);
-      this.ctx.lineTo(x, canvas.height);
-      this.ctx.stroke();
-    }
-
-    // Lignes horizontales
-    for (let y = this.centerY % this.scale; y < canvas.height; y += this.scale) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(0, y);
-      this.ctx.lineTo(canvas.width, y);
-      this.ctx.stroke();
-    }
-
-    // Axes
-    this.ctx.strokeStyle = '#000000';
-    this.ctx.lineWidth = 2;
-    
-    // Axe X
-    this.ctx.beginPath();
-    this.ctx.moveTo(0, this.centerY);
-    this.ctx.lineTo(canvas.width, this.centerY);
-    this.ctx.stroke();
-
-    // Axe Y
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.centerX, 0);
-    this.ctx.lineTo(this.centerX, canvas.height);
-    this.ctx.stroke();
   }
 
   private drawRobotTrail(trail: RobotTrail): void {

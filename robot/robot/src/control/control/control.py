@@ -34,6 +34,7 @@ class MoveController(Node):
         self.current_angular = 0.0
         self.current_position = {"x": 0.0, "y": 0.0}
         self.battery_level = 100
+        self.current_heading = 0.0
 
     def movement_callback(self, msg):
         try:

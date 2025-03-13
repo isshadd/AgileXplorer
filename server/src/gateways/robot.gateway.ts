@@ -63,14 +63,17 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private async initROS2() {
     try {
-      await rclnodejs.init();
       this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
       this.feedbackNode.createSubscription(
         'std_msgs/msg/String',
         '/feedback',
         (msg: any) => {
+          this.logger.log(`Message feedback reçu brut: ${JSON.stringify(msg)}`);
           try {
             const feedbackData = JSON.parse(msg.data);
+            this.logger.debug(
+              `Données feedback parsées: ${JSON.stringify(feedbackData)}`,
+            );
             if (feedbackData.robot_id && feedbackData.position) {
               this.handleRobotPosition(
                 feedbackData.robot_id,
@@ -79,6 +82,8 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
               this.logger.debug(
                 `Position reçue pour ${feedbackData.robot_id}: ${JSON.stringify(feedbackData.position)}`,
               );
+            } else {
+              this.logger.warn('Feedback incomplet reçu:', feedbackData);
             }
           } catch (error) {
             this.logger.error(

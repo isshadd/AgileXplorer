@@ -3,6 +3,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 import json
+import math
 
 class MoveController(Node):
 
@@ -101,10 +102,12 @@ class MoveController(Node):
         self.current_angular = 0.0
 
     def publish_feedback(self):
-        dt = 1.0
-        # Calcul de la nouvelle position en tenant compte de la rotation
-        self.current_position["x"] += self.current_speed * dt * (1 if abs(self.current_angular) < 0.1 else 0)
-        self.current_position["y"] += self.current_speed * dt * (1 if abs(self.current_angular) >= 0.1 else 0)
+        dt = 0.1
+        # Mise à jour de l'angle courant (en radians)
+        self.current_heading = (self.current_heading + self.current_angular * dt) % (2 * math.pi)
+        # Mise à jour de la position selon la vitesse et l'angle courant
+        self.current_position["x"] += self.current_speed * dt * math.cos(self.current_heading)
+        self.current_position["y"] += self.current_speed * dt * math.sin(self.current_heading)
         
         feedback = {
             "speed": self.current_speed,

@@ -54,7 +54,7 @@ class MoveController(Node):
             elif command['action'] == 'start_mission':
                 self._cancel_current_action()
                 self.current_speed = 0.1
-                self.current_angular = 0.0
+                self.current_angular = 0.2
                 self.action_duration = 3000
                 self.start_action_timer()
             elif command['action'] == 'end_mission':

@@ -14,7 +14,7 @@ def generate_launch_description():
 
     id_arg = DeclareLaunchArgument(
         'id',
-        default_value='robot1_102',
+        default_value='102robot1',
         description='Namespace ID for the robot'
     )
 

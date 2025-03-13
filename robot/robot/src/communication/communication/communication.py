@@ -1,8 +1,10 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
+from nav_msgs.msg import Odometry
 import json
 from std_msgs.msg import Empty
+
 
 class CommunicationController(Node):
 
@@ -19,6 +21,7 @@ class CommunicationController(Node):
         self.movement_publisher = self.create_publisher(String, movement_topic, 10)
         self.get_logger().info(f"Publishing to: {movement_topic}")
 
+        self.odom_subscription = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
         start_topic = f'/{self.robot_id}/start_mission'
         end_topic = f'/{self.robot_id}/end_mission'
         self.start_mission_publisher = self.create_publisher(Empty, start_topic, 10)
@@ -45,13 +48,31 @@ class CommunicationController(Node):
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement du message: {str(e)}")
 
-    def feedback_callback(self, msg):
+    def odom_callback(self, msg):
         try:
+            position = msg.pose.pose.position
+            orientation = msg.pose.pose.orientation
+            
+            # Création d'un message formaté avec les données d'odométrie
+            feedback_data = {
+                "position": {
+                    "x": position.x,
+                    "y": position.y,
+                    "z": position.z
+                },
+                "orientation": {
+                    "x": orientation.x,
+                    "y": orientation.y,
+                    "z": orientation.z,
+                    "w": orientation.w
+                }
+            }
+            
             server_msg = String()
-            server_msg.data = msg.data
+            server_msg.data = json.dumps(feedback_data)
             self.server_feedback_publisher.publish(server_msg)
         except Exception as e:
-            self.get_logger().error(f"Erreur lors du transfert du feedback: {str(e)}")
+            self.get_logger().error(f"Erreur lors du transfert des données d'odométrie: {str(e)}")
 
 
 def main(args=None):

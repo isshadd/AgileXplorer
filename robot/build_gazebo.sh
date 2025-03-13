@@ -1,5 +1,5 @@
 # /bin/bash
-cd gazebo
+cd gazebo2
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 colcon build --cmake-args -DBUILD_TESTING=ON

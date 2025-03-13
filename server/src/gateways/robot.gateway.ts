@@ -47,26 +47,26 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
       this.feedbackNode.createSubscription(
-        'std_msgs/msg/String',
-        '/feedback',
+        'nav_msgs/msg/Odometry',
+        '/odom',
         (msg: any) => {
-          this.logger.log(`Message feedback reçu brut: ${JSON.stringify(msg)}`);
+          this.logger.log(`Message d'odométrie reçu`);
           try {
-            const feedbackData = JSON.parse(msg.data);
+            // Extraire les données de position du message d'odométrie
+            const position = {
+              x: msg.pose.pose.position.x,
+              y: msg.pose.pose.position.y,
+              timestamp: Date.now(),
+            };
+
+            // Pour l'instant on utilise un ID fixe car l'odométrie ne contient pas l'ID du robot
+            // TODO: Adapter selon votre logique d'identification des robots
+            const robotId = 'robot1_102';
+
+            this.handleRobotPosition(robotId, position);
             this.logger.debug(
-              `Données feedback parsées: ${JSON.stringify(feedbackData)}`,
+              `Position reçue pour ${robotId}: ${JSON.stringify(position)}`,
             );
-            if (feedbackData.robot_id && feedbackData.position) {
-              this.handleRobotPosition(
-                feedbackData.robot_id,
-                feedbackData.position,
-              );
-              this.logger.debug(
-                `Position reçue pour ${feedbackData.robot_id}: ${JSON.stringify(feedbackData.position)}`,
-              );
-            } else {
-              this.logger.warn('Feedback incomplet reçu:', feedbackData);
-            }
           } catch (error) {
             this.logger.error(
               'Erreur lors du traitement du message feedback:',
@@ -77,7 +77,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       );
 
       rclnodejs.spin(this.feedbackNode);
-      this.logger.log('Subscriber ROS2 initialisé pour le topic /feedback');
+      this.logger.log('Subscriber ROS2 initialisé pour le topic /odom');
     } catch (error) {
       this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
     }

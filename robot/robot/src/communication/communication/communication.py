@@ -15,11 +15,9 @@ class CommunicationController(Node):
         # Topics pour la communication avec le robot
         messages_topic = f'/{self.robot_id}/messages'
         self.subscription = self.create_subscription(String, messages_topic, self.messages_callback, 10)
-        self.get_logger().info(f"Subscribed to: {messages_topic}")
 
         movement_topic = f'/{self.robot_id}/movement'
         self.movement_publisher = self.create_publisher(String, movement_topic, 10)
-        self.get_logger().info(f"Publishing to: {movement_topic}")
 
         self.odom_subscription = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
         start_topic = f'/{self.robot_id}/start_mission'
@@ -33,15 +31,16 @@ class CommunicationController(Node):
         self.mission_active = False
         self.empty = Empty()
 
-        # Souscription à l'odométrie
-        self.last_odom_time = self.get_clock().now().seconds_nanoseconds()[0]
+        # Souscription à l'odométrie avec le bon namespace
+        odom_topic = f'/{self.robot_id}/odom'  # Correspond au remapping dans limo_base.launch.py
         self.odom_subscription = self.create_subscription(
             Odometry, 
-            '/odom',  # Le robot publie sur ce topic
+            odom_topic,
             self.odom_callback,
-            qos_profile=10
+            10
         )
-        self.get_logger().info("Subscribed to /odom for real-time position tracking")
+        self.get_logger().info(f"Écoute de l'odométrie sur: {odom_topic}")
+        self.get_logger().info("Le noeud va maintenant recevoir les données d'odométrie du robot...")
 
     def messages_callback(self, msg):
         try:
@@ -61,24 +60,22 @@ class CommunicationController(Node):
 
     def odom_callback(self, msg):
         try:
-            current_time = self.get_clock().now().seconds_nanoseconds()[0]
+            # Log pour déboguer l'odométrie
+            self.get_logger().debug(f"Odométrie reçue - Position: ({msg.pose.pose.position.x}, {msg.pose.pose.position.y})")
             
-            # Le robot envoie continuellement des données d'odométrie, même quand il est 
-            # déplacé physiquement. Ces données sont utilisées pour suivre la position.
+            # Publication de la position
             position_data = {
                 "robot_id": self.robot_id,
                 "position": {
                     "x": msg.pose.pose.position.x,
                     "y": msg.pose.pose.position.y,
-                    "timestamp": current_time
+                    "timestamp": self.get_clock().now().seconds_nanoseconds()[0]
                 }
             }
-
-            # Publication des données de position
+            
             feedback_msg = String()
             feedback_msg.data = json.dumps(position_data)
             self.position_publisher.publish(feedback_msg)
-            self.last_odom_time = current_time
             
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")

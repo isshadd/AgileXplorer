@@ -14,7 +14,6 @@ import {
   WheelModeMessage,
   RobotStatesMessage,
   RobotPositionMessage,
-  MissionLogMessage,
   ErrorMessage,
   RobotPosition,
 } from '../interfaces/websocket.interface';
@@ -72,13 +71,10 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
             const data = JSON.parse(msg.data);
             if (data.robot_id && data.position) {
               this.handleRobotPosition(data.robot_id, data.position);
-              this.logger.debug(
-                `Position reçue pour ${data.robot_id}: ${JSON.stringify(data.position)}`,
-              );
             }
           } catch (error) {
             this.logger.error(
-              'Erreur lors du traitement du message server_feedback:',
+              'Erreur lors du traitement des données de position:',
               error,
             );
           }
@@ -120,9 +116,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
       rclnodejs.spin(this.feedbackNode);
-      this.logger.log(
-        'Subscriber ROS2 initialisé pour le topic /server_feedback',
-      );
     } catch (error) {
       this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
     }
@@ -144,7 +137,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ngOnDestroy() {
     if (this.feedbackNode) {
       this.feedbackNode.destroy();
-      this.logger.log('Noeud ROS2 de feedback détruit');
     }
   }
     try {
@@ -167,7 +159,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
     this.connectedClients.add(client);
     this.reconnectionAttempts.set(client.id, 0);
   async logCommand(robotId: string, command: string) {
@@ -198,7 +189,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.sensorDataInterval = setInterval(() => this.logSensorData(), 1000);
   }
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
     this.connectedClients.delete(client);
 
   private stopSensorDataLogging() {
@@ -227,7 +217,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       }, 3000);
     } else {
-      console.warn(`Client ${client.id} exceeded max reconnection attempts`);
       this.reconnectionAttempts.delete(client.id);
     }
   }
@@ -235,9 +224,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private handleReconnectionTimeout(client: Socket) {
     const attempts = this.reconnectionAttempts.get(client.id) || 0;
     if (attempts >= this.MAX_RECONNECTION_ATTEMPTS) {
-      console.error(
-        `Client ${client.id} failed to reconnect after ${attempts} attempts`,
-      );
       this.broadcastError({
         message: `Client ${client.id} connection lost`,
         code: 'CONNECTION_LOST',
@@ -268,7 +254,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
           throw new Error(`Unknown command type: ${message.payload.type}`);
       }
     } catch (error) {
-      console.error('Error handling mission command:', error);
       this.emitError(client, {
         message: error.message,
         code: 'MISSION_COMMAND_ERROR',
@@ -282,7 +267,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const { robotId, mode } = message.payload;
       await this.missionService.setWheelMode(robotId, mode);
     } catch (error) {
-      console.error('Error setting wheel mode:', error);
       this.emitError(client, {
         message: error.message,
         code: 'WHEEL_MODE_ERROR',
@@ -299,19 +283,17 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public handleRobotPosition(robotId: string, position: RobotPosition) {
-    // Stocker la position
     if (!this.robotPositions.has(robotId)) {
       this.robotPositions.set(robotId, []);
     }
     this.robotPositions.get(robotId).push(position);
 
-    // Garder seulement les 1000 dernières positions pour chaque robot
+    // Garder seulement les 1000 dernières positions
     const positions = this.robotPositions.get(robotId);
     if (positions.length > 1000) {
       positions.shift();
     }
 
-    // Diffuser la nouvelle position
     const message: RobotPositionMessage = {
       type: 'ROBOT_POSITION',
       payload: {
@@ -334,7 +316,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       };
       client.emit('ROBOT_STATES', message);
     } catch (error) {
-      console.error('Error sending robot states:', error);
       this.emitError(client, {
         message: 'Failed to fetch robot states',
         code: 'ROBOT_STATES_ERROR',
@@ -358,14 +339,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client.emit('ROBOT_POSITION', message);
       });
     }
-  }
-
-  public broadcastMissionLog(log: MissionLogMessage['payload']['log']) {
-    const message: MissionLogMessage = {
-      type: 'MISSION_LOG',
-      payload: { log },
-    };
-    this.server.emit('MISSION_LOG', message);
   }
 
   private emitError(client: Socket, error: ErrorMessage['payload']) {

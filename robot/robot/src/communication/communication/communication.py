@@ -28,6 +28,7 @@ class CommunicationController(Node):
         self.end_mission_publisher = self.create_publisher(Empty, end_topic, 10)
 
         self.feedback_subscription = self.create_subscription(String, '/feedback', self.feedback_callback, 10)
+        self.get_logger().info(f"Subscribed to odometry topic: {odom_topic}")
         self.server_feedback_publisher = self.create_publisher(String, '/server_feedback', 10)
         self.mission_active = False
         self.empty = Empty()

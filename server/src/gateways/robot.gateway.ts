@@ -66,9 +66,9 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
       this.feedbackNode.createSubscription(
         'nav_msgs/msg/Odometry',
-        '/odom',
+        '/102robot1/odom', // Topic avec l'ID du robot défini dans limo_base.launch.py
         (msg: any) => {
-          this.logger.log(`Message d'odométrie reçu`);
+          this.logger.debug("Message d'odométrie reçu");
           try {
             // Extraire les données de position du message d'odométrie
             const position = {
@@ -129,7 +129,9 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
       rclnodejs.spin(this.feedbackNode);
-      this.logger.log('Subscriber ROS2 initialisé pour le topic /odom');
+      this.logger.log(
+        'Subscriber ROS2 initialisé pour le topic /102robot1/odom',
+      );
     } catch (error) {
       this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
     }

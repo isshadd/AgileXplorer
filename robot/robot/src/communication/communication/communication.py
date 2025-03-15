@@ -20,7 +20,9 @@ class CommunicationController(Node):
         self.movement_publisher = self.create_publisher(String, movement_topic, 10)
         self.get_logger().info(f"Publishing to: {movement_topic}")
 
-        self.odom_subscription = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
+        odom_topic = '/102robot1/odom'  # ID défini dans limo_base.launch.py
+        self.odom_subscription = self.create_subscription(Odometry, odom_topic, self.odom_callback, 10)
+        self.get_logger().info(f"Subscribed to odometry topic: {odom_topic}")
         self.server_feedback_publisher = self.create_publisher(String, '/server_feedback', 10)
         self.mission_active = False
 

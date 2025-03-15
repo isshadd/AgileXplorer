@@ -65,29 +65,20 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
       this.feedbackNode.createSubscription(
-        'nav_msgs/msg/Odometry',
-        '/102robot1/odom', // Topic avec l'ID du robot défini dans limo_base.launch.py
+        'std_msgs/msg/String',
+        '/server_feedback',
         (msg: any) => {
-          this.logger.debug("Message d'odométrie reçu");
           try {
-            // Extraire les données de position du message d'odométrie
-            const position = {
-              x: msg.pose.pose.position.x,
-              y: msg.pose.pose.position.y,
-              timestamp: Date.now(),
-            };
-
-            // Pour l'instant on utilise un ID fixe car l'odométrie ne contient pas l'ID du robot
-            // TODO: Adapter selon votre logique d'identification des robots
-            const robotId = 'robot1_102';
-
-            this.handleRobotPosition(robotId, position);
-            this.logger.debug(
-              `Position reçue pour ${robotId}: ${JSON.stringify(position)}`,
-            );
+            const data = JSON.parse(msg.data);
+            if (data.robot_id && data.position) {
+              this.handleRobotPosition(data.robot_id, data.position);
+              this.logger.debug(
+                `Position reçue pour ${data.robot_id}: ${JSON.stringify(data.position)}`,
+              );
+            }
           } catch (error) {
             this.logger.error(
-              'Erreur lors du traitement du message feedback:',
+              'Erreur lors du traitement du message server_feedback:',
               error,
             );
           }
@@ -130,7 +121,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       rclnodejs.spin(this.feedbackNode);
       this.logger.log(
-        'Subscriber ROS2 initialisé pour le topic /102robot1/odom',
+        'Subscriber ROS2 initialisé pour le topic /server_feedback',
       );
     } catch (error) {
       this.logger.error("Erreur lors de l'initialisation de ROS2:", error);

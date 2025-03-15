@@ -5,7 +5,6 @@ from nav_msgs.msg import Odometry
 import json
 from std_msgs.msg import Empty
 
-
 class CommunicationController(Node):
 
     def __init__(self):
@@ -51,30 +50,22 @@ class CommunicationController(Node):
 
     def odom_callback(self, msg):
         try:
-            position = msg.pose.pose.position
-            orientation = msg.pose.pose.orientation
-            
-            # Création d'un message formaté avec les données d'odométrie
-            feedback_data = {
+            # Création du message de position depuis l'odométrie
+            position_data = {
+                "robot_id": self.robot_id,
                 "position": {
-                    "x": position.x,
-                    "y": position.y,
-                    "z": position.z
-                },
-                "orientation": {
-                    "x": orientation.x,
-                    "y": orientation.y,
-                    "z": orientation.z,
-                    "w": orientation.w
+                    "x": msg.pose.pose.position.x,
+                    "y": msg.pose.pose.position.y,
+                    "timestamp": self.get_clock().now().nanoseconds / 1e9
                 }
             }
             
+            # Envoi des données de position au serveur
             server_msg = String()
-            server_msg.data = json.dumps(feedback_data)
-            self.server_feedback_publisher.publish(server_msg)
+            server_msg.data = json.dumps(position_data)
+            self.position_publisher.publish(server_msg)
         except Exception as e:
-            self.get_logger().error(f"Erreur lors du transfert des données d'odométrie: {str(e)}")
-
+            self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
 
 def main(args=None):
     rclpy.init(args=args)
@@ -86,7 +77,6 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

@@ -15,16 +15,10 @@ import {
   RobotStatesMessage,
   RobotPositionMessage,
   ErrorMessage,
+  InitialPositionMessage,
   RobotPosition,
+  ErrorPayload,
 } from '../interfaces/websocket.interface';
-
-interface StartPositionMessage {
-  type: 'SET_START_POSITION';
-  payload: {
-    robotId: string;
-    position: RobotPosition;
-  };
-}
 
 @Injectable()
 @WebSocketGateway({
@@ -55,18 +49,27 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
       this.feedbackNode.createSubscription(
         'std_msgs/msg/String',
-        '/server_feedback',
+        '/robot_odom',
         (msg: any) => {
           try {
             const data = JSON.parse(msg.data);
-            if (data.robot_id && data.position) {
-              this.handleRobotPosition(data.robot_id, data.position);
+            if (data.robot_id && data.odom) {
+              const position: RobotPosition = {
+                x: data.odom.position.x,
+                y: data.odom.position.y,
+                timestamp: data.odom.timestamp,
+              };
+              this.handleRobotPosition(data.robot_id, position);
             }
           } catch (error) {
-            this.logger.error('Erreur lors du traitement des données:', error);
+            this.logger.error(
+              "Erreur lors du traitement des données d'odométrie:",
+              error,
+            );
           }
         },
       );
+
       rclnodejs.spin(this.feedbackNode);
     } catch (error) {
       this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
@@ -76,30 +79,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ngOnDestroy() {
     if (this.feedbackNode) {
       this.feedbackNode.destroy();
-    }
-  }
-
-  @SubscribeMessage('set_start_position')
-  handleSetStartPosition(client: Socket, message: StartPositionMessage) {
-    try {
-      const { robotId, position } = message.payload;
-      this.robotPositions.set(robotId, [position]);
-      const positionMessage: RobotPositionMessage = {
-        type: 'ROBOT_POSITION',
-        payload: {
-          robotId,
-          position,
-          speed: 0,
-          angular: 0,
-          battery: 100,
-        },
-      };
-      this.server.emit('ROBOT_POSITION', positionMessage);
-    } catch (error) {
-      this.emitError(client, {
-        message: 'Erreur lors de la définition de la position de départ',
-        code: 'START_POSITION_ERROR',
-      });
     }
   }
 
@@ -131,6 +110,27 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.broadcastError({
         message: `Client ${client.id} connection lost`,
         code: 'CONNECTION_LOST',
+      });
+    }
+  }
+
+  @SubscribeMessage('set_initial_position')
+  async handleSetInitialPosition(
+    client: Socket,
+    message: InitialPositionMessage,
+  ) {
+    try {
+      const { robotId, position } = message.payload;
+      // Mettre à jour la position du robot
+      this.handleRobotPosition(robotId, {
+        x: position.x,
+        y: position.y,
+        timestamp: Date.now(),
+      });
+    } catch (error) {
+      this.emitError(client, {
+        message: error.message,
+        code: 'SET_POSITION_ERROR',
       });
     }
   }
@@ -182,7 +182,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!this.robotPositions.has(robotId)) {
       this.robotPositions.set(robotId, []);
     }
-    this.robotPositions.get(robotId)!.push(position);
+    this.robotPositions.set(robotId, [position]); // Ne garder que la dernière position
 
     const message: RobotPositionMessage = {
       type: 'ROBOT_POSITION',
@@ -231,7 +231,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  private emitError(client: Socket, error: ErrorMessage['payload']) {
+  private emitError(client: Socket, error: ErrorPayload) {
     const message: ErrorMessage = {
       type: 'error',
       payload: error,
@@ -239,7 +239,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.emit('error', message);
   }
 
-  private broadcastError(error: ErrorMessage['payload']) {
+  private broadcastError(error: ErrorPayload) {
     const message: ErrorMessage = {
       type: 'error',
       payload: error,

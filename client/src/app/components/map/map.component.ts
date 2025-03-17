@@ -13,7 +13,6 @@ interface RobotTrail {
   robotId: string;
   positions: RobotPosition[];
   color: string;
-  isDragging?: boolean;
 }
 
 @Component({
@@ -29,21 +28,22 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription: Subscription = new Subscription();
   private readonly colors = ['#FF0000', '#00FF00', '#0000FF', '#FF00FF'];
   public robotTrails: Map<string, RobotTrail> = new Map();
-  private scale = 50;
+  private isDragging = false;
+  private draggedRobotId: string | null = null;
+  private dragStartPos = { x: 0, y: 0 };
+
+  public getRobotTrails(): Map<string, RobotTrail> {
+    return this.robotTrails;
+  }
+  private scale = 50; // 1 mètre = 50 pixels
   private centerX = 0;
   private centerY = 0;
   private readonly ZOOM_FACTOR = 1.2;
   private readonly MIN_SCALE = 10;
   private readonly MAX_SCALE = 200;
-  private readonly ROBOT_RADIUS = 5;
   private backgroundImage: HTMLImageElement | null = null;
-  private selectedRobot: RobotTrail | null = null;
 
-  constructor(private websocketService: WebSocketService) {
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
-  }
+  constructor(private websocketService: WebSocketService) {}
 
   ngOnInit(): void {
     this.subscription.add(
@@ -62,79 +62,116 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ctx = canvas.getContext('2d')!;
     this.resizeCanvas();
 
-    // Ajout des gestionnaires d'événements pour le drag and drop
-    canvas.addEventListener('mousedown', this.handleMouseDown);
-    canvas.addEventListener('mousemove', this.handleMouseMove);
-    canvas.addEventListener('mouseup', this.handleMouseUp);
-
     // Load background image
     this.backgroundImage = new Image();
     this.backgroundImage.src = '/map.png';
     this.backgroundImage.onload = () => {
       this.startDrawLoop();
     };
-  }
 
-  ngOnDestroy(): void {
-    const canvas = this.canvasRef.nativeElement;
-    canvas.removeEventListener('mousedown', this.handleMouseDown);
-    canvas.removeEventListener('mousemove', this.handleMouseMove);
-    canvas.removeEventListener('mouseup', this.handleMouseUp);
-    this.subscription.unsubscribe();
+    // Ajout des événements de souris pour le drag and drop
+    canvas.addEventListener('mousedown', this.handleMouseDown.bind(this));
+    canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
   }
 
   private handleMouseDown(event: MouseEvent): void {
     const canvas = this.canvasRef.nativeElement;
     const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
-    // Vérifier si un robot est cliqué
-    this.robotTrails.forEach(trail => {
-      if (!trail.positions.length) return;
+    // Vérifier si on clique sur un robot
+    for (const [robotId, trail] of this.robotTrails) {
+      if (trail.positions.length > 0) {
+        const lastPos = trail.positions[trail.positions.length - 1];
+        const robotX = this.centerX + lastPos.x * this.scale;
+        const robotY = this.centerY - lastPos.y * this.scale;
+        const distance = Math.sqrt(Math.pow(x - robotX, 2) + Math.pow(y - robotY, 2));
 
-      const lastPos = trail.positions[trail.positions.length - 1];
-      const robotX = this.centerX + lastPos.x * this.scale;
-      const robotY = this.centerY - lastPos.y * this.scale;
-
-      if (Math.hypot(mouseX - robotX, mouseY - robotY) <= this.ROBOT_RADIUS * 2) {
-        trail.isDragging = true;
-        this.selectedRobot = trail;
+        if (distance < 10) { // 10 pixels de rayon pour la zone de clic
+          this.isDragging = true;
+          this.draggedRobotId = robotId;
+          this.dragStartPos = { x, y };
+          break;
+        }
       }
-    });
+    }
   }
 
   private handleMouseMove(event: MouseEvent): void {
-    if (this.selectedRobot?.isDragging) {
-      const canvas = this.canvasRef.nativeElement;
-      const rect = canvas.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
+    if (!this.isDragging || !this.draggedRobotId) return;
 
-      // Convertir les coordonnées de la souris en coordonnées de la carte
-      const x = (mouseX - this.centerX) / this.scale;
-      const y = (this.centerY - mouseY) / this.scale;
+    const canvas = this.canvasRef.nativeElement;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
-      // Mettre à jour la position du robot
+    // Convertir les coordonnées de l'écran en coordonnées du monde
+    const worldX = (x - this.centerX) / this.scale;
+    const worldY = -(y - this.centerY) / this.scale;
+
+    // Mettre à jour la position du robot
+    const trail = this.robotTrails.get(this.draggedRobotId);
+    if (trail) {
       const newPosition: RobotPosition = {
-        x,
-        y,
+        x: worldX,
+        y: worldY,
         timestamp: Date.now()
       };
-
-      // Mettre à jour l'affichage
-      this.updateRobotPosition(this.selectedRobot.robotId, newPosition);
-
-      // Envoyer la nouvelle position au serveur
-      this.websocketService.sendStartPosition(this.selectedRobot.robotId, { x, y });
+      trail.positions = [newPosition];
     }
   }
 
-  private handleMouseUp(): void {
-    if (this.selectedRobot) {
-      this.selectedRobot.isDragging = false;
-      this.selectedRobot = null;
+  private handleMouseUp(event: MouseEvent): void {
+    if (this.isDragging && this.draggedRobotId) {
+      const canvas = this.canvasRef.nativeElement;
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      // Convertir les coordonnées de l'écran en coordonnées du monde
+      const worldX = (x - this.centerX) / this.scale;
+      const worldY = -(y - this.centerY) / this.scale;
+
+      // Envoyer la nouvelle position initiale au serveur
+      this.websocketService.emit('set_initial_position', {
+        robotId: this.draggedRobotId,
+        position: { x: worldX, y: worldY }
+      });
     }
+
+    this.isDragging = false;
+    this.draggedRobotId = null;
+  }
+
+  public zoomIn(): void {
+    this.scale = Math.min(this.scale * this.ZOOM_FACTOR, this.MAX_SCALE);
+    this.drawMap();
+  }
+
+  public zoomOut(): void {
+    this.scale = Math.max(this.scale / this.ZOOM_FACTOR, this.MIN_SCALE);
+    this.drawMap();
+  }
+
+  public resetView(): void {
+    this.scale = 50;
+    this.centerX = this.canvasRef.nativeElement.width / 2;
+    this.centerY = this.canvasRef.nativeElement.height / 2;
+    this.drawMap();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  private resizeCanvas(): void {
+    const canvas = this.canvasRef.nativeElement;
+    canvas.width = canvas.parentElement?.clientWidth || 800;
+    canvas.height = canvas.parentElement?.clientHeight || 600;
+    this.centerX = canvas.width / 2;
+    this.centerY = canvas.height / 2;
   }
 
   private updateRobotPosition(robotId: string, position: RobotPosition): void {
@@ -147,13 +184,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     
     const trail = this.robotTrails.get(robotId)!;
-    // Si le robot n'est pas en train d'être déplacé, stocker la position
-    if (!trail.isDragging) {
-      trail.positions.push(position);
-    } else {
-      // Si le robot est en train d'être déplacé, mettre à jour sa dernière position
-      trail.positions = [position];
-    }
+    trail.positions = [position];  // Ne garder que la position actuelle
   }
 
   private startDrawLoop(): void {
@@ -186,72 +217,19 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private drawRobotTrail(trail: RobotTrail): void {
-    if (!trail.positions.length) return;
+    if (trail.positions.length === 0) return;
 
-    // Dessiner le parcours seulement si le robot n'est pas en train d'être déplacé
-    if (!trail.isDragging && trail.positions.length >= 2) {
-      this.ctx.strokeStyle = trail.color;
-      this.ctx.lineWidth = 2;
-      this.ctx.beginPath();
-
-      trail.positions.forEach((pos, index) => {
-        const x = this.centerX + pos.x * this.scale;
-        const y = this.centerY - pos.y * this.scale;
-        
-        if (index === 0) {
-          this.ctx.moveTo(x, y);
-        } else {
-          this.ctx.lineTo(x, y);
-        }
-      });
-      this.ctx.stroke();
-    }
-
-    // Dessiner la position actuelle du robot
-    const lastPos = trail.positions[trail.positions.length - 1];
-    const x = this.centerX + lastPos.x * this.scale;
-    const y = this.centerY - lastPos.y * this.scale;
+    const pos = trail.positions[trail.positions.length - 1];
+    const x = this.centerX + pos.x * this.scale;
+    const y = this.centerY - pos.y * this.scale;
 
     this.ctx.fillStyle = trail.color;
     this.ctx.beginPath();
-    this.ctx.arc(x, y, this.ROBOT_RADIUS, 0, Math.PI * 2);
+    this.ctx.arc(x, y, 5, 0, Math.PI * 2);
     this.ctx.fill();
 
-    // Indiquer visuellement si le robot est sélectionné
-    if (trail.isDragging) {
-      this.ctx.strokeStyle = '#000000';
-      this.ctx.lineWidth = 2;
-      this.ctx.stroke();
-    }
-
-    // Afficher l'ID du robot
     this.ctx.fillStyle = '#000000';
     this.ctx.font = '12px Arial';
     this.ctx.fillText(trail.robotId, x + 10, y - 10);
-  }
-
-  public zoomIn(): void {
-    this.scale = Math.min(this.scale * this.ZOOM_FACTOR, this.MAX_SCALE);
-    this.drawMap();
-  }
-
-  public zoomOut(): void {
-    this.scale = Math.max(this.scale / this.ZOOM_FACTOR, this.MIN_SCALE);
-    this.drawMap();
-  }
-
-  public resetView(): void {
-    this.scale = 50;
-    this.centerX = this.canvasRef.nativeElement.width / 2;
-    this.centerY = this.canvasRef.nativeElement.height / 2;
-    this.drawMap();
-  }
-
-  private resizeCanvas(): void {
-    const canvas = this.canvasRef.nativeElement;
-    canvas.width = canvas.parentElement?.clientWidth || 800;
-    canvas.height = canvas.parentElement?.clientHeight || 600;
-    this.centerX = canvas.width / 2;
-    this.centerY = canvas.height / 2;
   }
 }

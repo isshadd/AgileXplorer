@@ -3,6 +3,11 @@ import io from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -37,6 +42,16 @@ export class WebSocketService {
       return () => {
         this.socket.off('ROBOT_POSITION');
       };
+    });
+  }
+
+  public sendStartPosition(robotId: string, position: Position): void {
+    this.socket.emit('set_start_position', {
+      type: 'SET_START_POSITION',
+      payload: {
+        robotId,
+        position
+      }
     });
   }
 

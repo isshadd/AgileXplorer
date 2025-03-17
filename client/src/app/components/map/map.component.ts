@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 interface RobotPosition {
   x: number;
   y: number;
-  timestamp: number;
+  timestamp?: number;  // Optionnel car l'odométrie ne fournit pas toujours un timestamp
 }
 
 interface RobotTrail {
@@ -32,9 +32,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private draggedRobotId: string | null = null;
   private dragStartPos = { x: 0, y: 0 };
 
-  public getRobotTrails(): Map<string, RobotTrail> {
-    return this.robotTrails;
-  }
   private scale = 50; // 1 mètre = 50 pixels
   private centerX = 0;
   private centerY = 0;
@@ -48,11 +45,13 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     this.subscription.add(
       this.websocketService.onRobotPosition().subscribe((data: { robotId: string; position: RobotPosition }) => {
-        this.updateRobotPosition(data.robotId, {
-          x: data.position.x,
-          y: data.position.y,
-          timestamp: data.position.timestamp
-        });
+        if (data.robotId && data.position && typeof data.position.x === 'number' && typeof data.position.y === 'number') {
+          this.updateRobotPosition(data.robotId, {
+            x: data.position.x,
+            y: data.position.y,
+            timestamp: Date.now()  // Timestamp local si non fourni
+          });
+        }
       })
     );
   }
@@ -62,7 +61,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ctx = canvas.getContext('2d')!;
     this.resizeCanvas();
 
-    // Load background image
     this.backgroundImage = new Image();
     this.backgroundImage.src = '/map.png';
     this.backgroundImage.onload = () => {
@@ -80,7 +78,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    // Vérifier si on clique sur un robot
     for (const [robotId, trail] of this.robotTrails) {
       if (trail.positions.length > 0) {
         const lastPos = trail.positions[trail.positions.length - 1];
@@ -111,12 +108,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const trail = this.robotTrails.get(this.draggedRobotId);
     if (trail) {
-      const newPosition: RobotPosition = {
+      trail.positions = [{
         x: worldX,
         y: worldY,
         timestamp: Date.now()
-      };
-      trail.positions = [newPosition];
+      }];
     }
   }
 
@@ -179,7 +175,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     
     const trail = this.robotTrails.get(robotId)!;
-    trail.positions.push(position);  // Ajouter la nouvelle position à la trajectoire
+    trail.positions.push(position);  // Ajouter la nouvelle position à l'historique
   }
 
   private startDrawLoop(): void {
@@ -231,7 +227,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.ctx.stroke();
 
-    // Dessiner la position actuelle du robot
+    // Dessiner la position actuelle
     const lastPos = trail.positions[trail.positions.length - 1];
     const x = this.centerX + lastPos.x * this.scale;
     const y = this.centerY - lastPos.y * this.scale;

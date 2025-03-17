@@ -22,12 +22,8 @@ class MoveController(Node):
         cmd_vel_topic = f'/{self.robot_id}/cmd_vel'
         self.publisher = self.create_publisher(Twist, cmd_vel_topic, 10)
 
-        self.current_action = None
-        self.action_start_time = None
+        self.action_timer = None
         self.mission_active = False
-        self.action_duration = 0
-        self.current_speed = 0.0
-        self.current_angular = 0.0
 
     def movement_callback(self, msg):
         try:
@@ -35,23 +31,18 @@ class MoveController(Node):
             self.get_logger().info(f"Commande reçue sur {self.robot_id}: {command}")
 
             if command['action'] == 'move':
-                self._cancel_current_action()
-                self.current_speed = command.get('speed', 0.0)
-                self.current_angular = 0.0
-                self.action_duration = command.get('duration', 0.0)
-                self.start_action_timer()
+                self.stop_current_motion()
+                speed = command.get('speed', 0.0)
+                duration = command.get('duration', 0.0)
+                self.start_timed_motion(speed, 0.0, duration)
             elif command['action'] == 'turn':
-                self._cancel_current_action()
-                self.current_speed = 0.0
-                self.current_angular = command.get('speed', 0.0)
-                self.action_duration = command.get('duration', 0.0)
-                self.start_action_timer()
+                self.stop_current_motion()
+                speed = command.get('speed', 0.0)
+                duration = command.get('duration', 0.0)
+                self.start_timed_motion(0.0, speed, duration)
             elif command['action'] == 'start_mission':
-                self._cancel_current_action()
-                self.current_speed = 0.1
-                self.current_angular = 0.2
-                self.action_duration = 3000
-                self.start_action_timer()
+                self.stop_current_motion()
+                self.start_timed_motion(0.1, 0.2, 3000)
             elif command['action'] == 'end_mission':
                 self.mission_active = False
                 self.stop()
@@ -62,38 +53,25 @@ class MoveController(Node):
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement de la commande: {str(e)}")
 
-    def _mission_turn_loop(self):
-        if self.mission_active:
-            twist = Twist()
-            twist.linear.x = 0.0
-            twist.angular.z = 1.0
-            self.publisher.publish(twist)
+    def start_timed_motion(self, linear_speed: float, angular_speed: float, duration: float):
+        self.publish_velocity(linear_speed, angular_speed)
+        if duration > 0:
+            self.action_timer = self.create_timer(duration, self.stop)
 
-    def start_action_timer(self):
-        self.action_start_time = self.get_clock().now()
-        self.timer = self.create_timer(0.1, self._execute_action)
-
-    def _execute_action(self):
-        elapsed = (self.get_clock().now() - self.action_start_time).nanoseconds / 1e9
-        if elapsed < self.action_duration:
-            twist = Twist()
-            twist.linear.x = self.current_speed
-            twist.angular.z = self.current_angular
-            self.publisher.publish(twist)
-        else:
-            self.stop()
-            self.timer.cancel()
-
-    def _cancel_current_action(self):
-        if hasattr(self, 'timer') and not self.timer.is_canceled():
-            self.timer.cancel()
+    def stop_current_motion(self):
+        if self.action_timer:
+            self.action_timer.cancel()
         self.stop()
+
+    def publish_velocity(self, linear: float, angular: float):
+        twist = Twist()
+        twist.linear.x = linear
+        twist.angular.z = angular
+        self.publisher.publish(twist)
 
     def stop(self):
         twist = Twist()
         self.publisher.publish(twist)
-        self.current_speed = 0.0
-        self.current_angular = 0.0
 
 def main(args=None):
     rclpy.init(args=args)

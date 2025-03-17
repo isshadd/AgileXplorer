@@ -3,7 +3,6 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 import json
-import math
 
 class MoveController(Node):
 
@@ -23,18 +22,12 @@ class MoveController(Node):
         cmd_vel_topic = f'/{self.robot_id}/cmd_vel'
         self.publisher = self.create_publisher(Twist, cmd_vel_topic, 10)
 
-        self.feedback_publisher = self.create_publisher(String, '/feedback', 10)
-        self.feedback_timer = self.create_timer(1.0, self.publish_feedback)
-
         self.current_action = None
         self.action_start_time = None
         self.mission_active = False
         self.action_duration = 0
         self.current_speed = 0.0
         self.current_angular = 0.0
-        self.current_position = {"x": 0.0, "y": 0.0}
-        self.battery_level = 100
-        self.current_heading = 0.0
 
     def movement_callback(self, msg):
         try:
@@ -101,34 +94,6 @@ class MoveController(Node):
         self.publisher.publish(twist)
         self.current_speed = 0.0
         self.current_angular = 0.0
-
-    def publish_feedback(self):
-        dt = 0.1
-        # Mise à jour de l'angle courant (en radians)
-        self.current_heading = (self.current_heading + self.current_angular * dt) % (2 * math.pi)
-        # Mise à jour de la position selon la vitesse et l'angle courant
-        self.current_position["x"] += self.current_speed * dt * math.cos(self.current_heading)
-        self.current_position["y"] += self.current_speed * dt * math.sin(self.current_heading)
-        
-        feedback = {
-            "speed": self.current_speed,
-            "angular": self.current_angular,
-            "position": self.current_position,
-            "battery": self.battery_level,
-            "robot_id": self.robot_id,
-            "timestamp": self.get_clock().now().nanoseconds / 1e9
-        }
-        new_feedback_str = json.dumps(feedback)
-        if not hasattr(self, 'last_feedback'):
-            self.last_feedback = ""
-        if new_feedback_str != self.last_feedback:
-            feedback_msg = String()
-            feedback_msg.data = new_feedback_str
-            self.feedback_publisher.publish(feedback_msg)
-            self.get_logger().info(f"Feedback publié: {feedback_msg.data}")
-            self.last_feedback = new_feedback_str
-        else:
-            self.get_logger().debug("Feedback inchangé, non publié.")
 
 def main(args=None):
     rclpy.init(args=args)

@@ -69,7 +69,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.startDrawLoop();
     };
 
-    // Ajout des événements de souris pour le drag and drop
     canvas.addEventListener('mousedown', this.handleMouseDown.bind(this));
     canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
     canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
@@ -89,7 +88,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
         const robotY = this.centerY - lastPos.y * this.scale;
         const distance = Math.sqrt(Math.pow(x - robotX, 2) + Math.pow(y - robotY, 2));
 
-        if (distance < 10) { // 10 pixels de rayon pour la zone de clic
+        if (distance < 10) {
           this.isDragging = true;
           this.draggedRobotId = robotId;
           this.dragStartPos = { x, y };
@@ -107,11 +106,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    // Convertir les coordonnées de l'écran en coordonnées du monde
     const worldX = (x - this.centerX) / this.scale;
     const worldY = -(y - this.centerY) / this.scale;
 
-    // Mettre à jour la position du robot
     const trail = this.robotTrails.get(this.draggedRobotId);
     if (trail) {
       const newPosition: RobotPosition = {
@@ -130,11 +127,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      // Convertir les coordonnées de l'écran en coordonnées du monde
       const worldX = (x - this.centerX) / this.scale;
       const worldY = -(y - this.centerY) / this.scale;
 
-      // Envoyer la nouvelle position initiale au serveur
       this.websocketService.emit('set_initial_position', {
         robotId: this.draggedRobotId,
         position: { x: worldX, y: worldY }
@@ -184,7 +179,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     
     const trail = this.robotTrails.get(robotId)!;
-    trail.positions = [position];  // Ne garder que la position actuelle
+    trail.positions.push(position);  // Ajouter la nouvelle position à la trajectoire
   }
 
   private startDrawLoop(): void {
@@ -219,9 +214,27 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private drawRobotTrail(trail: RobotTrail): void {
     if (trail.positions.length === 0) return;
 
-    const pos = trail.positions[trail.positions.length - 1];
-    const x = this.centerX + pos.x * this.scale;
-    const y = this.centerY - pos.y * this.scale;
+    // Dessiner la trajectoire
+    this.ctx.strokeStyle = trail.color;
+    this.ctx.lineWidth = 2;
+    this.ctx.beginPath();
+
+    trail.positions.forEach((pos, index) => {
+      const x = this.centerX + pos.x * this.scale;
+      const y = this.centerY - pos.y * this.scale;
+      
+      if (index === 0) {
+        this.ctx.moveTo(x, y);
+      } else {
+        this.ctx.lineTo(x, y);
+      }
+    });
+    this.ctx.stroke();
+
+    // Dessiner la position actuelle du robot
+    const lastPos = trail.positions[trail.positions.length - 1];
+    const x = this.centerX + lastPos.x * this.scale;
+    const y = this.centerY - lastPos.y * this.scale;
 
     this.ctx.fillStyle = trail.color;
     this.ctx.beginPath();

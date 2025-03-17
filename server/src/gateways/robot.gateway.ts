@@ -18,6 +18,14 @@ import {
   RobotPosition,
 } from '../interfaces/websocket.interface';
 
+interface StartPositionMessage {
+  type: 'SET_START_POSITION';
+  payload: {
+    robotId: string;
+    position: RobotPosition;
+  };
+}
+
 @Injectable()
 @WebSocketGateway({
   cors: {
@@ -55,14 +63,10 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
               this.handleRobotPosition(data.robot_id, data.position);
             }
           } catch (error) {
-            this.logger.error(
-              'Erreur lors du traitement des données de position:',
-              error,
-            );
+            this.logger.error('Erreur lors du traitement des données:', error);
           }
         },
       );
-
       rclnodejs.spin(this.feedbackNode);
     } catch (error) {
       this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
@@ -72,6 +76,30 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ngOnDestroy() {
     if (this.feedbackNode) {
       this.feedbackNode.destroy();
+    }
+  }
+
+  @SubscribeMessage('set_start_position')
+  handleSetStartPosition(client: Socket, message: StartPositionMessage) {
+    try {
+      const { robotId, position } = message.payload;
+      this.robotPositions.set(robotId, [position]);
+      const positionMessage: RobotPositionMessage = {
+        type: 'ROBOT_POSITION',
+        payload: {
+          robotId,
+          position,
+          speed: 0,
+          angular: 0,
+          battery: 100,
+        },
+      };
+      this.server.emit('ROBOT_POSITION', positionMessage);
+    } catch (error) {
+      this.emitError(client, {
+        message: 'Erreur lors de la définition de la position de départ',
+        code: 'START_POSITION_ERROR',
+      });
     }
   }
 
@@ -150,25 +178,11 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  public broadcastRobotStates(states: any[]) {
-    const message: RobotStatesMessage = {
-      type: 'ROBOT_STATES',
-      payload: { states },
-    };
-    this.server.emit('ROBOT_STATES', message);
-  }
-
   public handleRobotPosition(robotId: string, position: RobotPosition) {
     if (!this.robotPositions.has(robotId)) {
       this.robotPositions.set(robotId, []);
     }
-    this.robotPositions.get(robotId).push(position);
-
-    // Garder seulement les 1000 dernières positions
-    const positions = this.robotPositions.get(robotId);
-    if (positions.length > 1000) {
-      positions.shift();
-    }
+    this.robotPositions.get(robotId)!.push(position);
 
     const message: RobotPositionMessage = {
       type: 'ROBOT_POSITION',

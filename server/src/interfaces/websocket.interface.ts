@@ -12,6 +12,7 @@ export type WebSocketMessageType =
   | 'ROBOT_STATES'
   | 'MISSION_LOG'
   | 'ROBOT_POSITION'
+  | 'set_initial_position'
   | 'error';
 
 export interface MissionStatus {
@@ -40,6 +41,14 @@ export interface RobotPosition {
   timestamp: number;
 }
 
+export interface InitialPositionPayload {
+  robotId: string;
+  position: {
+    x: number;
+    y: number;
+  };
+}
+
 export interface RobotPositionPayload {
   robotId: string;
   position: RobotPosition;
@@ -66,4 +75,5 @@ export type WheelModeMessage = WebSocketMessage<WheelModePayload>;
 export type RobotStatesMessage = WebSocketMessage<RobotStatesPayload>;
 export type RobotPositionMessage = WebSocketMessage<RobotPositionPayload>;
 export type MissionLogMessage = WebSocketMessage<MissionLogPayload>;
+export type InitialPositionMessage = WebSocketMessage<InitialPositionPayload>;
 export type ErrorMessage = WebSocketMessage<ErrorPayload>;

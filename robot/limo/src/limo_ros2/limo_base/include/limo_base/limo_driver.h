@@ -101,7 +101,7 @@ private:
 
     bool pub_odom_tf_ = false;
     bool use_mcnamu_ = false;
-    double initial_yaw_offset_ = 42.5;  // Offset initial pour l'orientation
+    double initial_yaw_offset_ = 35.0;  // Offset initial pour l'orientation
     double present_theta_,last_theta_,delta_theta_,real_theta_,rad;
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_publisher_;
     rclcpp::Publisher<limo_msgs::msg::LimoStatus>::SharedPtr status_publisher_;

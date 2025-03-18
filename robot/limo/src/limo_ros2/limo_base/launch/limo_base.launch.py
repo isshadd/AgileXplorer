@@ -38,8 +38,8 @@ def generate_launch_description():
     sim_control_rate_arg = DeclareLaunchArgument('control_rate', default_value='50',
                                                  description='Simulation control loop update rate')
                                                  
-    initial_yaw_offset_arg = DeclareLaunchArgument('initial_yaw_offset', default_value='0.0',
-                                                  description='Initial yaw offset in degrees')
+    initial_yaw_offset_arg = DeclareLaunchArgument('initial_yaw_offset', default_value='60.0',
+                                                   description='Initial yaw offset in degrees')
     
     limo_base_node = launch_ros.actions.Node(
         package='limo_base',

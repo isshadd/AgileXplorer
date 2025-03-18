@@ -50,8 +50,8 @@ class MoveController(Node):
 
             elif command['action'] == 'start_mission':
                 self.mission_active = True
-                self.current_linear_speed = 0.1
-                self.current_angular_speed = 0.2
+                self.current_linear_speed = 0.0
+                self.current_angular_speed = 0.0
                 self.get_logger().info("Mission démarrée")
 
             elif command['action'] == 'end_mission':

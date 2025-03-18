@@ -12,13 +12,7 @@
     gap: 1rem;
 }
 
-.map-container {
-    flex: 2;
-    min-width: 0; /* Pour éviter le débordement */
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    overflow: hidden;
-}
+
 
 .robots-container {
     flex: 1;

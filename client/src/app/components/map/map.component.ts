@@ -32,7 +32,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private draggedRobotId: string | null = null;
   private dragStartPos = { x: 0, y: 0 };
 
-  private scale = 50; // 1 mètre = 50 pixels
+  private scale = 50;
   private centerX = 0;
   private centerY = 0;
   private readonly ZOOM_FACTOR = 1.2;
@@ -159,10 +159,77 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private resizeCanvas(): void {
     const canvas = this.canvasRef.nativeElement;
-    canvas.width = canvas.parentElement?.clientWidth || 800;
-    canvas.height = canvas.parentElement?.clientHeight || 600;
-    this.centerX = canvas.width / 2;
-    this.centerY = canvas.height / 2;
+    const parent = canvas.parentElement;
+    if (!parent) return;
+
+    // Calculer la dimension carrée en prenant la plus petite dimension disponible
+    const maxSize = Math.min(parent.clientWidth, parent.clientHeight);
+    
+    canvas.width = maxSize;
+    canvas.height = maxSize;
+    
+    // Mettre à jour le CSS du canvas pour le centrer
+    canvas.style.width = `${maxSize}px`;
+    canvas.style.height = `${maxSize}px`;
+    
+    this.centerX = maxSize / 2;
+    this.centerY = maxSize / 2;
+  }
+
+  public ANGLE_OFFSET = 318.0; // Angle de correction en degrés
+  public DISTANCE_FACTOR = 4.0; // Facteur multiplicateur pour ajuster les distances
+  private angleInterval: any;
+  private incrementSpeed = 50; // Vitesse initiale de répétition en ms
+  private incrementAmount = 1.0; // Incrément initial
+
+  // Méthode pour ajuster l'angle offset
+  public setAngleOffset(angle: number): void {
+    this.ANGLE_OFFSET = angle;
+    this.drawMap(); // Redessiner la carte avec le nouvel angle
+  }
+
+  public startAngleIncrement(increment: number): void {
+    // Annuler tout intervalle existant
+    this.stopAngleIncrement();
+    
+    // Appliquer l'incrément initial
+    this.setAngleOffset(this.ANGLE_OFFSET + increment);
+
+    // Créer un nouvel intervalle avec accélération progressive
+    let holdTime = 0;
+    this.angleInterval = setInterval(() => {
+      holdTime += this.incrementSpeed;
+      // Augmenter la vitesse d'incrémentation avec le temps
+      const speedMultiplier = Math.min(Math.floor(holdTime / 1000) + 1, 5);
+      this.setAngleOffset(this.ANGLE_OFFSET + (increment * speedMultiplier));
+    }, this.incrementSpeed);
+  }
+
+  public stopAngleIncrement(): void {
+    if (this.angleInterval) {
+      clearInterval(this.angleInterval);
+      this.angleInterval = null;
+    }
+  }
+
+  // Méthode pour ajuster le facteur de distance
+  public setDistanceFactor(factor: number): void {
+    if (factor > 0) {
+      this.DISTANCE_FACTOR = factor;
+      this.drawMap(); // Redessiner la carte avec le nouveau facteur
+    }
+  }
+  
+  private transformPosition(position: RobotPosition): RobotPosition {
+    // Convertir l'angle en radians
+    const angleRad = (this.ANGLE_OFFSET * Math.PI) / 180;
+    
+    // Appliquer une rotation 2D et le facteur multiplicateur
+    return {
+      x: (position.x * Math.cos(angleRad) - position.y * Math.sin(angleRad)) * this.DISTANCE_FACTOR,
+      y: (position.x * Math.sin(angleRad) + position.y * Math.cos(angleRad)) * this.DISTANCE_FACTOR,
+      timestamp: position.timestamp
+    };
   }
 
   private updateRobotPosition(robotId: string, position: RobotPosition): void {
@@ -175,7 +242,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     
     const trail = this.robotTrails.get(robotId)!;
-    trail.positions.push(position);  // Ajouter la nouvelle position à l'historique
+    // Transformer la position avant de l'ajouter
+    const transformedPosition = this.transformPosition(position);
+    trail.positions.push(transformedPosition);
   }
 
   private startDrawLoop(): void {

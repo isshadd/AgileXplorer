@@ -4,6 +4,24 @@
     <button (click)="zoomIn()" class="control-button">+</button>
     <button (click)="zoomOut()" class="control-button">-</button>
     <button (click)="resetView()" class="control-button">Reset</button>
+    <div class="distance-controls">
+      <span class="control-label">Distance:</span>
+      <button (click)="setDistanceFactor(DISTANCE_FACTOR - 0.1)" class="control-button">-</button>
+      <span class="factor-value">{{DISTANCE_FACTOR.toFixed(1)}}</span>
+      <button (click)="setDistanceFactor(DISTANCE_FACTOR + 0.1)" class="control-button">+</button>
+    </div>
+    <div class="distance-controls">
+      <span class="control-label">Angle:</span>
+      <button (mousedown)="startAngleIncrement(-1.0)"
+              (mouseup)="stopAngleIncrement()"
+              (mouseleave)="stopAngleIncrement()"
+              class="control-button">-</button>
+      <span class="factor-value">{{ANGLE_OFFSET.toFixed(1)}}</span>
+      <button (mousedown)="startAngleIncrement(1.0)"
+              (mouseup)="stopAngleIncrement()"
+              (mouseleave)="stopAngleIncrement()"
+              class="control-button">+</button>
+    </div>
   </div>
   <div class="map-legend">
     <div *ngFor="let trail of robotTrails | keyvalue" class="legend-item">

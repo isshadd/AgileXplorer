@@ -48,7 +48,7 @@ def generate_launch_description():
         emulate_tty=True,
         namespace=LaunchConfiguration('id'),
         remappings=[
-            ('/cmd_vel', [ '/', LaunchConfiguration('id'), '/cmd_vel']),
+            ('/cmd_vel', ['/cmd_vel']),
             ('/imu', [ '/', LaunchConfiguration('id'), '/imu']),
             ('/limo_status', [ '/', LaunchConfiguration('id'), '/limo_status']),
             ('/odom', [ '/', LaunchConfiguration('id'), '/odom']),

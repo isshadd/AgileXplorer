@@ -23,13 +23,9 @@ class MoveController(Node):
         self.publisher = self.create_publisher(Twist, cmd_vel_topic, 10)
 
         self.action_timer = None
-        self.mission_timer = None
         self.mission_active = False
         self.current_linear_speed = 0.0
         self.current_angular_speed = 0.0
-
-        # Timer pour mettre à jour la vitesse pendant la mission
-        self.mission_timer = self.create_timer(0.1, self.update_mission_velocity)
 
     def movement_callback(self, msg):
         try:
@@ -50,12 +46,11 @@ class MoveController(Node):
 
             elif command['action'] == 'start_mission':
                 self.mission_active = True
-                self.current_linear_speed = 0.0
-                self.current_angular_speed = 0.0
-                self.get_logger().info("Mission démarrée")
+                self.current_linear_speed = 0.1
+                self.current_angular_speed = 0.2
+                self.publish_velocity(self.current_linear_speed, self.current_angular_speed)
 
             elif command['action'] == 'end_mission':
-                self.get_logger().info("Mission arrêtée")
                 self.mission_active = False
                 self.stop()
 
@@ -68,13 +63,7 @@ class MoveController(Node):
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement de la commande: {str(e)}")
 
-    def update_mission_velocity(self):
-        """Met à jour la vitesse si une mission est active"""
-        if self.mission_active:
-            self.publish_velocity(self.current_linear_speed, self.current_angular_speed)
-
     def start_timed_motion(self, linear_speed: float, angular_speed: float, duration: float):
-        """Démarre un mouvement temporaire"""
         if duration > 0:
             self.current_linear_speed = linear_speed
             self.current_angular_speed = angular_speed
@@ -84,13 +73,13 @@ class MoveController(Node):
             self.action_timer = self.create_timer(duration, self.stop)
 
     def stop_current_motion(self):
-        """Arrête le mouvement temporaire en cours"""
         if self.action_timer:
             self.action_timer.cancel()
             self.action_timer = None
+        self.current_linear_speed = 0.0
+        self.current_angular_speed = 0.0
 
     def publish_velocity(self, linear: float, angular: float):
-        """Publie une commande de vitesse"""
         twist = Twist()
         twist.linear.x = linear
         twist.angular.z = angular
@@ -98,13 +87,10 @@ class MoveController(Node):
         self.get_logger().debug(f"Vitesse publiée: linear={linear}, angular={angular}")
 
     def stop(self):
-        """Arrête tout mouvement"""
+        self.mission_active = False
         self.current_linear_speed = 0.0
         self.current_angular_speed = 0.0
         self.publish_velocity(0.0, 0.0)
-        if self.action_timer:
-            self.action_timer.cancel()
-            self.action_timer = None
 
 def main(args=None):
     rclpy.init(args=args)

@@ -24,15 +24,9 @@ def generate_launch_description():
     pkg_project_description = get_package_share_directory('ros_gz_example_description')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
-    # 1) Appeler le script random_generator.py avant de lancer Gazebo
-    # local path vers random_generator.py
+    # Generate the random map
     random_generator_script = os.path.join(pkg_project_bringup, 'launch', 'random_generator.py')
-
-    # On exécute le script
     subprocess.run(["python3", random_generator_script], check=True)
-
-    # 2) Maintenant on a "random_world.sdf" tout prêt
-    #    On indique à gz_sim de lancer ce nouveau fichier
     random_world_path = os.path.join(pkg_project_bringup, 'launch', 'random_world.sdf')
     
 
@@ -42,7 +36,6 @@ def generate_launch_description():
         launch_arguments={'gz_args': random_world_path}.items(),
     )
 
-    # 3) Le reste comme avant
     sdf_file = os.path.join(pkg_project_description, 'models', 'limo_diff_drive', 'model.sdf')
     with open(sdf_file, 'r') as infp:
         robot_desc = infp.read()
@@ -62,16 +55,16 @@ def generate_launch_description():
     bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
-        namespace=LaunchConfiguration('id'),
-        remappings=[
-            ('/cmd_vel', [ '/', LaunchConfiguration('id'), '/cmd_vel']),
-            ('/imu', [ '/', LaunchConfiguration('id'), '/imu']),
-            ('/limo_status', [ '/', LaunchConfiguration('id'), '/limo_status']),
-            ('/odom', [ '/', LaunchConfiguration('id'), '/odom']),
-            ('/parameter_events', [ '/', LaunchConfiguration('id'), '/parameter_events']),
-            ('/rosout', [ '/', LaunchConfiguration('id'), '/rosout']),
-            ('/tf', [ '/', LaunchConfiguration('id'), '/tf']),
-        ],
+        #namespace=LaunchConfiguration('id'),
+        # remappings=[
+        #     ('/cmd_vel', [ '/', LaunchConfiguration('id'), '/cmd_vel']),
+        #     ('/imu', [ '/', LaunchConfiguration('id'), '/imu']),
+        #     ('/limo_status', [ '/', LaunchConfiguration('id'), '/limo_status']),
+        #     ('/odom', [ '/', LaunchConfiguration('id'), '/odom']),
+        #     ('/parameter_events', [ '/', LaunchConfiguration('id'), '/parameter_events']),
+        #     ('/rosout', [ '/', LaunchConfiguration('id'), '/rosout']),
+        #     ('/tf', [ '/', LaunchConfiguration('id'), '/tf']),
+        # ],
         parameters=[{
             'config_file': os.path.join(pkg_project_bringup, 'config', 'ros_gz_example_bridge.yaml'),
             'qos_overrides./tf_static.publisher.durability': 'transient_local',

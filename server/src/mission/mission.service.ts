@@ -2,77 +2,118 @@ import { Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { LogsService } from '../logs/logs.service';
 
+interface Robot {
+  id: string;
+  position: { x: number; y: number; z: number };
+  distance: number;
+}
+
 @Injectable()
 export class MissionService {
   private readonly logger = new Logger(MissionService.name);
   private activeMissionId: string | null = null;
+  private activeRobots: Map<string, Robot> = new Map();
 
   constructor(private readonly logsService: LogsService) {
     this.logger.log('MissionService initialized');
+    // Initialize with test robots
+    this.activeRobots.set('robot1', {
+      id: 'robot1',
+      position: { x: 0, y: 0, z: 0 },
+      distance: 0
+    });
+    this.activeRobots.set('robot2', {
+      id: 'robot2',
+      position: { x: 1, y: 1, z: 0 },
+      distance: 0
+    });
   }
 
-  async startMission() {
+  startMission() {
     this.activeMissionId = uuidv4();
     this.logger.log(`Starting mission with ID: ${this.activeMissionId}`);
     
-    try {
-      const log = await this.logsService.create({
-        type: 'MISSION_START',
-        message: 'Mission started',
-        missionId: this.activeMissionId,
-        data: {
-          timestamp: new Date().toISOString()
-        }
+    // Initialize mission log
+    this.logsService.initializeMissionLog(this.activeMissionId)
+      .then(() => {
+        this.logsService.addLog(this.activeMissionId, {
+          type: 'COMMAND',
+          data: {
+            command: 'START_MISSION',
+            timestamp: new Date().toISOString()
+          }
+        });
+      })
+      .catch(error => {
+        this.logger.error(`Error initializing mission log: ${error.message}`, error.stack);
       });
-      
-      this.logger.debug(`Created mission start log`);
-      return { missionId: this.activeMissionId };
-    } catch (error) {
-      this.logger.error(`Error creating mission start log: ${error.message}`, error.stack);
-      throw error;
-    }
+
+    return { missionId: this.activeMissionId };
   }
 
   async stopMission() {
     const stoppedMissionId = this.activeMissionId;
     this.logger.log(`Stopping mission with ID: ${stoppedMissionId}`);
     
-    if (stoppedMissionId) {
-      try {
-        const log = await this.logsService.create({
-          type: 'MISSION_STOP',
-          message: 'Mission stopped',
-          missionId: stoppedMissionId,
-          data: {
-            timestamp: new Date().toISOString()
-          }
-        });
-        
-        this.logger.debug(`Created mission stop log`);
-      } catch (error) {
-        this.logger.error(`Error creating mission stop log: ${error.message}`, error.stack);
-        throw error;
-      }
-    } else {
+    if (!stoppedMissionId) {
       this.logger.warn('Attempted to stop mission but no active mission found');
+      return { stoppedMissionId: null };
     }
     
+    // Clear the mission ID first to prevent any new logs
     this.activeMissionId = null;
-    return { stoppedMissionId };
+
+    try {
+      // Add final stop command and finalize in one operation
+      await this.logsService.finalizeMissionLog(stoppedMissionId);
+      this.logger.debug(`Mission log finalized`);
+      return { stoppedMissionId };
+    } catch (error) {
+      this.logger.error(`Error finalizing mission log: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   getActiveMissionId() {
     return this.activeMissionId;
   }
 
+  getActiveRobots(): Robot[] {
+    return Array.from(this.activeRobots.values());
+  }
+
+  updateRobotData(robotId: string, position: { x: number; y: number; z: number }, distance: number) {
+    const robot = this.activeRobots.get(robotId);
+    if (robot) {
+      robot.position = position;
+      robot.distance = distance;
+      this.activeRobots.set(robotId, robot);
+
+      // Log robot data if mission is active
+      if (this.activeMissionId) {
+        this.logsService.addLog(this.activeMissionId, {
+          type: 'SENSOR',
+          robotId,
+          data: {
+            position,
+            distance,
+            timestamp: new Date().toISOString()
+          }
+        }).catch(error => {
+          this.logger.error(`Error logging robot data: ${error.message}`, error.stack);
+        });
+      }
+    }
+  }
+
   async getMissionLogs(missionId: string) {
     this.logger.log(`Getting logs for mission ID: ${missionId}`);
     try {
-      const logs = await this.logsService.findByMissionId(missionId);
-      this.logger.debug(`Found ${logs.length} logs for mission ID: ${missionId}`);
-      return logs;
+      const missionLog = await this.logsService.findMissionLog(missionId);
+      this.logger.debug(`Found mission log with ${missionLog.logs.length} entries`);
+      return missionLog;
     } catch (error) {
-      this.logger.error(`Error getting logs for mission ID ${missionId}: ${error.message}`, error.stack);
+      this.logger.error(`Error getting mission log: ${error.message}`, error.stack);
       throw error;
     }
   }

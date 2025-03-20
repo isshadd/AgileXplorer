@@ -13,10 +13,13 @@ curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bas
 export NVM_DIR="$HOME/.nvm"
 source "$NVM_DIR/nvm.sh"
 
-# Install and use the latest LTS version of Node.js
-echo "🟢 Installing Node.js (LTS)..."
-nvm install --lts
-nvm use --lts
+# Install and use Node.js v20 explicitly
+echo "🟢 Installing Node.js v20..."
+nvm install 20
+nvm use 20
+
+# Set Node.js v20 as the default version
+nvm alias default 20
 
 # Confirm Node.js and npm versions
 node -v
@@ -60,8 +63,75 @@ fi
 echo "✅ Checking rclnodejs installation..."
 node -e "require('rclnodejs').init().then(() => console.log('rclnodejs is installed and ready!')).catch(err => console.error('rclnodejs setup failed:', err))"
 
-# 8️⃣ Start the NestJS project
+# 8️⃣ Install and configure MongoDB
+echo "📦 Setting up MongoDB..."
+# Install MongoDB-related dependencies
+    npm install @nestjs/mongoose mongoose
+
+    # Install WebSocket dependencies with legacy peer deps
+    npm install @nestjs/platform-socket.io @nestjs/websockets --legacy-peer-deps
+
+    # Install types for development
+    npm install -D @types/mongoose
+# Check if MongoDB is already installed
+if ! command -v mongod &> /dev/null; then
+    echo "Installing MongoDB..."
+    
+    # Import MongoDB public GPG key if not already imported
+    if [ ! -f /usr/share/keyrings/mongodb-server-6.0.gpg ]; then
+        curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
+        sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
+        --dearmor
+    fi
+
+    # Add MongoDB repository if not already added
+    if [ ! -f /etc/apt/sources.list.d/mongodb-org-6.0.list ]; then
+        echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | \
+        sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+    fi
+
+    # Install MongoDB packages
+    sudo apt-get update
+    sudo apt-get install -y mongodb-org
+    
+else
+    echo "MongoDB is already installed"
+fi
+
+# Ensure MongoDB data directory exists with correct permissions
+sudo mkdir -p /var/lib/mongodb
+sudo chown -R mongodb:mongodb /var/lib/mongodb
+sudo chmod -R 744 /var/lib/mongodb
+
+# Start MongoDB service
+echo "🚀 Starting MongoDB service..."
+if ! sudo systemctl is-active --quiet mongod; then
+    sudo systemctl start mongod
+fi
+
+# Enable MongoDB service on boot
+if ! sudo systemctl is-enabled --quiet mongod; then
+    sudo systemctl enable mongod
+fi
+
+# Wait for MongoDB to be ready
+echo "⏳ Waiting for MongoDB to be ready..."
+attempt=1
+max_attempts=30
+while ! mongosh --eval "db.version()" >/dev/null 2>&1; do
+    if [ $attempt -gt $max_attempts ]; then
+        echo "❌ Error: MongoDB failed to start within the timeout period"
+        exit 1
+    fi
+    echo "Attempt $attempt of $max_attempts: Waiting for MongoDB to be ready..."
+    sleep 2
+    ((attempt++))
+done
+
+echo "✅ MongoDB is up and running"
+
+# 9️⃣ Start the NestJS project
 echo "🚀 Starting the server..."
-npm run start
+npm run start:dev
 
 echo "🎉 Environment setup complete!"

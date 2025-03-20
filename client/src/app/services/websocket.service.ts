@@ -40,6 +40,19 @@ export class WebSocketService {
     });
   }
 
+  public onMapData(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('MAP_DATA', (data: any) => {
+        console.log('WebSocket: données MAP_DATA reçues', data.payload);
+        observer.next(data.payload);
+      });
+
+      return () => {
+        this.socket.off('MAP_DATA');
+      };
+    });
+  }
+
   public emit(event: string, data: any): void {
     this.socket.emit(event, {
       type: event,

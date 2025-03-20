@@ -18,6 +18,8 @@ import {
   InitialPositionMessage,
   RobotPosition,
   ErrorPayload,
+  MapDataMessage,
+  MapDataPayload,
 } from '../interfaces/websocket.interface';
 import { LogsService } from '../logs/logs.service';
 import { WebSocketEvent } from '../interfaces/websocket.interface';
@@ -65,6 +67,8 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private async initROS2() {
     try {
       this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
+      
+      // Abonnement aux données d'odométrie
       this.feedbackNode.createSubscription(
         'std_msgs/msg/String',
         '/robot_odom',
@@ -82,6 +86,42 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
           } catch (error) {
             this.logger.error(
               "Erreur lors du traitement des données d'odométrie:",
+              error,
+            );
+          }
+        },
+      );
+      
+      // Abonnement aux données de la carte (lidar)
+      this.feedbackNode.createSubscription(
+        'nav_msgs/msg/OccupancyGrid',
+        '/map',
+        (msg: any) => {
+          try {
+            // Conversion des données de carte pour le WebSocket
+            const mapData: MapDataPayload = {
+              resolution: msg.info.resolution,
+              width: msg.info.width,
+              height: msg.info.height,
+              origin: {
+                x: msg.info.origin.position.x,
+                y: msg.info.origin.position.y,
+                z: msg.info.origin.position.z,
+                orientation: {
+                  x: msg.info.origin.orientation.x,
+                  y: msg.info.origin.orientation.y,
+                  z: msg.info.origin.orientation.z,
+                  w: msg.info.origin.orientation.w
+                }
+              },
+              data: Array.from(msg.data)  // Conversion en Array JavaScript
+            };
+            
+            this.emitMapData(mapData);
+            this.logger.log("Données de carte reçues et transmises");
+          } catch (error) {
+            this.logger.error(
+              "Erreur lors du traitement des données de carte:",
               error,
             );
           }
@@ -126,6 +166,15 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     } catch (error) {
       this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
     }
+  }
+  
+  // Méthode pour émettre les données de la carte
+  private emitMapData(mapData: MapDataPayload) {
+    const message: MapDataMessage = {
+      type: 'MAP_DATA',
+      payload: mapData
+    };
+    this.server.emit('MAP_DATA', message);
   }
   @SubscribeMessage('requestMissionLogs')
   async handleRequestMissionLogs(client: Socket, missionId: string) {

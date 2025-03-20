@@ -11,7 +11,8 @@ source /opt/ros/humble/setup.bash
 source install/setup.bash
 colcon build
 source install/setup.bash
-ros2 launch limo_base limo_base.launch.py id:=robot1_102 
+ros2 launch limo_bringup limo_start.launch.py pub_odom_tf:=false
+# ros2 launch limo_base limo_base.launch.py id:=robot1_102 
 
 
 # start limo et lidar : ros2 launch limo_bringup limo_start.launch.py pub_odom_tf:=false = start tout le limo at lidar, on peut mettre que ca launch rvis mais fais rien

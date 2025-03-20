@@ -18,7 +18,6 @@ run toolbox = ros2 launch slam_toolbox online_async_launch.py slam_params_file:=
 
 # installer nav2
 sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup
-sudo apt install ros-humble-twist-mux
 
 # Install essential packages
 sudo apt-get update \

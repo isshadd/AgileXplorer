@@ -16,5 +16,8 @@ envoyer un http au serveur : curl -X POST http://localhost:3000/robots/robot1_10
 
 kill le port 3000 : sudo lsof -i :3000
 
+lancer rviz = LD_PRELOAD=/lib/x86_64-linux-gnu/libpthread.so.0 rviz2
+teleopt keyboard = ros2 run teleop_twist_keyboard teleop_twist_keyboard 
+
 
 

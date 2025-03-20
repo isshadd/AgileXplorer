@@ -15,6 +15,24 @@ interface RobotTrail {
   color: string;
 }
 
+interface MapData {
+  resolution: number;
+  width: number;
+  height: number;
+  origin: {
+    x: number;
+    y: number;
+    z: number;
+    orientation: {
+      x: number;
+      y: number;
+      z: number;
+      w: number;
+    }
+  };
+  data: number[];
+}
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -39,6 +57,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly MIN_SCALE = 10;
   private readonly MAX_SCALE = 200;
   private backgroundImage: HTMLImageElement | null = null;
+  
+  // Propriétés pour les données du lidar
+  private mapData: MapData | null = null;
+  private mapCanvas: HTMLCanvasElement | null = null;
+  private mapCtx: CanvasRenderingContext2D | null = null;
 
   constructor(private websocketService: WebSocketService) {}
 
@@ -54,12 +77,29 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       })
     );
+    
+    // S'abonner aux données de la carte (lidar)
+    this.subscription.add(
+      this.websocketService.onMapData().subscribe((data: MapData) => {
+        console.log('MapComponent: Données lidar reçues:', data.width, 'x', data.height);
+        console.log('MapComponent: Exemple de données:', data.data.slice(0, 10));
+        console.log('MapComponent: Origin:', data.origin);
+        this.mapData = data;
+        this.renderMapData();
+      })
+    );
   }
 
   ngAfterViewInit(): void {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d')!;
     this.resizeCanvas();
+
+    // Créer un canvas séparé pour les données de carte
+    this.mapCanvas = document.createElement('canvas');
+    this.mapCanvas.width = canvas.width;
+    this.mapCanvas.height = canvas.height;
+    this.mapCtx = this.mapCanvas.getContext('2d')!;
 
     this.backgroundImage = new Image();
     this.backgroundImage.src = '/map.png';
@@ -70,6 +110,115 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     canvas.addEventListener('mousedown', this.handleMouseDown.bind(this));
     canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
     canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
+  }
+
+  // Méthode pour rendre les données du lidar
+  private renderMapData(): void {
+    console.log('renderMapData: Début du rendu');
+    if (!this.mapData || !this.mapCtx || !this.mapCanvas) {
+      console.warn('renderMapData: Données manquantes:', {
+        mapData: !!this.mapData,
+        mapCtx: !!this.mapCtx,
+        mapCanvas: !!this.mapCanvas
+      });
+      return;
+    }
+    
+    // Effacer le canvas de la carte
+    this.mapCtx.clearRect(0, 0, this.mapCanvas.width, this.mapCanvas.height);
+    
+    // Calculer l'échelle et la position
+    const mapWidthWorld = this.mapData.width * this.mapData.resolution;
+    const mapHeightWorld = this.mapData.height * this.mapData.resolution;
+    console.log('renderMapData: Dimensions monde:', { mapWidthWorld, mapHeightWorld, resolution: this.mapData.resolution });
+    
+    // Créer une image à partir des données de la grille
+    const imageData = this.mapCtx.createImageData(
+      this.mapData.width,
+      this.mapData.height
+    );
+    
+    // Compter les différents types de cellules pour le débogage
+    let unknownCells = 0;
+    let freeCells = 0;
+    let occupiedCells = 0;
+    
+    // Parcourir les données de la grille
+    for (let i = 0; i < this.mapData.data.length; i++) {
+      const value = this.mapData.data[i];
+      const xPos: number = i % this.mapData.width;
+      const yPos: number = Math.floor(i / this.mapData.width);
+      const idx = (yPos * this.mapData.width + xPos) * 4;
+      
+      // Définir la couleur en fonction de la valeur
+      if (value === -1) {
+        // Inconnu - semi-transparent gris
+        imageData.data[idx] = 128;     // R
+        imageData.data[idx + 1] = 128; // G
+        imageData.data[idx + 2] = 128; // B
+        imageData.data[idx + 3] = 50;  // A - semi-transparent
+        unknownCells++;
+      } else if (value === 0) {
+        // Libre - légèrement bleu pour mieux voir
+        imageData.data[idx] = 0;       // R
+        imageData.data[idx + 1] = 0;   // G
+        imageData.data[idx + 2] = 200; // B - bleu
+        imageData.data[idx + 3] = 20;  // A - légèrement visible
+        freeCells++;
+      } else {
+        // Occupé - dégradé du gris clair au noir
+        const intensity = Math.min(255, Math.floor(value * 2.55));
+        const color = 255 - intensity;
+        imageData.data[idx] = color;     // R
+        imageData.data[idx + 1] = color; // G
+        imageData.data[idx + 2] = color; // B
+        imageData.data[idx + 3] = 255;   // A - opaque
+        occupiedCells++;
+      }
+    }
+    
+    console.log('renderMapData: Statistiques cellules:', {
+      total: this.mapData.data.length,
+      inconnu: unknownCells,
+      libre: freeCells,
+      occupé: occupiedCells
+    });
+    
+    // Créer une image temporaire à partir des données
+    const tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = this.mapData.width;
+    tmpCanvas.height = this.mapData.height;
+    const tmpCtx = tmpCanvas.getContext('2d')!;
+    tmpCtx.putImageData(imageData, 0, 0);
+    
+    // Dessiner l'image transformée sur le canvas de la carte
+    this.mapCtx.save();
+    
+    // Calcul pour aligner les coordonnées de la grille avec le monde
+    const originX = this.centerX + this.mapData.origin.x * this.scale;
+    const originY = this.centerY - this.mapData.origin.y * this.scale;
+    const scaledResolution = this.mapData.resolution * this.scale;
+    
+    console.log('renderMapData: Transformations:', {
+      centerX: this.centerX,
+      centerY: this.centerY,
+      originX,
+      originY,
+      scaledResolution,
+      mapWidth: this.mapData.width,
+      mapHeight: this.mapData.height,
+      scale: this.scale
+    });
+    
+    this.mapCtx.translate(originX, originY);
+    this.mapCtx.scale(scaledResolution, -scaledResolution);
+    this.mapCtx.drawImage(tmpCanvas, 0, 0);
+    
+    this.mapCtx.restore();
+    
+    console.log('renderMapData: Rendu terminé');
+    // Forcer la mise à jour de l'affichage
+    this.drawMap();
   }
 
   private handleMouseDown(event: MouseEvent): void {
@@ -256,6 +405,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private drawMap(): void {
+    console.log('drawMap: Début du rafraîchissement');
     const canvas = this.canvasRef.nativeElement;
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -269,11 +419,21 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.ctx.translate(-scaledWidth/2, -scaledHeight/2);
       this.ctx.drawImage(this.backgroundImage, 0, 0, scaledWidth, scaledHeight);
       this.ctx.restore();
+      console.log('drawMap: Arrière-plan dessiné');
+    }
+    
+    // Dessiner les données du lidar (superposition)
+    if (this.mapCanvas) {
+      console.log('drawMap: Dessin du canvas lidar', this.mapCanvas.width, this.mapCanvas.height);
+      this.ctx.drawImage(this.mapCanvas, 0, 0);
+    } else {
+      console.warn('drawMap: mapCanvas non initialisé!');
     }
 
     this.robotTrails.forEach(trail => {
       this.drawRobotTrail(trail);
     });
+    console.log('drawMap: Trajectoires des robots dessinées');
   }
 
   private drawRobotTrail(trail: RobotTrail): void {

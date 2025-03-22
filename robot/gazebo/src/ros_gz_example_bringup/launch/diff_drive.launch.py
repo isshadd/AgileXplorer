@@ -1,80 +1,97 @@
 import os
-import subprocess  # pour lancer le script Python
+import subprocess
 from ament_index_python.packages import get_package_share_directory
-
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    # Configure ROS nodes for launch
+    # Define robot namespaces
+    robot_names = ['robot1_102'] #, 'robot2_102']
+    robot_models = ['limo1'] #'limo2']  # Names in Gazebo SDF
 
-    id_arg = DeclareLaunchArgument(
-        'id',
-        default_value='robot1_102',
-        description='Namespace ID for the robot'
-    )
-
-    # Setup project paths
+    # Setup paths
     pkg_project_bringup = get_package_share_directory('ros_gz_example_bringup')
     pkg_project_gazebo = get_package_share_directory('ros_gz_example_gazebo')
     pkg_project_description = get_package_share_directory('ros_gz_example_description')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
-    # Generate the random map
+    # Generate random world (same as before)
     random_generator_script = os.path.join(pkg_project_bringup, 'launch', 'random_generator.py')
     subprocess.run(["python3", random_generator_script], check=True)
     random_world_path = os.path.join(pkg_project_bringup, 'launch', 'random_world.sdf')
-    
 
+    # Launch Gazebo
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
         launch_arguments={'gz_args': random_world_path}.items(),
     )
 
-    sdf_file = os.path.join(pkg_project_description, 'models', 'limo_diff_drive', 'model.sdf')
-    with open(sdf_file, 'r') as infp:
-        robot_desc = infp.read()
+    # Create nodes for each robot
+    nodes = []
+    for i, (robot_name, model_name) in enumerate(zip(robot_names, robot_models)):
+        # Robot State Publisher (namespaced)
+        robot_sdf = f'limo{i+1}.sdf'
+        diff_drive_dir = f'limo_diff_drive{i+1}'
+        sdf_file = os.path.join(pkg_project_description, 'models', diff_drive_dir, robot_sdf)
+        with open(sdf_file, 'r') as f:
+            robot_desc = f.read()
+        
+        robot_state_publisher = Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='both',
+            parameters=[
+                {'use_sim_time': True},
+                {'robot_description': robot_desc},
+            ]
+        )
+        nodes.append(robot_state_publisher)
 
-    # Node qui publie l’URDF (ou SDF) sur /robot_description
-    robot_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
-        output='both',
-        parameters=[
-            {'use_sim_time': True},
-            {'robot_description': robot_desc},
-        ]
+        # Parameter Bridge 
+        bridge_config = f'ros_gz_example_bridge{i+1}.yaml'
+        bridge = Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            name=f'{robot_name}_bridge',
+            #namespace=robot_name,
+            # remappings=[
+            #     ('/cmd_vel', [ '/', robot_name, '/cmd_vel']),
+            #     ('/imu', [ '/', robot_name, '/imu']),
+            #     ('/limo_status', [ '/', robot_name, '/limo_status']),
+            #     ('/odom', [ '/', robot_name, '/odom']),
+            #     ('/parameter_events', [ '/', robot_name, '/parameter_events']),
+            #     ('/rosout', [ '/', robot_name, '/rosout']),
+            #     ('/scan', [ '/', robot_name, '/scan']),
+            #     ('/tf', [ '/', robot_name, '/tf']),
+            # ],
+            parameters=[{
+                'config_file': os.path.join(pkg_project_bringup, 'config', bridge_config),
+                'qos_overrides./tf_static.publisher.durability': 'transient_local',
+            }],
+            output='screen'
+        )
+
+        nodes.append(bridge)
+
+    slam_robot1 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                get_package_share_directory('ros_gz_example_bringup'),
+                'launch/map.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'namespace': 'robot1_102',
+            'slam_params_file': PathJoinSubstitution([
+                get_package_share_directory('ros_gz_example_bringup'),
+                'config/slam_config1.yaml'
+            ])
+        }.items()
     )
 
-    bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        #namespace=LaunchConfiguration('id'),
-        # remappings=[
-        #     ('/cmd_vel', [ '/', LaunchConfiguration('id'), '/cmd_vel']),
-        #     ('/imu', [ '/', LaunchConfiguration('id'), '/imu']),
-        #     ('/limo_status', [ '/', LaunchConfiguration('id'), '/limo_status']),
-        #     ('/odom', [ '/', LaunchConfiguration('id'), '/odom']),
-        #     ('/parameter_events', [ '/', LaunchConfiguration('id'), '/parameter_events']),
-        #     ('/rosout', [ '/', LaunchConfiguration('id'), '/rosout']),
-        #     ('/tf', [ '/', LaunchConfiguration('id'), '/tf']),
-        # ],
-        parameters=[{
-            'config_file': os.path.join(pkg_project_bringup, 'config', 'ros_gz_example_bridge.yaml'),
-            'qos_overrides./tf_static.publisher.durability': 'transient_local',
-        }],
-        output='screen'
-    )
-
-    return LaunchDescription([
-        id_arg,
-        gz_sim,
-        bridge,
-        robot_state_publisher,
-    ])
+    return LaunchDescription([gz_sim, slam_robot1] + nodes)

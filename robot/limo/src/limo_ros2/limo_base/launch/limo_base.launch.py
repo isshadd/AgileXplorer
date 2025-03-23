@@ -13,7 +13,7 @@ def generate_launch_description():
 
     id_arg = DeclareLaunchArgument(
         'id',
-        default_value='102robot1',
+        default_value='limo1',
         description='Namespace ID for the robot'
     )
 
@@ -43,16 +43,16 @@ def generate_launch_description():
         executable='limo_base',  #foxy executable='limo_base',
         output='screen',
         emulate_tty=True,
-        namespace=LaunchConfiguration('id'),
-        remappings=[
-            ('/cmd_vel', [ '/', LaunchConfiguration('id'), '/cmd_vel']),
-            ('/imu', [ '/', LaunchConfiguration('id'), '/imu']),
-            ('/limo_status', [ '/', LaunchConfiguration('id'), '/limo_status']),
-            ('/odom', [ '/', LaunchConfiguration('id'), '/odom']),
-            ('/parameter_events', [ '/', LaunchConfiguration('id'), '/parameter_events']),
-            ('/rosout', [ '/', LaunchConfiguration('id'), '/rosout']),
-            ('/tf', [ '/', LaunchConfiguration('id'), '/tf']),
-        ],
+        # namespace=LaunchConfiguration('id'),
+        # remappings=[
+        #     ('/cmd_vel', [ '/', LaunchConfiguration('id'), '/cmd_vel']),
+        #     ('/imu', [ '/', LaunchConfiguration('id'), '/imu']),
+        #     ('/limo_status', [ '/', LaunchConfiguration('id'), '/limo_status']),
+        #     ('/odom', [ '/', LaunchConfiguration('id'), '/odom']),
+        #     ('/parameter_events', [ '/', LaunchConfiguration('id'), '/parameter_events']),
+        #     ('/rosout', [ '/', LaunchConfiguration('id'), '/rosout']),
+        #     ('/tf', [ '/', LaunchConfiguration('id'), '/tf']),
+        # ],
         parameters=[{
                 # 'use_sim_time': launch.substitutions.LaunchConfiguration('use_sim_time'),
                 'port_name': launch.substitutions.LaunchConfiguration('port_name'),                

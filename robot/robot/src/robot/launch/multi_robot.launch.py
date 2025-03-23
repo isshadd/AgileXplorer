@@ -8,19 +8,19 @@ from launch_ros.actions import PushRosNamespace
 def generate_launch_description():
     # Instance pour robot1
     robot1 = GroupAction([
-        PushRosNamespace('robot1_102'),
+        PushRosNamespace('limo1'),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(['path/to/robot.launch.py']),
-            launch_arguments={'id': 'robot1_102', 'robot_speed': '0.5'}.items()
+            launch_arguments={'id': 'limo1', 'robot_speed': '0.5'}.items()
         )
     ])
 
     # Instance pour robot2
     robot2 = GroupAction([
-        PushRosNamespace('robot2_102'),
+        PushRosNamespace('limo2'),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(['path/to/robot.launch.py']),
-            launch_arguments={'id': 'robot2_102', 'robot_speed': '0.5'}.items()
+            launch_arguments={'id': 'limo2', 'robot_speed': '0.5'}.items()
         )
     ])
 

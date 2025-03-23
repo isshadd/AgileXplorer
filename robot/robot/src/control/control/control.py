@@ -8,7 +8,7 @@ class MoveController(Node):
 
     def __init__(self):
         super().__init__('move_controller')
-        self.declare_parameter('robot_id', 'robot1_102')
+        self.declare_parameter('robot_id', 'limo1')
         self.robot_id = self.get_parameter('robot_id').value
 
         movement_topic = f'/{self.robot_id}/movement'

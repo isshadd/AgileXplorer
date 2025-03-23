@@ -18,7 +18,7 @@ export class MissionService {
     this.initPromise = rclnodejs.init()
       .then(() => {
         // Liste des identifiants de robots à gérer
-        const robotIds = ['robot1_102', 'robot2_102'];
+        const robotIds = ['limo1', 'limo2'];
         robotIds.forEach((robotId) => {
           // Création du noeud et du publisher pour les missions
           const missionNode = rclnodejs.createNode(`mission_service_node_${robotId}`);

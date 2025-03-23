@@ -1,3 +1,5 @@
+# setup lidar et localisation
+
 # Running on the Jetson Nano:
 ```shell
 # download https://github.com/dusty-nv/jetson-containers if needed
@@ -8,9 +10,14 @@ cd ~/agx_workspace
 git clone https://github.com/agilexrobotics/limo_ros2.git src
 
 
-# Début 
+# Début
 
-source /opt/ros/humble/setup.bash
+# installer toolbox
+sudo apt install ros-humble-slam-toolbox
+run toolbox = ros2 launch slam_toolbox online_async_launch.py slam_params_file:=gazebo/src/ros_gz_example_bringup/config/mapper_params_online_async.yaml use_sim_time:=true use_sim_time:=true   scan_topic:=/scan   base_frame:=limo/base_footprint   odom_frame:=limo/odom
+
+# installer nav2
+sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup
 
 # Install essential packages
 sudo apt-get update \

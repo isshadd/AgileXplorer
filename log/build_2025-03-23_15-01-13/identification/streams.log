@@ -1,0 +1,37 @@
+[1.253s] Invoking command in '/home/kevin/Desktop/INF3995-102/robot/robot/src/identification': PYTHONPATH=/home/kevin/Desktop/INF3995-102/build/identification/prefix_override:/usr/local/lib/python3.10/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/kevin/Desktop/INF3995-102/install/identification/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../../build/identification build --build-base /home/kevin/Desktop/INF3995-102/build/identification/build install --record /home/kevin/Desktop/INF3995-102/build/identification/install.log --single-version-externally-managed install_data
+[1.481s] running egg_info
+[1.481s] creating ../../../../build/identification/identification.egg-info
+[1.483s] writing ../../../../build/identification/identification.egg-info/PKG-INFO
+[1.483s] writing dependency_links to ../../../../build/identification/identification.egg-info/dependency_links.txt
+[1.484s] writing entry points to ../../../../build/identification/identification.egg-info/entry_points.txt
+[1.484s] writing requirements to ../../../../build/identification/identification.egg-info/requires.txt
+[1.484s] writing top-level names to ../../../../build/identification/identification.egg-info/top_level.txt
+[1.484s] writing manifest file '../../../../build/identification/identification.egg-info/SOURCES.txt'
+[1.484s] reading manifest file '../../../../build/identification/identification.egg-info/SOURCES.txt'
+[1.485s] writing manifest file '../../../../build/identification/identification.egg-info/SOURCES.txt'
+[1.486s] running build
+[1.486s] running build_py
+[1.486s] creating /home/kevin/Desktop/INF3995-102/build/identification/build
+[1.492s] creating /home/kevin/Desktop/INF3995-102/build/identification/build/lib
+[1.493s] creating /home/kevin/Desktop/INF3995-102/build/identification/build/lib/identification
+[1.493s] copying identification/__init__.py -> /home/kevin/Desktop/INF3995-102/build/identification/build/lib/identification
+[1.493s] copying identification/identification.py -> /home/kevin/Desktop/INF3995-102/build/identification/build/lib/identification
+[1.493s] running install
+[1.493s] running install_lib
+[1.493s] creating /home/kevin/Desktop/INF3995-102/install/identification/lib/python3.10/site-packages/identification
+[1.493s] copying /home/kevin/Desktop/INF3995-102/build/identification/build/lib/identification/__init__.py -> /home/kevin/Desktop/INF3995-102/install/identification/lib/python3.10/site-packages/identification
+[1.497s] copying /home/kevin/Desktop/INF3995-102/build/identification/build/lib/identification/identification.py -> /home/kevin/Desktop/INF3995-102/install/identification/lib/python3.10/site-packages/identification
+[1.497s] byte-compiling /home/kevin/Desktop/INF3995-102/install/identification/lib/python3.10/site-packages/identification/__init__.py to __init__.cpython-310.pyc
+[1.497s] byte-compiling /home/kevin/Desktop/INF3995-102/install/identification/lib/python3.10/site-packages/identification/identification.py to identification.cpython-310.pyc
+[1.498s] running install_data
+[1.498s] creating /home/kevin/Desktop/INF3995-102/install/identification/share/ament_index
+[1.498s] creating /home/kevin/Desktop/INF3995-102/install/identification/share/ament_index/resource_index
+[1.498s] creating /home/kevin/Desktop/INF3995-102/install/identification/share/ament_index/resource_index/packages
+[1.498s] copying resource/identification -> /home/kevin/Desktop/INF3995-102/install/identification/share/ament_index/resource_index/packages
+[1.498s] copying package.xml -> /home/kevin/Desktop/INF3995-102/install/identification/share/identification
+[1.498s] running install_egg_info
+[1.499s] Copying ../../../../build/identification/identification.egg-info to /home/kevin/Desktop/INF3995-102/install/identification/lib/python3.10/site-packages/identification-0.0.0-py3.10.egg-info
+[1.499s] running install_scripts
+[1.526s] Installing identify_node script to /home/kevin/Desktop/INF3995-102/install/identification/lib/identification
+[1.527s] writing list of installed files to '/home/kevin/Desktop/INF3995-102/build/identification/install.log'
+[1.602s] Invoked command in '/home/kevin/Desktop/INF3995-102/robot/robot/src/identification' returned '0': PYTHONPATH=/home/kevin/Desktop/INF3995-102/build/identification/prefix_override:/usr/local/lib/python3.10/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/kevin/Desktop/INF3995-102/install/identification/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../../build/identification build --build-base /home/kevin/Desktop/INF3995-102/build/identification/build install --record /home/kevin/Desktop/INF3995-102/build/identification/install.log --single-version-externally-managed install_data

@@ -1,0 +1,3 @@
+[console_scripts]
+identify_node = identification.identification:main
+

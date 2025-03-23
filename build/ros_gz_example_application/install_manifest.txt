@@ -1,0 +1,15 @@
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ament_index/resource_index/package_run_dependencies/ros_gz_example_application
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ament_index/resource_index/parent_prefix_path/ros_gz_example_application
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/environment/ament_prefix_path.sh
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/environment/ament_prefix_path.dsv
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/environment/path.sh
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/environment/path.dsv
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/local_setup.bash
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/local_setup.sh
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/local_setup.zsh
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/local_setup.dsv
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/package.dsv
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ament_index/resource_index/packages/ros_gz_example_application
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/cmake/ros_gz_example_applicationConfig.cmake
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/cmake/ros_gz_example_applicationConfig-version.cmake
+/home/kevin/Desktop/INF3995-102/install/ros_gz_example_application/share/ros_gz_example_application/package.xml

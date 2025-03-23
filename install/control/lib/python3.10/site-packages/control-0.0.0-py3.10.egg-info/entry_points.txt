@@ -1,0 +1,3 @@
+[console_scripts]
+move_controller = control.control:main
+

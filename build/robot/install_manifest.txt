@@ -1,0 +1,17 @@
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot//launch/multi_robot.launch.py
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot//launch/robot.launch.py
+/home/kevin/Desktop/INF3995-102/install/robot/share/ament_index/resource_index/package_run_dependencies/robot
+/home/kevin/Desktop/INF3995-102/install/robot/share/ament_index/resource_index/parent_prefix_path/robot
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/environment/ament_prefix_path.sh
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/environment/ament_prefix_path.dsv
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/environment/path.sh
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/environment/path.dsv
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/local_setup.bash
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/local_setup.sh
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/local_setup.zsh
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/local_setup.dsv
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/package.dsv
+/home/kevin/Desktop/INF3995-102/install/robot/share/ament_index/resource_index/packages/robot
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/cmake/robotConfig.cmake
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/cmake/robotConfig-version.cmake
+/home/kevin/Desktop/INF3995-102/install/robot/share/robot/package.xml

@@ -6,6 +6,7 @@ export ROS_DOMAIN_ID=102
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 colcon build --packages-select common_msgs
+source install/setup.bash
 
 # launch gazebo
 ros2 launch ros_gz_example_bringup diff_drive.launch.py & sleep 10

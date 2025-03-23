@@ -10,9 +10,9 @@ Supprimer tous les .identifer : sudo find . -name "*.Identifier" -type f -delete
 
 mettre un script sh en unix style : dos2unix file.sh
 
-publier sur un topic : ros2 topic pub /robot2_102/messages std_msgs/msg/String '{data: "{\"action\": \"start_mission\"}"}' -1
+publier sur un topic : ros2 topic pub /limo1/messages std_msgs/msg/String '{data: "{\"action\": \"start_mission\"}"}' -1
 
-envoyer un http au serveur : curl -X POST http://localhost:3000/robots/robot1_102/mission/start
+envoyer un http au serveur : curl -X POST http://localhost:3000/robots/limo1/mission/start
 
 kill le port 3000 : sudo lsof -i :3000
 

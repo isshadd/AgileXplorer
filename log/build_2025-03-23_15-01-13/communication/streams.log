@@ -1,0 +1,37 @@
+[1.258s] Invoking command in '/home/kevin/Desktop/INF3995-102/robot/robot/src/communication': PYTHONPATH=/home/kevin/Desktop/INF3995-102/build/communication/prefix_override:/usr/local/lib/python3.10/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/kevin/Desktop/INF3995-102/install/communication/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../../build/communication build --build-base /home/kevin/Desktop/INF3995-102/build/communication/build install --record /home/kevin/Desktop/INF3995-102/build/communication/install.log --single-version-externally-managed install_data
+[1.564s] running egg_info
+[1.565s] creating ../../../../build/communication/communication.egg-info
+[1.566s] writing ../../../../build/communication/communication.egg-info/PKG-INFO
+[1.567s] writing dependency_links to ../../../../build/communication/communication.egg-info/dependency_links.txt
+[1.568s] writing entry points to ../../../../build/communication/communication.egg-info/entry_points.txt
+[1.569s] writing requirements to ../../../../build/communication/communication.egg-info/requires.txt
+[1.569s] writing top-level names to ../../../../build/communication/communication.egg-info/top_level.txt
+[1.569s] writing manifest file '../../../../build/communication/communication.egg-info/SOURCES.txt'
+[1.569s] reading manifest file '../../../../build/communication/communication.egg-info/SOURCES.txt'
+[1.570s] writing manifest file '../../../../build/communication/communication.egg-info/SOURCES.txt'
+[1.570s] running build
+[1.570s] running build_py
+[1.570s] creating /home/kevin/Desktop/INF3995-102/build/communication/build
+[1.570s] creating /home/kevin/Desktop/INF3995-102/build/communication/build/lib
+[1.570s] creating /home/kevin/Desktop/INF3995-102/build/communication/build/lib/communication
+[1.570s] copying communication/__init__.py -> /home/kevin/Desktop/INF3995-102/build/communication/build/lib/communication
+[1.570s] copying communication/communication.py -> /home/kevin/Desktop/INF3995-102/build/communication/build/lib/communication
+[1.571s] running install
+[1.571s] running install_lib
+[1.573s] creating /home/kevin/Desktop/INF3995-102/install/communication/lib/python3.10/site-packages/communication
+[1.573s] copying /home/kevin/Desktop/INF3995-102/build/communication/build/lib/communication/__init__.py -> /home/kevin/Desktop/INF3995-102/install/communication/lib/python3.10/site-packages/communication
+[1.573s] copying /home/kevin/Desktop/INF3995-102/build/communication/build/lib/communication/communication.py -> /home/kevin/Desktop/INF3995-102/install/communication/lib/python3.10/site-packages/communication
+[1.573s] byte-compiling /home/kevin/Desktop/INF3995-102/install/communication/lib/python3.10/site-packages/communication/__init__.py to __init__.cpython-310.pyc
+[1.574s] byte-compiling /home/kevin/Desktop/INF3995-102/install/communication/lib/python3.10/site-packages/communication/communication.py to communication.cpython-310.pyc
+[1.575s] running install_data
+[1.575s] creating /home/kevin/Desktop/INF3995-102/install/communication/share/ament_index
+[1.575s] creating /home/kevin/Desktop/INF3995-102/install/communication/share/ament_index/resource_index
+[1.575s] creating /home/kevin/Desktop/INF3995-102/install/communication/share/ament_index/resource_index/packages
+[1.576s] copying resource/communication -> /home/kevin/Desktop/INF3995-102/install/communication/share/ament_index/resource_index/packages
+[1.576s] copying package.xml -> /home/kevin/Desktop/INF3995-102/install/communication/share/communication
+[1.576s] running install_egg_info
+[1.578s] Copying ../../../../build/communication/communication.egg-info to /home/kevin/Desktop/INF3995-102/install/communication/lib/python3.10/site-packages/communication-0.0.0-py3.10.egg-info
+[1.580s] running install_scripts
+[1.611s] Installing communication_controller script to /home/kevin/Desktop/INF3995-102/install/communication/lib/communication
+[1.611s] writing list of installed files to '/home/kevin/Desktop/INF3995-102/build/communication/install.log'
+[1.652s] Invoked command in '/home/kevin/Desktop/INF3995-102/robot/robot/src/communication' returned '0': PYTHONPATH=/home/kevin/Desktop/INF3995-102/build/communication/prefix_override:/usr/local/lib/python3.10/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/kevin/Desktop/INF3995-102/install/communication/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../../build/communication build --build-base /home/kevin/Desktop/INF3995-102/build/communication/build install --record /home/kevin/Desktop/INF3995-102/build/communication/install.log --single-version-externally-managed install_data

@@ -1,6 +1,0 @@
-Invoking command in '/home/kevin/Desktop/INF3995-102/build/robot': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/kevin/Desktop/INF3995-102/robot/robot/src/robot -DCMAKE_INSTALL_PREFIX=/home/kevin/Desktop/INF3995-102/install/robot
-Invoked command in '/home/kevin/Desktop/INF3995-102/build/robot' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/kevin/Desktop/INF3995-102/robot/robot/src/robot -DCMAKE_INSTALL_PREFIX=/home/kevin/Desktop/INF3995-102/install/robot
-Invoking command in '/home/kevin/Desktop/INF3995-102/build/robot': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/kevin/Desktop/INF3995-102/build/robot -- -j20 -l20
-Invoked command in '/home/kevin/Desktop/INF3995-102/build/robot' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/kevin/Desktop/INF3995-102/build/robot -- -j20 -l20
-Invoking command in '/home/kevin/Desktop/INF3995-102/build/robot': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/kevin/Desktop/INF3995-102/build/robot
-Invoked command in '/home/kevin/Desktop/INF3995-102/build/robot' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/kevin/Desktop/INF3995-102/build/robot

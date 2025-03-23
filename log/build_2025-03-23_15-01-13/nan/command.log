@@ -1,4 +1,0 @@
-Invoking command in '/home/kevin/Desktop/INF3995-102/build/nan': /usr/bin/cmake /home/kevin/Desktop/INF3995-102/server/node_modules/nan -DCMAKE_INSTALL_PREFIX=/home/kevin/Desktop/INF3995-102/install/nan
-Invoked command in '/home/kevin/Desktop/INF3995-102/build/nan' returned '0': /usr/bin/cmake /home/kevin/Desktop/INF3995-102/server/node_modules/nan -DCMAKE_INSTALL_PREFIX=/home/kevin/Desktop/INF3995-102/install/nan
-Invoking command in '/home/kevin/Desktop/INF3995-102/build/nan': /usr/bin/cmake --build /home/kevin/Desktop/INF3995-102/build/nan -- -j20 -l20
-Invoked command in '/home/kevin/Desktop/INF3995-102/build/nan' returned '0': /usr/bin/cmake --build /home/kevin/Desktop/INF3995-102/build/nan -- -j20 -l20

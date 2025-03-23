@@ -1,6 +1,0 @@
-/home/kevin/Desktop/INF3995-102/build/nan/CMakeFiles/lint.dir
-/home/kevin/Desktop/INF3995-102/build/nan/CMakeFiles/test.dir
-/home/kevin/Desktop/INF3995-102/build/nan/CMakeFiles/forcetest.dir
-/home/kevin/Desktop/INF3995-102/build/nan/CMakeFiles/docs.dir
-/home/kevin/Desktop/INF3995-102/build/nan/CMakeFiles/edit_cache.dir
-/home/kevin/Desktop/INF3995-102/build/nan/CMakeFiles/rebuild_cache.dir

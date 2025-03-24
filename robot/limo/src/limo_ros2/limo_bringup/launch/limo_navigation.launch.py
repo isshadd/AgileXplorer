@@ -92,14 +92,6 @@ def generate_launch_description():
             remappings=remappings),
 
         Node(
-            package='nav2_recoveries',
-            executable='recoveries_server',
-            name='recoveries_server',
-            output='screen',
-            parameters=[{'use_sim_time': use_sim_time}],
-            remappings=remappings),
-
-        Node(
             package='nav2_bt_navigator',
             executable='bt_navigator',
             name='bt_navigator',
@@ -125,7 +117,6 @@ def generate_launch_description():
                         {'autostart': autostart},
                         {'node_names': ['controller_server',
                                         'planner_server',
-                                        'recoveries_server',
                                         'bt_navigator',
                                         'waypoint_follower']}]),
     ])

@@ -17,7 +17,7 @@ from nav2_common.launch import RewrittenYaml, ReplaceString
 
 def generate_launch_description():
     # Dossier où se trouve nav2_bringup
-    bringup_dir = get_package_share_directory('nav2_bringup')
+    bringup_dir = get_package_share_directory('limo_bringup')
     launch_dir = os.path.join(bringup_dir, 'launch')
 
     # On définit un chemin par défaut pour la map venant de limo_bringup
@@ -120,7 +120,7 @@ def generate_launch_description():
         # si c’est déjà un param par défaut de nav2_bringup.
         default_value=os.path.join(
             bringup_dir,
-            'params',
+            'param',
             'navigation2.yaml'
         ),
         description='Full path to the ROS2 parameters file to use for all launched nodes'
@@ -200,7 +200,7 @@ def generate_launch_description():
 
         # Navigation
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(launch_dir, 'navigation_launch.py')),
+            PythonLaunchDescriptionSource(os.path.join(launch_dir, 'limo_navigation.launch.py')), #navigation_launch
             launch_arguments={
                 'namespace': namespace,
                 'use_sim_time': use_sim_time,

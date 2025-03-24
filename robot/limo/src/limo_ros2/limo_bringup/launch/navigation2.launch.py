@@ -30,8 +30,7 @@ def generate_launch_description():
         'map',
         default=os.path.join(
             get_package_share_directory('limo_bringup'),
-            'maps',
-            'zhiyuan.yaml'))
+            'maps'))
 
     param_file_name = 'navigation2.yaml'
     param_dir = LaunchConfiguration(

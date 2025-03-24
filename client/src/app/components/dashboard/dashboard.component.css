@@ -18,6 +18,101 @@
 .robot-card {
     flex: 1;
     max-width: 400px;
+    transition: all 0.3s ease;
+}
+
+.robot-card.mission-active {
+    border: 2px solid #4caf50;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+.robot-card.identified {
+    border: 2px solid #2196f3;
+    box-shadow: 0 0 15px rgba(33, 150, 243, 0.3);
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.status-indicator .status-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.status-indicator.mission-active {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+}
+
+.status-indicator.identified {
+    background-color: rgba(33, 150, 243, 0.2);
+    color: #2196f3;
+}
+
+.status-indicator.inactive {
+    background-color: rgba(158, 158, 158, 0.2);
+    color: #9e9e9e;
+}
+
+.robot-status {
+    padding: 1rem;
+}
+
+.battery-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.battery-label {
+    min-width: 160px;
+    color: rgba(255, 255, 255, 0.87);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.battery-label mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.battery-percentage {
+    min-width: 50px;
+    text-align: right;
+    color: rgba(255, 255, 255, 0.87);
+}
+
+mat-progress-bar {
+    flex-grow: 1;
+    height: 8px !important;
+}
+
+/* Override Material progress bar colors */
+::ng-deep .mdc-linear-progress__buffer {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+::ng-deep .mdc-linear-progress__bar-inner {
+    background: linear-gradient(to right, #4caf50, #8bc34a) !important;
+}
+
+.low-battery {
+    color: #ff6b6b;
+}
+
+mat-progress-bar.low-battery ::ng-deep .mdc-linear-progress__bar-inner {
+    background: linear-gradient(to right, #ff6b6b, #ff4444) !important;
 }
 
 .mission-controls {

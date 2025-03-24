@@ -5,4 +5,4 @@ cd limo
 
 export ROS_DOMAIN_ID=102
 source /opt/ros/humble/setup.bash
-ros2 launch nav2_bringup navigation_launch.py   params_file:=src/ros_gz_example_bringup/config/nav2_params.yaml use_sim_time:=false   autostart:=true
+ros2 launch limo_bringup bringup_launch.py

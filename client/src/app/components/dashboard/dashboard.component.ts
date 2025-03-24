@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
@@ -9,6 +11,7 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 import { RobotState } from '../../interfaces/robot-state.interface';
 import { MissionHistoryComponent } from '../mission-history/mission-history.component';
 import { MapComponent } from '../map/map.component';
+import { WebSocketService } from '../../services/websocket.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,6 +21,8 @@ import { MapComponent } from '../map/map.component';
         MatButtonModule,
         MatCardModule,
         MatDialogModule,
+        MatProgressBarModule,
+        MatIconModule,
         MissionHistoryComponent
         MapComponent
     ],
@@ -34,7 +39,14 @@ export class DashboardComponent {
         private robotService: RobotService,
         private notificationService: NotificationService,
         private dialog: MatDialog,
-    ) {}
+        private websocketService: WebSocketService,
+    ) {
+        this.websocketService.onBatteryData().subscribe((data: { robotId: string, battery_level: number }) => {
+            if (this.robotStates[data.robotId]) {
+              this.robotStates[data.robotId].battery_level = data.battery_level;
+            }
+          });
+    }
 
     startMission(robotId: string): void {
         this.robotService.startMission(robotId).subscribe(() => {

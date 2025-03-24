@@ -53,6 +53,18 @@ export class WebSocketService {
     });
   }
 
+  public onBatteryData(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('BATTERY_DATA', (data: any) => {
+        observer.next(data.payload);
+      });
+  
+      return () => {
+        this.socket.off('BATTERY_DATA');
+      };
+    });
+  }
+
   public emit(event: string, data: any): void {
     this.socket.emit(event, {
       type: event,

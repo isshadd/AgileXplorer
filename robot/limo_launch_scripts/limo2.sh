@@ -11,4 +11,4 @@ source /opt/ros/humble/setup.bash
 source install/setup.bash
 colcon build
 source install/setup.bash
-ros2 launch limo_base limo_base.launch.py id:=limo1
+ros2 launch limo_bringup limo_start.launch.py pub_odom_tf:=false id:=2

@@ -2,80 +2,37 @@
     <mat-card>
         <mat-card-header>
             <mat-card-title>Historique des Missions</mat-card-title>
+            <button mat-raised-button color="primary" (click)="loadMissions()">
+                <mat-icon>refresh</mat-icon>
+                Charger les missions
+            </button>
         </mat-card-header>
         <mat-card-content>
             <table mat-table [dataSource]="missions" matSort class="mission-table">
-                <!-- Date/Heure Colonne -->
+                <!-- ID Colonne -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef>ID Mission</th>
+                    <td mat-cell *matCellDef="let mission">{{mission.id}}</td>
+                </ng-container>
+
+                <!-- Date Début Colonne -->
                 <ng-container matColumnDef="startTime">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date/Heure</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Début</th>
                     <td mat-cell *matCellDef="let mission">
                         {{mission.startTime | date:'dd/MM/yyyy HH:mm:ss'}}
                     </td>
                 </ng-container>
 
-                <!-- Durée Colonne -->
-                <ng-container matColumnDef="duration">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Durée</th>
+                <!-- Date Fin Colonne -->
+                <ng-container matColumnDef="endTime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Fin</th>
                     <td mat-cell *matCellDef="let mission">
-                        {{formatDuration(mission.duration)}}
-                    </td>
-                </ng-container>
-
-                <!-- Status Colonne -->
-                <ng-container matColumnDef="status">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
-                    <td mat-cell *matCellDef="let mission">
-                        <span [class]="'status-badge ' + mission.status">
-                            {{mission.status === 'completed' ? 'Terminée' :
-                              mission.status === 'ongoing' ? 'En cours' : 'Annulée'}}
-                        </span>
-                    </td>
-                </ng-container>
-
-                <!-- Robots Colonne -->
-                <ng-container matColumnDef="robots">
-                    <th mat-header-cell *matHeaderCellDef>Robots</th>
-                    <td mat-cell *matCellDef="let mission">
-                        {{mission.robots.join(', ')}}
-                    </td>
-                </ng-container>
-
-                <!-- Distance Totale Colonne -->
-                <ng-container matColumnDef="totalDistance">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Distance Totale</th>
-                    <td mat-cell *matCellDef="let mission">
-                        {{formatDistance(mission.totalDistance)}}
-                    </td>
-                </ng-container>
-
-                <!-- Actions Colonne -->
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef>Actions</th>
-                    <td mat-cell *matCellDef="let mission">
-                        <button mat-icon-button color="primary"
-                                matTooltip="Voir les détails"
-                                (click)="viewMissionDetails(mission)">
-                            <mat-icon>info</mat-icon>
-                        </button>
-                        
-                        <button mat-icon-button color="accent"
-                                matTooltip="Télécharger les logs"
-                                (click)="downloadLogs(mission)">
-                            <mat-icon>download</mat-icon>
-                        </button>
-
-                        <button mat-icon-button
-                                [color]="mission.map ? 'primary' : 'default'"
-                                [disabled]="!mission.map"
-                                matTooltip="Voir la carte"
-                                (click)="loadMap(mission)">
-                            <mat-icon>map</mat-icon>
-                        </button>
+                        {{mission.endTime | date:'dd/MM/yyyy HH:mm:ss'}}
                     </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="showMissionLogs(row)" class="clickable-row"></tr>
             </table>
 
             <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"

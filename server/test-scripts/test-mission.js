@@ -14,7 +14,7 @@ async function testMissionFlow() {
     // Wait for 2 seconds
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Get mission logs
+    // Get mission logscd
     console.log('\nFetching mission logs...');
     const logsResponse = await fetch(`${baseUrl}/mission/${startData.missionId}/logs`);
     const logsData = await logsResponse.json();

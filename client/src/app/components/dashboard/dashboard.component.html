@@ -1,28 +1,32 @@
-<div class="robots-container">
-    <mat-card *ngFor="let robotId of ['robot1_102', 'robot2_102']" class="robot-card">
-        <mat-card-header>
-            <mat-card-title>Contrôle du {{ robotId }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <div class="mission-controls">
-                <button mat-raised-button
-                        color="primary"
-                        (click)="startMission(robotId)"
-                        [disabled]="robotStates[robotId].isMissionActive || !robotStates[robotId].isIdentified">
-                    Démarrer Mission
-                </button>
-                <button mat-raised-button 
-                        color="warn" 
-                        (click)="stopMission(robotId)" 
-                        [disabled]="!robotStates[robotId].isMissionActive">
-                    Arrêter Mission
-                </button>
-                <button mat-raised-button
-                        color="primary"
-                        (click)="identify(robotId)">
-                    Identifier
-                </button>
-            </div>
-        </mat-card-content>
-    </mat-card>
+<div class="dashboard-container">
+    <div class="robots-container">
+        <mat-card *ngFor="let robotId of ['robot1_102', 'robot2_102']" class="robot-card">
+            <mat-card-header>
+                <mat-card-title>Contrôle du {{ robotId }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="mission-controls">
+                    <button mat-raised-button
+                            color="primary"
+                            (click)="startMission(robotId)"
+                            [disabled]="robotStates[robotId].isMissionActive || !robotStates[robotId].isIdentified">
+                        Démarrer Mission
+                    </button>
+                    <button mat-raised-button
+                            color="warn"
+                            (click)="stopMission(robotId)"
+                            [disabled]="!robotStates[robotId].isMissionActive">
+                        Arrêter Mission
+                    </button>
+                    <button mat-raised-button
+                            color="primary"
+                            (click)="identify(robotId)">
+                        Identifier
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <app-mission-history></app-mission-history>
 </div>

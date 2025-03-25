@@ -114,7 +114,7 @@ def main():
 
     <model name="limo1">
       <self_collide>true</self_collide>
-      <pose>-1.6 -1.6 0.35 0 0 0</pose>
+      <pose>-1.3 -1.6 0.35 0 0 0</pose>
       <include merge="true">
         <uri>package://ros_gz_example_description/models/limo_diff_drive1</uri>
       </include>
@@ -122,7 +122,7 @@ def main():
     <!--
     <model name="limo2">
       <self_collide>true</self_collide>
-      <pose>-1.6 -1.0 0.35 0 0 0</pose>
+      <pose>0 -1.3 0.35 0 0 0</pose>
       <include merge="true">
         <uri>package://ros_gz_example_description/models/limo_diff_drive2</uri>
       </include>

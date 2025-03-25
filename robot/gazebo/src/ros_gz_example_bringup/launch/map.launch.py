@@ -63,6 +63,6 @@ def generate_launch_description():
     ld.add_action(declare_use_sim_time_argument)
     ld.add_action(declare_slam_params_file_cmd1)
     ld.add_action(start_async_slam_toolbox_node1)
-    #ld.add_action(declare_slam_params_file_cmd2)
-    #ld.add_action(start_async_slam_toolbox_node2)
+   # ld.add_action(declare_slam_params_file_cmd2)
+   # ld.add_action(start_async_slam_toolbox_node2)
     return ld

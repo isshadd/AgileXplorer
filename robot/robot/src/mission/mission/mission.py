@@ -1,11 +1,13 @@
 import rclpy
 import random
+import math
+
 from rclpy.node import Node
 from rclpy.action import ActionClient
+
 from nav_msgs.msg import OccupancyGrid
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from nav2_msgs.action import NavigateToPose
-from action_msgs.msg import GoalStatus
 from std_msgs.msg import Empty
 
 class MissionNode(Node):
@@ -13,142 +15,126 @@ class MissionNode(Node):
         super().__init__('mission_node')
         self.declare_parameter('robot_id', 'limo1')
         self.robot_id = self.get_parameter('robot_id').value
-        
-        self.map_sub = self.create_subscription(OccupancyGrid,f'/map', self.map_callback, 10)
-        self.costmap_sub = self.create_subscription(OccupancyGrid, '/global_costmap/costmap', self.costmap_callback, 10)
-        self.start_sub = self.create_subscription(Empty, '/start_exploration', self.start_callback, 10)
-        
-        self.action_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
 
-        self.timer = self.create_timer(10.0, self.timer_callback)
-        self.current_goal_handle = None    
-        self.exploration_active = False
-        self.map = None
-        self.costmap = None
+        start_topic = f'/{self.robot_id}/start_mission'
+        end_topic = f'/{self.robot_id}/end_mission'
+        self.start_subscription = self.create_subscription(Empty, start_topic, self.start_callback, 10)
+        self.end_subscription = self.create_subscription(Empty,end_topic, self.end_callback, 10)
+
+        self.map_subscription = self.create_subscription(OccupancyGrid,'map', self.map_callback, 10)
+        self.map_data = None
+
+        self.pose_subscription = self.create_subscription(PoseWithCovarianceStamped,'amcl_pose', self.pose_callback, 10)
+        self.current_pose = None
+
+        self.nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
+        self.mission_active = False
+
+    def map_callback(self, msg: OccupancyGrid):
+        self.map_data = msg
+        self.get_logger().debug("Map received")
+
+    def pose_callback(self, msg: PoseWithCovarianceStamped):
+        pose_stamped = PoseStamped()
+        pose_stamped.header = msg.header
+        pose_stamped.pose = msg.pose.pose
+        self.current_pose = pose_stamped
+        self.get_logger().debug("Current robot pose updated")
 
     def start_callback(self, msg):
-        self.get_logger().info("Received start command!")
-        self.exploration_active = True
+        self.mission_active = True
+        self.get_logger().info("Start mission triggered")
+        self.explore_map()
 
-    def map_callback(self, msg):
-        self.map = msg
+    def end_callback(self, msg):
+        self.mission_active = False
+        self.get_logger().info("End mission triggered")
 
-    def costmap_callback(self, msg):
-        self.costmap = msg
+    def explore_map(self):
 
-    def timer_callback(self):
+        if self.map_data is None:
+            self.get_logger().error("No map data received.")
+            return
 
-        if not self.exploration_active:
-            return 
+        if self.current_pose is None:
+            self.get_logger().error("No current pose received")
+            return
+
+        resolution = self.map_data.info.resolution
+        origin_x = self.map_data.info.origin.position.x
+        origin_y = self.map_data.info.origin.position.y
+        width = self.map_data.info.width
+        height = self.map_data.info.height
+        robot_x = self.current_pose.pose.position.x
+        robot_y = self.current_pose.pose.position.y
+
+        self.get_logger().info(robot_x)
+        self.get_logger().info(robot_y)
+        self.get_logger().info(f"Robot Position: x={robot_x}, y={robot_y}")
         
-        if self.map is None or self.costmap is None:
-            self.get_logger().info("Waiting for map and costmap...")
+        candidates = [
+            (robot_x, robot_y + 0.5),   
+            (robot_x + 0.5, robot_y + 0.5),
+            (robot_x + 0.5, robot_y),
+            (robot_x + 0.5, robot_y - 0.5),
+            (robot_x, robot_y - 0.5),
+            (robot_x - 0.5, robot_y - 0.5), 
+            (robot_x - 0.5, robot_y),
+            (robot_x - 0.5, robot_y + 0.5)
+        ]
+
+        def is_free(x, y):
+            mx = int((x - origin_x) / resolution)
+            my = int((y - origin_y) / resolution)
+            if 0 <= mx < width and 0 <= my < height:
+                index = my * width + mx
+                return self.map_data.data[index] == 100 # TODO : Free space
+
+            return False
+
+        free_candidates = [c for c in candidates if is_free(*c)]
+
+        if not free_candidates:
+            self.get_logger().warn("No free candidate points found!")
             return
         
-        if self.current_goal_handle is not None:
-            # Check if the current goal is still active
-            if self.current_goal_handle.status != GoalStatus.STATUS_SUCCEEDED:
-                self.get_logger().info("Current goal still active.")
-                return
-            else:
-                self.current_goal_handle = None
+        goal_x, goal_y = free_candidates[0]
+        self.get_logger().info(f"Selected random goal: x={goal_x:.2f}, y={goal_y:.2f}")
         
-        frontiers = self.find_frontiers()
-        if not frontiers:
-            self.get_logger().info("No frontiers found.")
-            self.exploration_active = False
-            return
-        
-        goal_point = self.select_random_goal(frontiers)
-        if goal_point:
-            self.send_goal(goal_point)
-
-    def find_frontiers(self):
-        frontiers = []
-        if self.map is None:
-            return frontiers
-        
-        map_data = self.map.data
-        map_width = self.map.info.width
-        map_height = self.map.info.height
-        resolution = self.map.info.resolution
-        origin_x = self.map.info.origin.position.x
-        origin_y = self.map.info.origin.position.y
-        
-        for y in range(1, map_height - 1):
-            for x in range(1, map_width - 1):
-                idx = y * map_width + x
-                if map_data[idx] == 0:
-                    neighbors = [
-                        (x+1, y), (x-1, y),
-                        (x, y+1), (x, y-1)
-                    ]
-                    for nx, ny in neighbors:
-                        n_idx = ny * map_width + nx
-                        if 0 <= nx < map_width and 0 <= ny < map_height:
-                            if map_data[n_idx] == -1:
-                                world_x = origin_x + (x + 0.5) * resolution
-                                world_y = origin_y + (y + 0.5) * resolution
-                                if self.is_navigable(world_x, world_y):
-                                    frontiers.append((world_x, world_y))
-                                    break
-        return frontiers
-
-    def is_navigable(self, x, y):
-        if self.costmap is None:
-            return False
-        
-        origin_x = self.costmap.info.origin.position.x
-        origin_y = self.costmap.info.origin.position.y
-        resolution = self.costmap.info.resolution
-        costmap_width = self.costmap.info.width
-        costmap_height = self.costmap.info.height
-        
-        gx = int((x - origin_x) / resolution)
-        gy = int((y - origin_y) / resolution)
-        
-        if gx < 0 or gy < 0 or gx >= costmap_width or gy >= costmap_height:
-            return False
-        
-        idx = gy * costmap_width + gx
-        return self.costmap.data[idx] < 50
-
-    def select_random_goal(self, frontiers):
-        if not frontiers:
-            return None
-        return random.choice(frontiers)
-
-    def send_goal(self, goal_point):
         goal_msg = NavigateToPose.Goal()
-        goal_msg.pose.header.frame_id = 'map'
-        goal_msg.pose.header.stamp = self.get_clock().now().to_msg()
-        goal_msg.pose.pose.position.x = goal_point[0]
-        goal_msg.pose.pose.position.y = goal_point[1]
-        goal_msg.pose.pose.orientation.w = 1.0  # Facing forward
-        
-        self.action_client.wait_for_server()
-        send_goal_future = self.action_client.send_goal_async(goal_msg)
-        send_goal_future.add_done_callback(self.goal_response_callback)
+        goal_pose = PoseStamped()
+        goal_pose.header.frame_id = "map"
+        goal_pose.pose.position.x = goal_x
+        goal_pose.pose.position.y = goal_y
+        #self.goal_pose.header.stamp = self.get_clock().now().to_msg()
+        goal_pose.pose.orientation.w = 1.0 # TODO : en avant pour l'instant
+        goal_msg.pose = goal_pose
 
+        if not self.nav_client.wait_for_server(timeout_sec=5.0):
+            self.get_logger().error("NavigateToPose action server not available!")
+            return
+        
+        send_goal_future = self.nav_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
+        send_goal_future.add_done_callback(self.goal_response_callback)
+    
     def goal_response_callback(self, future):
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.get_logger().info('Goal rejected')
+            self.get_logger().error("Goal rejected by server")
             return
-        
-        self.get_logger().info('Goal accepted')
-        self.current_goal_handle = goal_handle
+
+        self.get_logger().info("Goal accepted, waiting for result...")
         result_future = goal_handle.get_result_async()
         result_future.add_done_callback(self.get_result_callback)
 
     def get_result_callback(self, future):
         result = future.result().result
-        status = future.result().status
-        if status == GoalStatus.STATUS_SUCCEEDED:
-            self.get_logger().info('Goal succeeded!')
-        else:
-            self.get_logger().info(f'Goal failed with status: {status}')
-        self.current_goal_handle = None
+        self.get_logger().info("Navigation action completed with result: " + str(result))
+
+    def feedback_callback(self, feedback_msg):
+        feedback = feedback_msg.feedback
+        self.get_logger().debug("Received feedback: " + str(feedback))
+    
 
 def main(args=None):
     rclpy.init(args=args)

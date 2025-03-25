@@ -9,8 +9,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Define robot namespaces
-    robot_names = ['limo1', 'limo2'] 
-    robot_models = ['limo1', 'limo2']
+    robot_names = ['limo1'] 
+    robot_models = ['limo1']
 
     # Setup paths
     pkg_project_bringup = get_package_share_directory('ros_gz_example_bringup')
@@ -59,21 +59,5 @@ def generate_launch_description():
             output="screen",
         )
         nodes.append(bridge)
-
-    # slam_robot1 = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([
-    #         PathJoinSubstitution([
-    #             get_package_share_directory('ros_gz_example_bringup'),
-    #             'launch/map.launch.py'
-    #         ])
-    #     ]),
-    #     launch_arguments={
-    #         # 'namespace': 'limo1',
-    #         'slam_params_file': PathJoinSubstitution([
-    #             get_package_share_directory('ros_gz_example_bringup'),
-    #             'config/slam_config1.yaml'
-    #         ])
-    #     }.items()
-    # )
 
     return LaunchDescription([gz_sim] + nodes)

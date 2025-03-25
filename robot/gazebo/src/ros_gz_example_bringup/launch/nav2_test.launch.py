@@ -25,29 +25,32 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    namespace = LaunchConfiguration('namespace', default='limo2')
     map_dir = LaunchConfiguration(
         'map',
         default=os.path.join(
-            get_package_share_directory('limo_bringup'),
+            get_package_share_directory('ros_gz_example_bringup'),
             'maps'))
 
-    param_file_name = 'navigation2.yaml'
+    
+    remappings = ['tf:=/tf', 'tf_static:=/tf_static']
+    param_file_name = 'nav2_config2.yaml'
     param_dir = LaunchConfiguration(
         'params_file',
         default=os.path.join(
-            get_package_share_directory('limo_bringup'),
-            'param',
+            get_package_share_directory('ros_gz_example_bringup'),
+            'config',
             param_file_name))
 
     nav2_launch_file_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
 
-    rviz_config_dir = os.path.join(
-        get_package_share_directory('nav2_bringup'),
-        'rviz',
-        'nav2_default_view.rviz')
-
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'namespace',
+            default_value='limo2',
+            description='Robot namespace'),
+
         DeclareLaunchArgument(
             'map',
             default_value=map_dir,
@@ -60,22 +63,18 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'use_sim_time',
-            default_value='false',
+            default_value='true',
             description='Use simulation (Gazebo) clock if true'),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([nav2_launch_file_dir, '/bringup_launch.py']),
             launch_arguments={
+                'use_namespace': 'true',
+                'namespace': namespace,
                 'map': map_dir,
                 'use_sim_time': use_sim_time,
-                'params_file': param_dir}.items(),
+                'params_file': param_dir,
+                'remappings': remappings,
+                }.items(),
         ),
-
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', rviz_config_dir],
-            parameters=[{'use_sim_time': use_sim_time}],
-            output='screen'),
     ])

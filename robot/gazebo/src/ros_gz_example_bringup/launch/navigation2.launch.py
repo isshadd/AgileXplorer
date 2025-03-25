@@ -12,6 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+# 1 = trop de remapping
+# 2 = [behavior_server-5] [WARN] [1742847042.249186297] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+# 2 = local_costmap est blanche
+
+#envoyer manuellement à nav2 = 
+# ros2 topic pub /limo1/goal_pose geometry_msgs/msg/PoseStamped "{
+#   header: {
+#     frame_id: 'limo1/map'
+#   },
+#   pose: {
+#     position: {x: 0, y: -1.3, z: 0.0},
+#     orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+#   }
+# }" --once
+
+# envoyer manuellement à nav2 = 
+# ros2 topic pub /goal_pose geometry_msgs/msg/PoseStamped "{
+#   header: {
+#     frame_id: 'map'
+#   },
+#   pose: {
+#     position: {x: 0, y: -1.3, z: 0.0},
+#     orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+#   }
+# }" --once
+
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -48,17 +75,12 @@ def generate_launch_description():
                        'waypoint_follower',
                        'velocity_smoother']
 
-    # Map fully qualified names to relative ones so the node's namespace can be prepended.
-    # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
-    # https://github.com/ros/geometry2/issues/32
-    # https://github.com/ros/robot_state_publisher/pull/30
-    # TODO(orduno) Substitute with `PushNodeRemapping`
-    #              https://github.com/ros2/launch_ros/issues/56
-    remappings = [('/tf', 'tf'), ('/tf_static', 'tf_static')]
+    # Remap global topics to namespace
+    remappings = [] # [('tf', '/tf'), ('tf_static', '/tf_static')] # TODO : quoi faire avec lui
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
-        'use_sim_time': use_sim_time,
+        'use_sim_time': 'true',
         'autostart': autostart}
 
     configured_params = ParameterFile(
@@ -74,12 +96,12 @@ def generate_launch_description():
 
     declare_namespace_cmd = DeclareLaunchArgument(
         'namespace',
-        default_value='',
+        default_value='limo1',
         description='Top-level namespace')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='false',
+        default_value='true',
         description='Use simulation (Gazebo) clock if true')
 
     declare_params_file_cmd = DeclareLaunchArgument(
@@ -104,7 +126,7 @@ def generate_launch_description():
         description='Whether to respawn if a node crashes. Applied when composition is disabled.')
 
     declare_log_level_cmd = DeclareLaunchArgument(
-        'log_level', default_value='info',
+        'log_level', default_value='error',
         description='log level')
 
     load_nodes = GroupAction(
@@ -113,11 +135,13 @@ def generate_launch_description():
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
-                arguments=["0", "0", "0", "0", "0", "0", "limo1/map", "limo1/odom"]
+                arguments=["0", "0", "0", "0", "0", "0", "limo1/map", "limo1/odom"], # TODO : peut etre limo1/..
+                namespace=namespace,
             ),
             Node(
                 package='nav2_controller',
                 executable='controller_server',
+                namespace=namespace,
                 output='screen',
                 respawn=use_respawn,
                 respawn_delay=2.0,
@@ -127,6 +151,7 @@ def generate_launch_description():
             Node(
                 package='nav2_smoother',
                 executable='smoother_server',
+                namespace=namespace,
                 name='smoother_server',
                 output='screen',
                 respawn=use_respawn,
@@ -137,6 +162,7 @@ def generate_launch_description():
             Node(
                 package='nav2_planner',
                 executable='planner_server',
+                namespace=namespace,
                 name='planner_server',
                 output='screen',
                 respawn=use_respawn,
@@ -147,6 +173,7 @@ def generate_launch_description():
             Node(
                 package='nav2_behaviors',
                 executable='behavior_server',
+                namespace=namespace,
                 name='behavior_server',
                 output='screen',
                 respawn=use_respawn,
@@ -157,6 +184,7 @@ def generate_launch_description():
             Node(
                 package='nav2_bt_navigator',
                 executable='bt_navigator',
+                namespace=namespace,
                 name='bt_navigator',
                 output='screen',
                 respawn=use_respawn,
@@ -167,6 +195,7 @@ def generate_launch_description():
             Node(
                 package='nav2_waypoint_follower',
                 executable='waypoint_follower',
+                namespace=namespace,
                 name='waypoint_follower',
                 output='screen',
                 respawn=use_respawn,
@@ -177,6 +206,7 @@ def generate_launch_description():
             Node(
                 package='nav2_velocity_smoother',
                 executable='velocity_smoother',
+                namespace=namespace,
                 name='velocity_smoother',
                 output='screen',
                 respawn=use_respawn,
@@ -188,6 +218,7 @@ def generate_launch_description():
             Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',
+                namespace=namespace,
                 name='lifecycle_manager_navigation',
                 output='screen',
                 arguments=['--ros-args', '--log-level', log_level],
@@ -205,42 +236,49 @@ def generate_launch_description():
                 package='nav2_controller',
                 plugin='nav2_controller::ControllerServer',
                 name='controller_server',
+                namespace=namespace,
                 parameters=[configured_params],
                 remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
             ComposableNode(
                 package='nav2_smoother',
                 plugin='nav2_smoother::SmootherServer',
                 name='smoother_server',
+                namespace=namespace,
                 parameters=[configured_params],
                 remappings=remappings),
             ComposableNode(
                 package='nav2_planner',
                 plugin='nav2_planner::PlannerServer',
                 name='planner_server',
+                namespace=namespace,
                 parameters=[configured_params],
                 remappings=remappings),
             ComposableNode(
                 package='nav2_behaviors',
                 plugin='behavior_server::BehaviorServer',
                 name='behavior_server',
+                namespace=namespace,
                 parameters=[configured_params],
                 remappings=remappings),
             ComposableNode(
                 package='nav2_bt_navigator',
                 plugin='nav2_bt_navigator::BtNavigator',
                 name='bt_navigator',
+                namespace=namespace,
                 parameters=[configured_params],
                 remappings=remappings),
             ComposableNode(
                 package='nav2_waypoint_follower',
                 plugin='nav2_waypoint_follower::WaypointFollower',
                 name='waypoint_follower',
+                namespace=namespace,
                 parameters=[configured_params],
                 remappings=remappings),
             ComposableNode(
                 package='nav2_velocity_smoother',
                 plugin='nav2_velocity_smoother::VelocitySmoother',
                 name='velocity_smoother',
+                namespace=namespace,
                 parameters=[configured_params],
                 remappings=remappings +
                            [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel')]),
@@ -248,6 +286,7 @@ def generate_launch_description():
                 package='nav2_lifecycle_manager',
                 plugin='nav2_lifecycle_manager::LifecycleManager',
                 name='lifecycle_manager_navigation',
+                namespace=namespace,
                 parameters=[{'use_sim_time': use_sim_time,
                              'autostart': autostart,
                              'node_names': lifecycle_nodes}]),

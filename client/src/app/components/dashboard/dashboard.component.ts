@@ -7,6 +7,7 @@ import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
+import { MissionHistoryComponent } from '../mission-history/mission-history.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -15,7 +16,8 @@ import { RobotState } from '../../interfaces/robot-state.interface';
         CommonModule,
         MatButtonModule,
         MatCardModule,
-        MatDialogModule
+        MatDialogModule,
+        MissionHistoryComponent
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'

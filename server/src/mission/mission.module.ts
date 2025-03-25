@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MissionService } from './mission.service';
+import { MissionController } from './mission.controller';
+import { LogsModule } from '../logs/logs.module';
 
 @Module({
-  providers: [MissionService],  // Register MissionService
-  exports: [MissionService],    // Export MissionService to make it available in other modules
+  controllers: [MissionController],
+  providers: [MissionService],
+  exports: [MissionService],
+  imports: [LogsModule]
 })
 export class MissionModule {}

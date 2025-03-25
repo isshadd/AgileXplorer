@@ -17,6 +17,17 @@
 # 2 = [behavior_server-5] [WARN] [1742847042.249186297] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
 # 2 = local_costmap est blanche
 
+# envoyer manuellement à nav2 = 
+# ros2 topic pub /limo1/goal_pose geometry_msgs/msg/PoseStamped "{
+#   header: {
+#     frame_id: 'limo1/map'
+#   },
+#   pose: {
+#     position: {x: 0, y: -1.3, z: 0.0},
+#     orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+#   }
+# }" --once
+
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -54,7 +65,7 @@ def generate_launch_description():
                        'velocity_smoother']
 
     # Remap global topics to namespace
-    remappings = [('tf', '/tf'), ('tf_static', '/tf_static')] # TODO : quoi faire avec lui
+    remappings = [] # [('tf', '/tf'), ('tf_static', '/tf_static')] # TODO : quoi faire avec lui
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
@@ -104,7 +115,7 @@ def generate_launch_description():
         description='Whether to respawn if a node crashes. Applied when composition is disabled.')
 
     declare_log_level_cmd = DeclareLaunchArgument(
-        'log_level', default_value='info',
+        'log_level', default_value='error',
         description='log level')
 
     load_nodes = GroupAction(
@@ -113,7 +124,7 @@ def generate_launch_description():
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
-                arguments=["0", "0", "0", "0", "0", "0", "map", "odom"], # TODO : peut etre limo1/..
+                arguments=["0", "0", "0", "0", "0", "0", "limo1/map", "limo1/odom"], # TODO : peut etre limo1/..
                 namespace=namespace,
             ),
             Node(

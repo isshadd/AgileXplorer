@@ -9,8 +9,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Define robot namespaces
-    robot_names = ['limo1', 'limo2'] 
-    robot_models = ['limo1', 'limo2']
+    robot_names = ['limo1'] 
+    robot_models = ['limo1']
 
     # Setup paths
     pkg_project_bringup = get_package_share_directory('ros_gz_example_bringup')

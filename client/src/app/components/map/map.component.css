@@ -1,7 +1,7 @@
 .map-container {
   position: relative;
-  width: calc(100vh - 100px) !important;
-  height: calc(100vh - 100px) !important;
+  width: min(calc(100vh - 100px), 100%) !important;
+  height: min(calc(100vh - 100px), 100%) !important;
   background-color: #f5f5f5;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -10,6 +10,80 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+/* Ajustement pour les tablettes */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .map-container {
+    width: min(calc(100vh - 120px), 100%) !important;
+    height: min(calc(100vh - 120px), 100%) !important;
+    margin: auto;
+  }
+
+  .map-controls {
+    top: 15px;
+    right: 15px;
+    gap: 8px;
+  }
+
+  .control-button {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .map-legend {
+    bottom: 15px;
+    left: 15px;
+    padding: 12px;
+  }
+
+  .legend-item {
+    margin: 6px 0;
+  }
+
+  .legend-color {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+  }
+}
+
+/* Ajustement pour les petits écrans */
+@media (max-width: 767px) {
+  .map-container {
+    width: 100% !important;
+    height: min(calc(100vh - 150px), 100vw) !important;
+    margin: auto;
+  }
+
+  .map-controls {
+    top: 10px;
+    right: 10px;
+    gap: 6px;
+  }
+
+  .control-button {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .map-legend {
+    bottom: 10px;
+    left: 10px;
+    padding: 8px;
+  }
+
+  .legend-item {
+    margin: 4px 0;
+  }
+
+  .legend-color {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+  }
 }
 
 .map-canvas {

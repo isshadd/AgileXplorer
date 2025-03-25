@@ -259,34 +259,36 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.reconnectionAttempts.set(client.id, 0);
     this.sendRobotStates(client);
     this.sendStoredPositions(client);
-
-    // Assigner le premier client comme contrôleur s'il n'y en a pas encore
-    if (!this.controllerClientId) {
+    
+    // Si c'est le seul client ou s'il n'y a pas de contrôleur, lui donner le contrôle
+    if (this.connectedClients.size === 1 || !this.controllerClientId) {
       this.controllerClientId = client.id;
       this.sendControllerStatus(client, true);
     } else {
-      // Informer le client qu'il est en mode spectateur
+      // Sinon, mode spectateur
       this.sendControllerStatus(client, false);
     }
 
     // Informer tous les clients du nouveau nombre de clients connectés
     this.broadcastClientCount();
+    this.logger.log(`Client ${client.id} connecté. Nombre total: ${this.connectedClients.size}. Contrôleur: ${this.controllerClientId}`);
   }
 
   handleDisconnect(client: Socket) {
     this.connectedClients.delete(client);
-
-    // Si le contrôleur se déconnecte, assigner un nouveau contrôleur
-    if (
-      this.controllerClientId === client.id &&
-      this.connectedClients.size > 0
-    ) {
-      this.controllerClientId = [...this.connectedClients][0].id;
-      const newController = [...this.connectedClients].find(
-        (c) => c.id === this.controllerClientId,
-      );
-      if (newController) {
-        this.sendControllerStatus(newController, true);
+    
+    // Si le client qui se déconnecte était le contrôleur
+    if (this.controllerClientId === client.id) {
+      if (this.connectedClients.size > 0) {
+        // S'il y a d'autres clients, donner le contrôle au premier
+        this.controllerClientId = [...this.connectedClients][0].id;
+        const newController = [...this.connectedClients].find(c => c.id === this.controllerClientId);
+        if (newController) {
+          this.sendControllerStatus(newController, true);
+        }
+      } else {
+        // S'il n'y a plus de clients, réinitialiser le controllerClientId
+        this.controllerClientId = null;
       }
     }
 

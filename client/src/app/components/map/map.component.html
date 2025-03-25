@@ -1,25 +1,44 @@
 <div class="map-container">
   <canvas #mapCanvas class="map-canvas"></canvas>
   <div class="map-controls">
-    <button (click)="zoomIn()" class="control-button">+</button>
-    <button (click)="zoomOut()" class="control-button">-</button>
-    <button (click)="resetView()" class="control-button">Reset</button>
+    <button (click)="zoomIn()"
+           [disabled]="!isController"
+           [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+           class="control-button">+</button>
+    <button (click)="zoomOut()"
+           [disabled]="!isController"
+           [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+           class="control-button">-</button>
+    <button (click)="resetView()"
+           [disabled]="!isController"
+           [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+           class="control-button">Reset</button>
     <div class="distance-controls">
       <span class="control-label">Distance:</span>
-      <button (click)="setDistanceFactor(DISTANCE_FACTOR - 0.1)" class="control-button">-</button>
+      <button (click)="setDistanceFactor(DISTANCE_FACTOR - 0.1)"
+             [disabled]="!isController"
+             [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+             class="control-button">-</button>
       <span class="factor-value">{{DISTANCE_FACTOR.toFixed(1)}}</span>
-      <button (click)="setDistanceFactor(DISTANCE_FACTOR + 0.1)" class="control-button">+</button>
+      <button (click)="setDistanceFactor(DISTANCE_FACTOR + 0.1)"
+             [disabled]="!isController"
+             [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+             class="control-button">+</button>
     </div>
     <div class="distance-controls">
       <span class="control-label">Angle:</span>
       <button (mousedown)="startAngleIncrement(-1.0)"
               (mouseup)="stopAngleIncrement()"
               (mouseleave)="stopAngleIncrement()"
+              [disabled]="!isController"
+              [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
               class="control-button">-</button>
       <span class="factor-value">{{ANGLE_OFFSET.toFixed(1)}}</span>
       <button (mousedown)="startAngleIncrement(1.0)"
               (mouseup)="stopAngleIncrement()"
               (mouseleave)="stopAngleIncrement()"
+              [disabled]="!isController"
+              [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
               class="control-button">+</button>
     </div>
   </div>

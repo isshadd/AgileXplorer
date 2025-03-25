@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
@@ -12,6 +14,7 @@ import { RobotState } from '../../interfaces/robot-state.interface';
 import { MapComponent } from '../map/map.component';
 import { WebSocketService } from '../../services/websocket.service';
 import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
+import { WebSocketService } from '../../services/websocket.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -23,6 +26,7 @@ import { ConnectedClientsComponent } from '../connected-clients/connected-client
         MatDialogModule,
         MatProgressBarModule,
         MatIconModule,
+        MatTooltipModule,
         MapComponent,
         MatIconModule,
         ConnectedClientsComponent
@@ -40,13 +44,10 @@ export class DashboardComponent {
         private robotService: RobotService,
         private notificationService: NotificationService,
         private dialog: MatDialog,
-        private websocketService: WebSocketService,
-    ) {
-        this.websocketService.onBatteryData().subscribe((data: { robotId: string, battery_level: number }) => {
-            if (this.robotStates[data.robotId]) {
-              this.robotStates[data.robotId].battery_level = data.battery_level;
-            }
-          });
+    ) {}
+
+    get isController(): boolean {
+        return this.websocketService.isControllerClient();
     }
 
     startMission(robotId: string): void {

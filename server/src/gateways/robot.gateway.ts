@@ -96,14 +96,14 @@ export class RobotGateway implements OnModuleDestroy {
 
     try {
       // Get sensor data for each robot and log it
-      const robots = this.missionService.getActiveRobots();
-      for (const robot of robots) {
+      const robotIds = ['limo1', 'limo2'];
+      for (const robotId of robotIds) {
         await this.logsService.addLog(this.currentMissionId, {
           type: 'SENSOR',
-          robotId: robot.id,
+          robotId: robotId,
           data: {
-            position: robot.position,
-            distance: robot.distance,
+            position: {x:0, y:0, z:0},
+            distance: 0,
             timestamp: new Date().toISOString()
           }
         });

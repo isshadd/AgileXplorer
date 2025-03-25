@@ -5,12 +5,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
 import { MapComponent } from '../map/map.component';
 import { WebSocketService } from '../../services/websocket.service';
+import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -23,6 +25,8 @@ import { WebSocketService } from '../../services/websocket.service';
         MatProgressBarModule,
         MatIconModule,
         MapComponent
+        MatIconModule,
+        ConnectedClientsComponent
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'

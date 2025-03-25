@@ -55,6 +55,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private isDragging = false;
   private draggedRobotId: string | null = null;
   private dragStartPos = { x: 0, y: 0 };
+  public displayMode: 'background' | 'mapping' = 'background';
+
+  public toggleDisplayMode(): void {
+    this.displayMode = this.displayMode === 'background' ? 'mapping' : 'background';
+    this.drawMap();
+  }
 
   private scale = 50;
   private centerX = 0;
@@ -419,7 +425,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     const canvas = this.canvasRef.nativeElement;
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (this.backgroundImage) {
+    if (this.displayMode === 'background' && this.backgroundImage) {
       const scaledWidth = canvas.width;
       const scaledHeight = canvas.height;
       
@@ -430,20 +436,20 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.ctx.drawImage(this.backgroundImage, 0, 0, scaledWidth, scaledHeight);
       this.ctx.restore();
       console.log('drawMap: Arrière-plan dessiné');
-    }
-    
-    // Dessiner les données du lidar (superposition)
-    if (this.mapCanvas) {
-      console.log('drawMap: Dessin du canvas lidar', this.mapCanvas.width, this.mapCanvas.height);
-      this.ctx.drawImage(this.mapCanvas, 0, 0);
-    } else {
-      console.warn('drawMap: mapCanvas non initialisé!');
-    }
 
-    this.robotTrails.forEach(trail => {
-      this.drawRobotTrail(trail);
-    });
-    console.log('drawMap: Trajectoires des robots dessinées');
+      // Afficher les robots uniquement en mode background
+      this.robotTrails.forEach(trail => {
+        this.drawRobotTrail(trail);
+      });
+      console.log('drawMap: Trajectoires des robots dessinées');
+    } else if (this.displayMode === 'mapping' && this.mapCanvas) {
+      // En mode cartographie, adapter l'échelle du canvas LIDAR
+      console.log('drawMap: Dessin du canvas lidar', this.mapCanvas.width, this.mapCanvas.height);
+      this.ctx.save();
+      this.ctx.scale(canvas.width / this.mapCanvas.width, canvas.height / this.mapCanvas.height);
+      this.ctx.drawImage(this.mapCanvas, 0, 0);
+      this.ctx.restore();
+    }
   }
 
   private drawRobotTrail(trail: RobotTrail): void {

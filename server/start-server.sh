@@ -76,11 +76,19 @@ echo "🚀 Starting NestJS server..."
 # Source ROS2 environment
 source /opt/ros/humble/setup.bash
 
-# Source our workspace environment
-source ../robot/limo/install/setup.bash
+# Go to the limo directory and build the messages package
+cd ../robot/limo && \
+colcon build --packages-select limo_msgs && \
+source install/setup.bash && \
 
-#generate messages types
-npx generate-ros-messages
+# Return to server directory and set up ROS environment
+cd ../../server && \
+source /opt/ros/humble/setup.bash && \
+source ../robot/limo/install/setup.bash && \
+
+# Install dependencies and generate message types
+npm install && \
+npx generate-ros-messages && \
 
 # Set environment variables
 export ROS_DOMAIN_ID=102

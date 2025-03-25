@@ -5,7 +5,7 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   ConnectedSocket,
-  MessageBody
+  MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Injectable, Logger } from '@nestjs/common';
@@ -22,7 +22,7 @@ import {
   ErrorPayload,
   MapDataMessage,
   MapDataPayload,
-  LimoStatusPayload
+  LimoStatusPayload,
 } from '../interfaces/websocket.interface';
 import { LogsService } from '../logs/logs.service';
 import { WebSocketEvent } from '../interfaces/websocket.interface';
@@ -57,7 +57,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private batteryInterval: NodeJS.Timeout;
   private robotBatteryLevels: Map<string, number> = new Map([
     ['robot1_102', 100],
-    ['robot2_102', 100]
+    ['robot2_102', 100],
   ]);
   private controllerClientId: string | null = null; // ID du client ayant le contrôle
 
@@ -81,7 +81,9 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   private calculateBatteryPercentage(voltage: number): number {
-    const percentage = ((voltage - this.MIN_VOLTAGE) / (this.MAX_VOLTAGE - this.MIN_VOLTAGE)) * 100;
+    const percentage =
+      ((voltage - this.MIN_VOLTAGE) / (this.MAX_VOLTAGE - this.MIN_VOLTAGE)) *
+      100;
     return Math.max(0, Math.min(100, Math.round(percentage)));
   }
 
@@ -90,9 +92,10 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       for (const [robotId, level] of this.robotBatteryLevels.entries()) {
         // Simulate voltage between MIN_VOLTAGE and MAX_VOLTAGE
         const reduction = Math.random() * 0.1; // Small voltage drop
-        const currentVoltage = this.MIN_VOLTAGE +
-          ((this.MAX_VOLTAGE - this.MIN_VOLTAGE) * level / 100);
-        
+        const currentVoltage =
+          this.MIN_VOLTAGE +
+          ((this.MAX_VOLTAGE - this.MIN_VOLTAGE) * level) / 100;
+
         let newVoltage = Math.max(this.MIN_VOLTAGE, currentVoltage - reduction);
         if (newVoltage <= this.MIN_VOLTAGE + 0.5) {
           newVoltage = this.MAX_VOLTAGE; // Simulate battery replacement/recharge
@@ -100,59 +103,62 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         const batteryLevel = this.calculateBatteryPercentage(newVoltage);
         this.robotBatteryLevels.set(robotId, batteryLevel);
-        
+
         this.server.emit('BATTERY_DATA', {
           type: 'BATTERY_DATA',
           payload: {
             robotId,
-            battery_level: batteryLevel
-          }
+            battery_level: batteryLevel,
+          },
         });
       }
     }, 2000);
   }
-private async initROS2() {
-  try {
-    
+  private async initROS2() {
     try {
-      await rclnodejs.init();
-    } catch (error) {
-      if (!error.message.includes('already been initialized')) {
-        throw error;
+      try {
+        await rclnodejs.init();
+      } catch (error) {
+        if (!error.message.includes('already been initialized')) {
+          throw error;
+        }
       }
-    }
-    this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
-    
-    // Abonnement aux données de statut et de batterie
-    this.feedbackNode.createSubscription(
-      'limo_msgs/msg/LimoStatus',
-      '/robot1_102/limo_status',
-      (rosMsg: any) => {
-        // Transform ROS message to our interface format
-        const msg: LimoStatusPayload = {
-          robotId: 'robot1_102', // You might want to make this dynamic
-          vehicle_state: rosMsg.vehicle_state,
-          control_mode: rosMsg.control_mode,
-          battery_voltage: rosMsg.battery_voltage,
-          error_code: rosMsg.error_code,
-          motion_mode: rosMsg.motion_mode
-        };
-        
-        const batteryLevel = this.calculateBatteryPercentage(msg.battery_voltage);
-        this.logger.log(`Received battery update - Robot: ${msg.robotId}, Battery Level: ${batteryLevel}V`);
-        
-        this.server.emit('BATTERY_DATA', {
-          type: 'BATTERY_DATA',
-          payload: {
-            robotId: msg.robotId,
-            battery_level: batteryLevel
-          }
-        });
-      });
-    
+      this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
 
+      // Abonnement aux données de statut et de batterie
       this.feedbackNode.createSubscription(
         'limo_msgs/msg/LimoStatus',
+        '/robot1_102/limo_status',
+        (rosMsg: any) => {
+          // Transform ROS message to our interface format
+          const msg: LimoStatusPayload = {
+            robotId: 'robot1_102', // You might want to make this dynamic
+            vehicle_state: rosMsg.vehicle_state,
+            control_mode: rosMsg.control_mode,
+            battery_voltage: rosMsg.battery_voltage,
+            error_code: rosMsg.error_code,
+            motion_mode: rosMsg.motion_mode,
+          };
+
+          const batteryLevel = this.calculateBatteryPercentage(
+            msg.battery_voltage,
+          );
+          this.logger.log(
+            `Received battery update - Robot: ${msg.robotId}, Battery Level: ${batteryLevel}V`,
+          );
+
+          this.server.emit('BATTERY_DATA', {
+            type: 'BATTERY_DATA',
+            payload: {
+              robotId: msg.robotId,
+              battery_level: batteryLevel,
+            },
+          });
+        },
+      );
+
+      this.feedbackNode.createSubscription(
+        'limo_msgs/msg/LimoStatus' as any,
         '/robot2_102/limo_status',
         (rosMsg: any) => {
           // Transform ROS message to our interface format
@@ -162,21 +168,25 @@ private async initROS2() {
             control_mode: rosMsg.control_mode,
             battery_voltage: rosMsg.battery_voltage,
             error_code: rosMsg.error_code,
-            motion_mode: rosMsg.motion_mode
+            motion_mode: rosMsg.motion_mode,
           };
 
-          const batteryLevel = this.calculateBatteryPercentage(msg.battery_voltage);
-          this.logger.log(`Received battery update - Robot: ${msg.robotId}, Battery Level: ${batteryLevel}V`);
+          const batteryLevel = this.calculateBatteryPercentage(
+            msg.battery_voltage,
+          );
+          this.logger.log(
+            `Received battery update - Robot: ${msg.robotId}, Battery Level: ${batteryLevel}V`,
+          );
 
           this.server.emit('BATTERY_DATA', {
             type: 'BATTERY_DATA',
             payload: {
               robotId: msg.robotId,
-              battery_level: batteryLevel
-            }
+              battery_level: batteryLevel,
+            },
           });
-        });
-
+        },
+      );
 
       // Abonnement aux données d'odométrie
       this.feedbackNode.createSubscription(
@@ -201,7 +211,7 @@ private async initROS2() {
           }
         },
       );
-      
+
       // Abonnement aux données de la carte (lidar)
       this.feedbackNode.createSubscription(
         'nav_msgs/msg/OccupancyGrid',
@@ -221,17 +231,17 @@ private async initROS2() {
                   x: msg.info.origin.orientation.x,
                   y: msg.info.origin.orientation.y,
                   z: msg.info.origin.orientation.z,
-                  w: msg.info.origin.orientation.w
-                }
+                  w: msg.info.origin.orientation.w,
+                },
               },
-              data: Array.from(msg.data)  // Conversion en Array JavaScript
+              data: Array.from(msg.data), // Conversion en Array JavaScript
             };
-            
+
             this.emitMapData(mapData);
-            this.logger.log("Données de carte reçues et transmises");
+            this.logger.log('Données de carte reçues et transmises');
           } catch (error) {
             this.logger.error(
-              "Erreur lors du traitement des données de carte:",
+              'Erreur lors du traitement des données de carte:',
               error,
             );
           }
@@ -277,12 +287,12 @@ private async initROS2() {
       this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
     }
   }
-  
+
   // Méthode pour émettre les données de la carte
   private emitMapData(mapData: MapDataPayload) {
     const message: MapDataMessage = {
       type: 'MAP_DATA',
-      payload: mapData
+      payload: mapData,
     };
     this.server.emit('MAP_DATA', message);
   }
@@ -336,7 +346,7 @@ private async initROS2() {
     // Envoyer l'état initial des robots et leurs positions au nouveau client
     this.sendRobotStates(client);
     this.sendStoredPositions(client);
-    
+
     // Assigner le premier client comme contrôleur s'il n'y en a pas encore
     if (!this.controllerClientId) {
       this.controllerClientId = client.id;
@@ -345,7 +355,7 @@ private async initROS2() {
       // Informer le client qu'il est en mode spectateur
       this.sendControllerStatus(client, false);
     }
-    
+
     // Informer tous les clients du nouveau nombre de clients connectés
     this.broadcastClientCount();
   }
@@ -371,16 +381,21 @@ private async initROS2() {
   }
   handleDisconnect(client: Socket) {
     this.connectedClients.delete(client);
-    
+
     // Si le contrôleur se déconnecte, assigner un nouveau contrôleur
-    if (this.controllerClientId === client.id && this.connectedClients.size > 0) {
+    if (
+      this.controllerClientId === client.id &&
+      this.connectedClients.size > 0
+    ) {
       this.controllerClientId = [...this.connectedClients][0].id;
-      const newController = [...this.connectedClients].find(c => c.id === this.controllerClientId);
+      const newController = [...this.connectedClients].find(
+        (c) => c.id === this.controllerClientId,
+      );
       if (newController) {
         this.sendControllerStatus(newController, true);
       }
     }
-    
+
     // Mettre à jour le nombre de clients connectés
     this.broadcastClientCount();
     
@@ -414,14 +429,16 @@ private async initROS2() {
       this.reconnectionAttempts.delete(client.id);
     }
   }
-  
+
   private sendControllerStatus(client: Socket, isController: boolean) {
     client.emit('CONTROLLER_STATUS', { isController });
   }
-  
+
   private broadcastClientCount() {
     this.server.emit('CLIENT_COUNT', { count: this.connectedClients.size });
-    this.logger.log(`Nombre de clients connectés: ${this.connectedClients.size}`);
+    this.logger.log(
+      `Nombre de clients connectés: ${this.connectedClients.size}`,
+    );
   }
 
   private handleReconnectionTimeout(client: Socket) {
@@ -570,10 +587,13 @@ private async initROS2() {
   handleGetClientCount(@ConnectedSocket() client: Socket) {
     // Envoyer seulement au client qui demande
     client.emit('CLIENT_COUNT', { count: this.connectedClients.size });
-    client.emit('CONTROLLER_STATUS', { isController: client.id === this.controllerClientId });
-    
-    this.logger.log(`Client ${client.id} a demandé le nombre de clients connectés: ${this.connectedClients.size}`);
+    client.emit('CONTROLLER_STATUS', {
+      isController: client.id === this.controllerClientId,
+    });
+
+    this.logger.log(
+      `Client ${client.id} a demandé le nombre de clients connectés: ${this.connectedClients.size}`,
+    );
     return { success: true };
   }
-
 }

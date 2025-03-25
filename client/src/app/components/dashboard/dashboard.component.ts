@@ -4,12 +4,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
 import { MapComponent } from '../map/map.component';
 import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
+import { WebSocketService } from '../../services/websocket.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -20,6 +22,7 @@ import { ConnectedClientsComponent } from '../connected-clients/connected-client
         MatCardModule,
         MatDialogModule,
         MatIconModule,
+        MatTooltipModule,
         MapComponent,
         ConnectedClientsComponent
     ],
@@ -36,7 +39,12 @@ export class DashboardComponent {
         private robotService: RobotService,
         private notificationService: NotificationService,
         private dialog: MatDialog,
+        private websocketService: WebSocketService
     ) {}
+
+    get isController(): boolean {
+        return this.websocketService.isControllerClient();
+    }
 
     startMission(robotId: string): void {
         this.robotService.startMission(robotId).subscribe(() => {

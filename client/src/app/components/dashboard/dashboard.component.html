@@ -13,21 +13,26 @@
                 <button mat-raised-button
                         color="primary"
                         (click)="startMission(robotId)"
-                        [disabled]="robotStates[robotId].isMissionActive || !robotStates[robotId].isIdentified">
+                        [disabled]="robotStates[robotId].isMissionActive || !robotStates[robotId].isIdentified || !isController"
+                        [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
                     Démarrer Mission
                 </button>
                 <button mat-raised-button 
                         color="warn" 
                         (click)="stopMission(robotId)" 
-                        [disabled]="!robotStates[robotId].isMissionActive">
+                        [disabled]="!robotStates[robotId].isMissionActive || !isController"
+                        [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
                     Arrêter Mission
                 </button>
                 <button mat-raised-button
                         color="primary"
-                        (click)="identify(robotId)">
+                        (click)="identify(robotId)"
+                        [disabled]="!isController"
+                        [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
                     Identifier
                 </button>
             </div>
         </mat-card-content>
     </mat-card>
+  </div>
 </div>

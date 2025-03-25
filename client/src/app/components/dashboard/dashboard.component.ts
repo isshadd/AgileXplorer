@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
 import { MapComponent } from '../map/map.component';
+import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -17,7 +19,9 @@ import { MapComponent } from '../map/map.component';
         MatButtonModule,
         MatCardModule,
         MatDialogModule,
-        MapComponent
+        MatIconModule,
+        MapComponent,
+        ConnectedClientsComponent
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'

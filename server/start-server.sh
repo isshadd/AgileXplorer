@@ -12,6 +12,9 @@ source /opt/ros/humble/setup.bash
 # Source our workspace environment
 source ../robot/limo/install/setup.bash
 
+#generate messages types
+npx generate-ros-messages
+
 # Set environment variables
 export ROS_DOMAIN_ID=102
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/../robot/limo/install/limo_msgs/lib

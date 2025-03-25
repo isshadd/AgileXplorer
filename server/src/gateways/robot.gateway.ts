@@ -20,6 +20,7 @@ import {
   ErrorPayload,
   MapDataMessage,
   MapDataPayload,
+  LimoStatusPayload
 } from '../interfaces/websocket.interface';
 
 @Injectable()
@@ -41,15 +42,122 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private robotPositions: Map<string, RobotPosition[]> = new Map();
   private readonly logger = new Logger(RobotGateway.name);
   private feedbackNode: rclnodejs.Node;
+  private batteryInterval: NodeJS.Timeout;
+  private robotBatteryLevels: Map<string, number> = new Map([
+    ['robot1_102', 100],
+    ['robot2_102', 100]
+  ]);
+
+  private readonly SIMULATE_BATTERY = 'false';
+  private readonly MIN_VOLTAGE = 9;
+  private readonly MAX_VOLTAGE = 12.6;
 
   constructor(private readonly missionService: MissionService) {
     this.initROS2();
+    if (this.SIMULATE_BATTERY) {
+      this.logger.log('Starting battery simulation mode');
+      // this.startBatterySimulation();
+    }
   }
 
-  private async initROS2() {
+  private calculateBatteryPercentage(voltage: number): number {
+    const percentage = ((voltage - this.MIN_VOLTAGE) / (this.MAX_VOLTAGE - this.MIN_VOLTAGE)) * 100;
+    return Math.max(0, Math.min(100, Math.round(percentage)));
+  }
+
+  private startBatterySimulation() {
+    this.batteryInterval = setInterval(() => {
+      for (const [robotId, level] of this.robotBatteryLevels.entries()) {
+        // Simulate voltage between MIN_VOLTAGE and MAX_VOLTAGE
+        const reduction = Math.random() * 0.1; // Small voltage drop
+        const currentVoltage = this.MIN_VOLTAGE +
+          ((this.MAX_VOLTAGE - this.MIN_VOLTAGE) * level / 100);
+        
+        let newVoltage = Math.max(this.MIN_VOLTAGE, currentVoltage - reduction);
+        if (newVoltage <= this.MIN_VOLTAGE + 0.5) {
+          newVoltage = this.MAX_VOLTAGE; // Simulate battery replacement/recharge
+        }
+
+        const batteryLevel = this.calculateBatteryPercentage(newVoltage);
+        this.robotBatteryLevels.set(robotId, batteryLevel);
+        
+        this.server.emit('BATTERY_DATA', {
+          type: 'BATTERY_DATA',
+          payload: {
+            robotId,
+            battery_level: batteryLevel
+          }
+        });
+      }
+    }, 2000);
+  }
+private async initROS2() {
+  try {
+    
     try {
-      this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
-      
+      await rclnodejs.init();
+    } catch (error) {
+      if (!error.message.includes('already been initialized')) {
+        throw error;
+      }
+    }
+    this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
+    
+    // Abonnement aux données de statut et de batterie
+    this.feedbackNode.createSubscription(
+      'limo_msgs/msg/LimoStatus',
+      '/robot1_102/limo_status',
+      (rosMsg: any) => {
+        // Transform ROS message to our interface format
+        const msg: LimoStatusPayload = {
+          robotId: 'robot1_102', // You might want to make this dynamic
+          vehicle_state: rosMsg.vehicle_state,
+          control_mode: rosMsg.control_mode,
+          battery_voltage: rosMsg.battery_voltage,
+          error_code: rosMsg.error_code,
+          motion_mode: rosMsg.motion_mode
+        };
+        
+        const batteryLevel = this.calculateBatteryPercentage(msg.battery_voltage);
+        this.logger.log(`Received battery update - Robot: ${msg.robotId}, Battery Level: ${batteryLevel}V`);
+        
+        this.server.emit('BATTERY_DATA', {
+          type: 'BATTERY_DATA',
+          payload: {
+            robotId: msg.robotId,
+            battery_level: batteryLevel
+          }
+        });
+      });
+    
+
+      this.feedbackNode.createSubscription(
+        'limo_msgs/msg/LimoStatus',
+        '/robot2_102/limo_status',
+        (rosMsg: any) => {
+          // Transform ROS message to our interface format
+          const msg: LimoStatusPayload = {
+            robotId: 'robot2_102', // You might want to make this dynamic
+            vehicle_state: rosMsg.vehicle_state,
+            control_mode: rosMsg.control_mode,
+            battery_voltage: rosMsg.battery_voltage,
+            error_code: rosMsg.error_code,
+            motion_mode: rosMsg.motion_mode
+          };
+
+          const batteryLevel = this.calculateBatteryPercentage(msg.battery_voltage);
+          this.logger.log(`Received battery update - Robot: ${msg.robotId}, Battery Level: ${batteryLevel}V`);
+
+          this.server.emit('BATTERY_DATA', {
+            type: 'BATTERY_DATA',
+            payload: {
+              robotId: msg.robotId,
+              battery_level: batteryLevel
+            }
+          });
+        });
+
+
       // Abonnement aux données d'odométrie
       this.feedbackNode.createSubscription(
         'std_msgs/msg/String',
@@ -128,6 +236,9 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ngOnDestroy() {
     if (this.feedbackNode) {
       this.feedbackNode.destroy();
+    }
+    if (this.batteryInterval) {
+      clearInterval(this.batteryInterval);
     }
   }
 

@@ -120,4 +120,23 @@ export class MissionService {
       throw error;
     }
   }
+
+  async getMissions(): Promise<any[]> {
+    try {
+      const missionLogs = await this.logsService.findAllMissionLogs();
+      return missionLogs.map(log => ({
+        id: log.missionId,
+        startTime: log.startTime,
+        endTime: log.endTime,
+        status: log.endTime ? 'completed' : 'ongoing',
+        robots: log.logs
+          .filter(entry => entry.type === 'COMMAND' && entry.data.command === 'START_MISSION')
+          .map(entry => entry.robotIds),
+        logs: log.logs
+      }));
+    } catch (error) {
+      this.logger.error(`Error getting missions: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 }

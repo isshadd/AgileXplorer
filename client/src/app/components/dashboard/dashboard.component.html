@@ -60,14 +60,19 @@
                         <mat-icon>battery_std</mat-icon>
                         Niveau de batterie
                     </span>
-                    <mat-progress-bar
-                        mode="determinate"
-                        [value]="robotStates[robotId].battery_level || 0"
-                        [class.low-battery]="(robotStates[robotId].battery_level || 0) < 30"
-                    ></mat-progress-bar>
-                    <span class="battery-percentage" [class.low-battery]="(robotStates[robotId].battery_level || 0) < 30">
-                        {{ robotStates[robotId].battery_level || 0 }}%
-                    </span>
+                    <ng-container *ngIf="(robotStates[robotId].battery_level || 0) > 0; else batteryUnavailable">
+                        <mat-progress-bar
+                            mode="determinate"
+                            [value]="robotStates[robotId].battery_level"
+                            [class.low-battery]="(robotStates[robotId].battery_level || 0) < 30"
+                        ></mat-progress-bar>
+                        <span class="battery-percentage" [class.low-battery]="(robotStates[robotId].battery_level || 0) < 30">
+                            {{ robotStates[robotId].battery_level }}%
+                        </span>
+                    </ng-container>
+                    <ng-template #batteryUnavailable>
+                        <span class="battery-percentage">Non disponible</span>
+                    </ng-template>
                 </div>
             </div>
             <div class="mission-controls">

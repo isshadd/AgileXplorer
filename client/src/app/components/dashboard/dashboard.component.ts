@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
@@ -24,7 +23,7 @@ import { ConnectedClientsComponent } from '../connected-clients/connected-client
         MatDialogModule,
         MatProgressBarModule,
         MatIconModule,
-        MapComponent
+        MapComponent,
         MatIconModule,
         ConnectedClientsComponent
     ],

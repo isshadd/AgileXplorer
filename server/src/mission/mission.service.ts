@@ -36,13 +36,16 @@ export class MissionService {
     // Initialize mission log
     this.logsService.initializeMissionLog(this.activeMissionId)
       .then(() => {
-        this.logsService.addLog(this.activeMissionId, {
-          type: 'COMMAND',
-          data: {
-            command: 'START_MISSION',
-            timestamp: new Date().toISOString()
-          }
-        });
+        for (const robot of this.activeRobots.values()) {
+          this.logsService.addLog(this.activeMissionId, {
+            type: 'COMMAND',
+            robotId: robot.id,
+            data: {
+              command: 'START_MISSION',
+              timestamp: new Date().toISOString()
+            }
+          });
+        }
       })
       .catch(error => {
         this.logger.error(`Error initializing mission log: ${error.message}`, error.stack);

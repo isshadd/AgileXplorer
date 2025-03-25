@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewInit } fr
 import { WebSocketService } from '../../services/websocket.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+
 
 interface RobotPosition {
   x: number;
@@ -38,7 +41,10 @@ interface MapData {
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [
+    CommonModule,
+    MatTooltipModule,
+  ]
 })
 export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('mapCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -64,6 +70,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private mapCtx: CanvasRenderingContext2D | null = null;
 
   constructor(private websocketService: WebSocketService) {}
+
+  get isController(): boolean {
+    return this.websocketService.isControllerClient();
+  }
 
   ngOnInit(): void {
     this.subscription.add(

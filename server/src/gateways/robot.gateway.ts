@@ -346,18 +346,19 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // Envoyer l'état initial des robots et leurs positions au nouveau client
     this.sendRobotStates(client);
     this.sendStoredPositions(client);
-
-    // Assigner le premier client comme contrôleur s'il n'y en a pas encore
-    if (!this.controllerClientId) {
+    
+    // Si c'est le seul client ou s'il n'y a pas de contrôleur, lui donner le contrôle
+    if (this.connectedClients.size === 1 || !this.controllerClientId) {
       this.controllerClientId = client.id;
       this.sendControllerStatus(client, true);
     } else {
-      // Informer le client qu'il est en mode spectateur
+      // Sinon, mode spectateur
       this.sendControllerStatus(client, false);
     }
 
     // Informer tous les clients du nouveau nombre de clients connectés
     this.broadcastClientCount();
+    this.logger.log(`Client ${client.id} connecté. Nombre total: ${this.connectedClients.size}. Contrôleur: ${this.controllerClientId}`);
   }
     try {
       await this.logsService.addLog(this.currentMissionId, {

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
@@ -13,6 +14,7 @@ import { MissionHistoryComponent } from '../mission-history/mission-history.comp
 import { MapComponent } from '../map/map.component';
 import { WebSocketService } from '../../services/websocket.service';
 import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
+import { WebSocketService } from '../../services/websocket.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -24,8 +26,8 @@ import { ConnectedClientsComponent } from '../connected-clients/connected-client
         MatDialogModule,
         MatProgressBarModule,
         MatIconModule,
+        MatTooltipModule,
         MissionHistoryComponent
-        MapComponent
         ConnectedClientsComponent
     ],
     templateUrl: './dashboard.component.html',
@@ -48,6 +50,10 @@ export class DashboardComponent {
               this.robotStates[data.robotId].battery_level = data.battery_level;
             }
           });
+    }
+
+    get isController(): boolean {
+        return this.websocketService.isControllerClient();
     }
 
     startMission(robotId: string): void {

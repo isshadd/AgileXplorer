@@ -1,32 +1,49 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
+import { Mission } from '../interfaces/mission.interface';
 import { LogsService } from '../logs/logs.service';
-
-interface Robot {
-  id: string;
-  position: { x: number; y: number; z: number };
-  distance: number;
-}
+import * as rclnodejs from 'rclnodejs';
 
 @Injectable()
 export class MissionService {
   private readonly logger = new Logger(MissionService.name);
+  private missions: Map<string, Mission> = new Map();
+  private currentMission: Mission | null = null;
+  // On stocke les noeuds et publishers dans des Maps
+  private nodes: Map<string, any> = new Map();
+  private publishers: Map<string, any> = new Map();
+  private initPromise: Promise<void>;
   private activeMissionId: string | null = null;
-  private activeRobots: Map<string, Robot> = new Map();
+
 
   constructor(private readonly logsService: LogsService) {
-    this.logger.log('MissionService initialized');
-    // Initialize with test robots
-    this.activeRobots.set('robot1', {
-      id: 'robot1',
-      position: { x: 0, y: 0, z: 0 },
-      distance: 0
-    });
-    this.activeRobots.set('robot2', {
-      id: 'robot2',
-      position: { x: 1, y: 1, z: 0 },
-      distance: 0
-    });
+    // Initialiser rclnodejs une seule fois
+    this.initPromise = rclnodejs.init()
+      .then(() => {
+        // Liste des identifiants de robots à gérer
+        const robotIds = ['limo1', 'limo2'];
+        robotIds.forEach((robotId) => {
+          // Création du noeud et du publisher pour les missions
+          const missionNode = rclnodejs.createNode(`mission_service_node_${robotId}`);
+          const missionPublisher = missionNode.createPublisher('std_msgs/msg/String', `/${robotId}/messages`);
+          rclnodejs.spin(missionNode);
+          this.nodes.set(`${robotId}_mission`, missionNode);
+          this.publishers.set(`${robotId}_mission`, missionPublisher);
+          this.logger.log(`Noeud de mission créé pour ${robotId}`);
+
+          // Création du noeud et du publisher pour l’identification
+          const identificationNode = rclnodejs.createNode(`identification_service_node_${robotId}`);
+          const identificationPublisher = identificationNode.createPublisher('std_msgs/msg/Empty', `/${robotId}/identify`);
+          rclnodejs.spin(identificationNode);
+          this.nodes.set(`${robotId}_identification`, identificationNode);
+          this.publishers.set(`${robotId}_identification`, identificationPublisher);
+          this.logger.log(`Noeud d’identification créé pour ${robotId}`);
+        });
+        this.logger.log('rclnodejs initialisé et tous les noeuds sont en exécution');
+      })
+      .catch((err) => {
+        this.logger.error('Échec de l’init de rclnodejs', err);
+      });
   }
 
   startMission() {
@@ -36,19 +53,37 @@ export class MissionService {
     // Initialize mission log
     this.logsService.initializeMissionLog(this.activeMissionId)
       .then(() => {
-        for (const robot of this.activeRobots.values()) {
+        // Liste des identifiants de robots à gérer
+        const robotIds = ['limo1', 'limo2'];
+        robotIds.forEach((robotId) => {
           this.logsService.addLog(this.activeMissionId, {
             type: 'COMMAND',
-            robotId: robot.id,
+            robotId: robotId,
             data: {
               command: 'START_MISSION',
               timestamp: new Date().toISOString()
             }
           });
-        }
+          // Création du noeud et du publisher pour les missions
+          const missionNode = rclnodejs.createNode(`mission_service_node_${robotId}`);
+          const missionPublisher = missionNode.createPublisher('std_msgs/msg/String', `/${robotId}/messages`);
+          rclnodejs.spin(missionNode);
+          this.nodes.set(`${robotId}_mission`, missionNode);
+          this.publishers.set(`${robotId}_mission`, missionPublisher);
+          this.logger.log(`Noeud de mission créé pour ${robotId}`);
+
+          // Création du noeud et du publisher pour l’identification
+          const identificationNode = rclnodejs.createNode(`identification_service_node_${robotId}`);
+          const identificationPublisher = identificationNode.createPublisher('std_msgs/msg/Empty', `/${robotId}/identify`);
+          rclnodejs.spin(identificationNode);
+          this.nodes.set(`${robotId}_identification`, identificationNode);
+          this.publishers.set(`${robotId}_identification`, identificationPublisher);
+          this.logger.log(`Noeud d’identification créé pour ${robotId}`);
+        });
+        this.logger.log('rclnodejs initialisé et tous les noeuds sont en exécution');
       })
-      .catch(error => {
-        this.logger.error(`Error initializing mission log: ${error.message}`, error.stack);
+      .catch((err) => {
+        this.logger.error('Échec de l’init de rclnodejs', err);
       });
 
     return { missionId: this.activeMissionId };
@@ -81,17 +116,8 @@ export class MissionService {
     return this.activeMissionId;
   }
 
-  getActiveRobots(): Robot[] {
-    return Array.from(this.activeRobots.values());
-  }
-
   updateRobotData(robotId: string, position: { x: number; y: number; z: number }, distance: number) {
-    const robot = this.activeRobots.get(robotId);
-    if (robot) {
-      robot.position = position;
-      robot.distance = distance;
-      this.activeRobots.set(robotId, robot);
-
+    if (robotId) {
       // Log robot data if mission is active
       if (this.activeMissionId) {
         this.logsService.addLog(this.activeMissionId, {

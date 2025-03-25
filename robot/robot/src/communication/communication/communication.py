@@ -2,12 +2,13 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 import json
+from std_msgs.msg import Empty
 
 class CommunicationController(Node):
 
     def __init__(self):
         super().__init__('communication_controller')
-        self.declare_parameter('robot_id', 'robot1_102')
+        self.declare_parameter('robot_id', 'limo1')
         self.robot_id = self.get_parameter('robot_id').value
 
         messages_topic = f'/{self.robot_id}/messages'
@@ -18,9 +19,15 @@ class CommunicationController(Node):
         self.movement_publisher = self.create_publisher(String, movement_topic, 10)
         self.get_logger().info(f"Publishing to: {movement_topic}")
 
+        start_topic = f'/{self.robot_id}/start_mission'
+        end_topic = f'/{self.robot_id}/end_mission'
+        self.start_mission_publisher = self.create_publisher(Empty, start_topic, 10)
+        self.end_mission_publisher = self.create_publisher(Empty, end_topic, 10)
+
         self.feedback_subscription = self.create_subscription(String, '/feedback', self.feedback_callback, 10)
         self.server_feedback_publisher = self.create_publisher(String, '/server_feedback', 10)
         self.mission_active = False
+        self.empty = Empty()
 
     def messages_callback(self, msg):
         try:
@@ -28,14 +35,13 @@ class CommunicationController(Node):
             action = data.get('action')
             if action == 'start_mission':
                 self.mission_active = True
-                self.get_logger().info(f"Mission démarrée pour {self.robot_id}")
+                self.start_mission_publisher.publish(self.empty)
             elif action == 'end_mission':
                 self.mission_active = False
-                self.get_logger().info(f"Mission arrêtée pour {self.robot_id}")
+                self.end_mission_publisher.publish(self.empty)
             else:
                 self.get_logger().info(f"Transmitting command on {self.robot_id}/movement: {msg.data}")
-
-            self.movement_publisher.publish(msg)
+                self.movement_publisher.publish(msg)
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement du message: {str(e)}")
 

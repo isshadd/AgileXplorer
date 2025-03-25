@@ -24,8 +24,8 @@ import { MissionHistoryComponent } from '../mission-history/mission-history.comp
 })
 export class DashboardComponent {
     robotStates: { [key: string]: RobotState } = {
-        'robot1_102': { isMissionActive: false, isIdentified: false },
-        'robot2_102': { isMissionActive: false, isIdentified: false }
+        'limo1': { isMissionActive: false, isIdentified: false },
+        'limo2': { isMissionActive: false, isIdentified: false }
     };
 
     constructor(

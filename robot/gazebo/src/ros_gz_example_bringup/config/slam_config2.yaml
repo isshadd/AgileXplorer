@@ -12,12 +12,12 @@ slam_toolbox:
     # ROS Parameters
     odom_frame: limo2/odom
     map_frame: limo2/map
-    base_frame: limo2    #base_footprint #?
+    base_frame: limo2 
     scan_topic: limo2/scan
     use_map_saver: true
 
     #mapping 
-    mode: localization
+    mode: mapping
 
     # mode: localization
     # load_map_file : true

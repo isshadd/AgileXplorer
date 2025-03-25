@@ -40,11 +40,21 @@ def generate_launch_description():
         parameters=[{'robot_id': LaunchConfiguration('id')}],
         remappings=[('/identify', [ '/', LaunchConfiguration('id'), '/identify'])]
     )
+
+    mission_node = Node(
+        package='mission',
+        executable='mission_node',
+        name='mission_node',
+        output='screen',
+        parameters=[{'robot_id': LaunchConfiguration('id')}],
+        remappings=[('/mission', [ '/', LaunchConfiguration('id'), '/mission'])]
+    )
     
     ld = LaunchDescription()
     ld.add_action(robot_speed_arg)
     ld.add_action(move_controller_node)
     ld.add_action(communication_controller_node)
     ld.add_action(identify_node)
+    ld.add_action(mission_node)
 
     return ld

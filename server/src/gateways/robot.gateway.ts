@@ -4,6 +4,8 @@ import {
   SubscribeMessage,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  ConnectedSocket,
+  MessageBody
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Injectable, Logger } from '@nestjs/common';
@@ -30,7 +32,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 @Injectable()
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:4200',
+    origin: '*', // Permet les connexions depuis n'importe quelle origine
     credentials: true,
     methods: ['GET', 'POST'],
     transports: ['websocket', 'polling'],
@@ -57,6 +59,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     ['robot1_102', 100],
     ['robot2_102', 100]
   ]);
+  private controllerClientId: string | null = null; // ID du client ayant le contrôle
 
   private readonly SIMULATE_BATTERY = 'false';
   private readonly MIN_VOLTAGE = 9;
@@ -333,6 +336,18 @@ private async initROS2() {
     // Envoyer l'état initial des robots et leurs positions au nouveau client
     this.sendRobotStates(client);
     this.sendStoredPositions(client);
+    
+    // Assigner le premier client comme contrôleur s'il n'y en a pas encore
+    if (!this.controllerClientId) {
+      this.controllerClientId = client.id;
+      this.sendControllerStatus(client, true);
+    } else {
+      // Informer le client qu'il est en mode spectateur
+      this.sendControllerStatus(client, false);
+    }
+    
+    // Informer tous les clients du nouveau nombre de clients connectés
+    this.broadcastClientCount();
   }
     try {
       await this.logsService.addLog(this.currentMissionId, {
@@ -356,6 +371,19 @@ private async initROS2() {
   }
   handleDisconnect(client: Socket) {
     this.connectedClients.delete(client);
+    
+    // Si le contrôleur se déconnecte, assigner un nouveau contrôleur
+    if (this.controllerClientId === client.id && this.connectedClients.size > 0) {
+      this.controllerClientId = [...this.connectedClients][0].id;
+      const newController = [...this.connectedClients].find(c => c.id === this.controllerClientId);
+      if (newController) {
+        this.sendControllerStatus(newController, true);
+      }
+    }
+    
+    // Mettre à jour le nombre de clients connectés
+    this.broadcastClientCount();
+    
 
   private stopSensorDataLogging() {
     if (this.sensorDataInterval) {
@@ -385,6 +413,15 @@ private async initROS2() {
     } else {
       this.reconnectionAttempts.delete(client.id);
     }
+  }
+  
+  private sendControllerStatus(client: Socket, isController: boolean) {
+    client.emit('CONTROLLER_STATUS', { isController });
+  }
+  
+  private broadcastClientCount() {
+    this.server.emit('CLIENT_COUNT', { count: this.connectedClients.size });
+    this.logger.log(`Nombre de clients connectés: ${this.connectedClients.size}`);
   }
 
   private handleReconnectionTimeout(client: Socket) {
@@ -529,4 +566,14 @@ private async initROS2() {
     };
     this.server.emit('error', message);
   }
+  @SubscribeMessage('GET_CLIENT_COUNT')
+  handleGetClientCount(@ConnectedSocket() client: Socket) {
+    // Envoyer seulement au client qui demande
+    client.emit('CLIENT_COUNT', { count: this.connectedClients.size });
+    client.emit('CONTROLLER_STATUS', { isController: client.id === this.controllerClientId });
+    
+    this.logger.log(`Client ${client.id} a demandé le nombre de clients connectés: ${this.connectedClients.size}`);
+    return { success: true };
+  }
+
 }

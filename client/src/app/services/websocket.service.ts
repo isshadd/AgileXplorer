@@ -8,6 +8,9 @@ import { environment } from '../../environments/environment';
 })
 export class WebSocketService {
   private socket: ReturnType<typeof io>;
+  private isController: boolean = false;
+  private clientId: string = '';
+  private clientCount: number = 1;
 
   constructor() {
     this.socket = io(environment.apiUrl, {
@@ -17,6 +20,7 @@ export class WebSocketService {
 
     this.socket.on('connect', () => {
       console.log('WebSocket connecté');
+      this.clientId = this.socket.id || `client-${Date.now()}`;
     });
 
     this.socket.on('disconnect', () => {
@@ -26,6 +30,20 @@ export class WebSocketService {
     this.socket.on('error', (error: any) => {
       console.error('WebSocket erreur:', error);
     });
+    
+    // Réception du statut de contrôleur
+    this.socket.on('CONTROLLER_STATUS', (data: {isController: boolean}) => {
+      this.isController = data.isController;
+      console.log(`Statut de contrôleur: ${this.isController ? 'Actif' : 'Spectateur'}`);
+    });
+  }
+  
+  public getClientId(): string {
+    return this.clientId;
+  }
+  
+  public isControllerClient(): boolean {
+    return this.isController;
   }
 
   public onRobotPosition(): Observable<any> {
@@ -51,6 +69,27 @@ export class WebSocketService {
         this.socket.off('MAP_DATA');
       };
     });
+  }
+  
+  public onClientCountUpdate(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('CLIENT_COUNT', (data: any) => {
+        this.clientCount = data.count;
+        console.log(`Nombre de clients connectés: ${this.clientCount}`);
+        observer.next({
+          count: this.clientCount,
+          isController: this.isController
+        });
+      });
+
+      return () => {
+        this.socket.off('CLIENT_COUNT');
+      };
+    });
+  }
+  
+  public getClientCount(): number {
+    return this.clientCount;
   }
 
   public onBatteryData(): Observable<any> {

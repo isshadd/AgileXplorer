@@ -18,12 +18,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: '*', // Permet les connexions depuis n'importe quelle origine
     credentials: true,
   });
 
-  await app.listen(3000);
-  console.log('Server running on port 3000');
+  // Pour permettre l'accès depuis le réseau local, écoutez sur toutes les interfaces
+  await app.listen(3000, '0.0.0.0');
+  console.log(`L'application est disponible sur http://localhost:3000 et sur le réseau local`);
 }
 
 bootstrap();

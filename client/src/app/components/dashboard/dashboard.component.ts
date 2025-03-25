@@ -12,7 +12,6 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 import { RobotState } from '../../interfaces/robot-state.interface';
 import { MissionHistoryComponent } from '../mission-history/mission-history.component';
 import { MapComponent } from '../map/map.component';
-import { WebSocketService } from '../../services/websocket.service';
 import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
 import { WebSocketService } from '../../services/websocket.service';
 

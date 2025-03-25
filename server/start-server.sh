@@ -73,4 +73,15 @@ fi
 
 # Start the server
 echo "🚀 Starting NestJS server..."
+# Source ROS2 environment
+source /opt/ros/humble/setup.bash
+
+# Source our workspace environment
+source ../robot/limo/install/setup.bash
+
+# Set environment variables
+export ROS_DOMAIN_ID=102
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/../robot/limo/install/limo_msgs/lib
+
+# Start the server
 npm run start:dev

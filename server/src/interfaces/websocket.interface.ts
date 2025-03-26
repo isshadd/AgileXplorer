@@ -7,6 +7,7 @@ export type WebSocketMessageType =
   | 'ROBOT_POSITION'
   | 'set_initial_position'
   | 'MAP_DATA'
+  | 'LIMO_STATUS'
   | 'error';
 
 export interface WebSocketMessage<T = any> {
@@ -84,4 +85,14 @@ export type RobotPositionMessage = WebSocketMessage<RobotPositionPayload>;
 export type MissionLogMessage = WebSocketMessage<MissionLogPayload>;
 export type InitialPositionMessage = WebSocketMessage<InitialPositionPayload>;
 export type MapDataMessage = WebSocketMessage<MapDataPayload>;
+export interface LimoStatusPayload {
+  robotId: string;
+  vehicle_state: number;
+  control_mode: number;
+  battery_voltage: number;
+  error_code: number;
+  motion_mode: number;
+}
+
+export type LimoStatusMessage = WebSocketMessage<LimoStatusPayload>;
 export type ErrorMessage = WebSocketMessage<ErrorPayload>;

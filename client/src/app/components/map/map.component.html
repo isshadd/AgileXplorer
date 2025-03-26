@@ -1,18 +1,27 @@
 <div class="map-container">
   <canvas #mapCanvas class="map-canvas"></canvas>
   <div class="map-controls">
-    <button (click)="zoomIn()"
-           [disabled]="!isController"
-           [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
-           class="control-button">+</button>
-    <button (click)="zoomOut()"
-           [disabled]="!isController"
-           [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
-           class="control-button">-</button>
-    <button (click)="resetView()"
-           [disabled]="!isController"
-           [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
-           class="control-button">Reset</button>
+    <div class="view-controls">
+      <span class="control-label">Vue:</span>
+      <button (click)="toggleDisplayMode()"
+             [matTooltip]="displayMode === 'background' ? 'Afficher la cartographie' : 'Afficher la carte'"
+             class="control-button toggle-view">
+        {{ displayMode === 'background' ? 'Carte' : 'SLAM' }}
+      </button>
+    </div>
+    <div class="zoom-group">
+      <span class="control-label">Zoom:</span>
+      <div class="zoom-controls">
+        <button (click)="zoomIn()"
+               [disabled]="!isController"
+               [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+               class="control-button small">+</button>
+        <button (click)="zoomOut()"
+               [disabled]="!isController"
+               [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+               class="control-button small">-</button>
+      </div>
+    </div>
     <div class="distance-controls">
       <span class="control-label">Distance:</span>
       <button (click)="setDistanceFactor(DISTANCE_FACTOR - 0.1)"

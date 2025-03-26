@@ -97,6 +97,13 @@
                         [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
                     Identifier
                 </button>
+                <button mat-raised-button
+                        color="accent"
+                        (click)="returnToBase(robotId)"
+                        [disabled]="!robotStates[robotId].isMissionActive || !isController"
+                        [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
+                    Retour à la base
+                </button>
             </div>
         </mat-card-content>
     </mat-card>

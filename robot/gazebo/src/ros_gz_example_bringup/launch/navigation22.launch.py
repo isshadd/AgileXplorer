@@ -95,7 +95,7 @@ def generate_launch_description():
 
     declare_namespace_cmd = DeclareLaunchArgument(
         'namespace',
-        default_value='limo1',
+        default_value='limo2',
         description='Top-level namespace')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -105,7 +105,7 @@ def generate_launch_description():
 
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
-        default_value=os.path.join(pkg_share, 'config', 'nav2_config1.yaml'),
+        default_value=os.path.join(pkg_share, 'config', 'nav2_config2.yaml'),
         description='Full path to the ROS2 parameters file to use for all launched nodes')
 
     declare_autostart_cmd = DeclareLaunchArgument(
@@ -134,7 +134,7 @@ def generate_launch_description():
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
-                arguments=["0", "0", "0", "0", "0", "0", "limo1/map", "limo1/odom"],
+                arguments=["0", "0", "0", "0", "0", "0", "limo2/map", "limo2/odom"],
                 namespace=namespace,
             ),
             Node(

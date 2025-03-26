@@ -16,6 +16,7 @@ def generate_launch_description():
     declare_use_sim_time_argument = DeclareLaunchArgument(
         "use_sim_time", default_value="true", description="Use simulation/Gazebo clock"
     )
+    log_args = ['--ros-args', '--log-level', 'error']
 
     declare_slam_params_file_cmd1 = DeclareLaunchArgument(
         "slam_params_file1",
@@ -28,13 +29,14 @@ def generate_launch_description():
         executable="async_slam_toolbox_node",
         name="slam_toolbox",
         output="screen",
+        arguments=log_args,
         remappings=[
             ("/map", "/limo1/map"),
             ("/map_metadata", "/limo1/map_metadata"),
             ("/slam_toolbox/feedback", "/limo1/slam_toolbox/feedback"),
             ("/slam_toolbox/graph_visualization", "/limo1/slam_toolbox/graph_visualization"),
             ("/slam_toolbox/scan_visualization", "/limo1/slam_toolbox/scan_visualization"),
-            ("/slam_toolbox/update", "/limo1/slam_toolbox/update")]
+            ("/slam_toolbox/update", "/limo1/slam_toolbox/update")],
     )
     
     declare_slam_params_file_cmd2 = DeclareLaunchArgument(
@@ -49,6 +51,7 @@ def generate_launch_description():
         executable="async_slam_toolbox_node",
         name="slam_toolbox",
         output="screen",
+        arguments=log_args,
         remappings=[
             ("/map", "/limo2/map"),
             ("/map_metadata", "/limo2/map_metadata"),
@@ -63,6 +66,6 @@ def generate_launch_description():
     ld.add_action(declare_use_sim_time_argument)
     ld.add_action(declare_slam_params_file_cmd1)
     ld.add_action(start_async_slam_toolbox_node1)
-   # ld.add_action(declare_slam_params_file_cmd2)
-   # ld.add_action(start_async_slam_toolbox_node2)
+    ld.add_action(declare_slam_params_file_cmd2)
+    ld.add_action(start_async_slam_toolbox_node2)
     return ld

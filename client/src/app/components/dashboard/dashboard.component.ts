@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
@@ -21,9 +22,11 @@ import { WebSocketService } from '../../services/websocket.service';
         MatButtonModule,
         MatCardModule,
         MatDialogModule,
+        MatProgressBarModule,
         MatIconModule,
         MatTooltipModule,
         MapComponent,
+        MatIconModule,
         ConnectedClientsComponent
     ],
     templateUrl: './dashboard.component.html',
@@ -31,9 +34,9 @@ import { WebSocketService } from '../../services/websocket.service';
 })
 export class DashboardComponent {
     robotStates: { [key: string]: RobotState } = {
-        'robot1_102': { isMissionActive: false, isIdentified: false },
-        'robot2_102': { isMissionActive: false, isIdentified: false }
-    };
+        'robot1_102': { isMissionActive: false, isIdentified: false, battery_level: 0 },
+        'robot2_102': { isMissionActive: false, isIdentified: false, battery_level: 0 }
+      };
 
     constructor(
         private robotService: RobotService,
@@ -74,6 +77,21 @@ export class DashboardComponent {
         this.robotService.identify(robotId).subscribe(() => {
             this.robotStates[robotId].isIdentified = true;
             this.notificationService.identifySignal();
+        });
+    }
+
+    returnToBase(robotId: string): void {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            width: '400px',
+            data: { message: `Êtes-vous sûr de vouloir faire retourner le robot ${robotId} à sa base ?` }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.robotService.returnToBase(robotId).subscribe(() => {
+                    this.notificationService.returnToBase();
+                });
+            }
         });
     }
 }

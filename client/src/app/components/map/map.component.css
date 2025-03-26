@@ -32,6 +32,12 @@
     font-size: 20px;
   }
 
+  .control-button.toggle-view {
+    width: auto;
+    height: 32px;
+    font-size: 14px;
+  }
+
   .map-legend {
     bottom: 15px;
     left: 15px;
@@ -69,6 +75,18 @@
     font-size: 16px;
   }
 
+  .control-button.toggle-view {
+    width: auto;
+    min-width: 80px;
+    height: 28px;
+    font-size: 12px;
+    padding: 0 8px;
+  }
+
+  .control-label {
+    font-size: 10px;
+  }
+
   .map-legend {
     bottom: 10px;
     left: 10px;
@@ -103,25 +121,90 @@
   flex-direction: column;
   gap: 5px;
   z-index: 1000;
+  align-items: flex-end;
 }
 
 .control-button {
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
   border: none;
-  border-radius: 4px;
+  border-radius: 3px;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 11px;
   color: #333;
+  padding: 0;
+}
+
+.control-button.small {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+.control-button.toggle-view {
+  width: auto;
+  min-width: 45px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 11px;
+  background-color: #2196F3;
+  color: white;
+  font-weight: 500;
+}
+
+.control-button.toggle-view:hover {
+  background-color: #1976D2;
 }
 
 .control-button:hover {
   background-color: #f0f0f0;
+}
+
+.zoom-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.control-label {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.distance-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.control-label {
+  opacity: 0.8;
+  margin-right: 2px;
+}
+
+.factor-value {
+  min-width: 20px;
+  text-align: center;
+  font-size: 10px;
 }
 
 .map-legend {

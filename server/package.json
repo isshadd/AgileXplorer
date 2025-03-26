@@ -21,6 +21,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.4.15",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@nestjs/schedule": "^5.0.1",
     "@nestjs/websockets": "^10.4.15",
     "dotenv": "^16.4.7",
@@ -33,13 +34,18 @@
     "socket.io-client": "^4.8.1",
     "uuid": "^11.1.0"
 =======
+=======
+>>>>>>> origin/websockets-position
     "@nestjs/websockets": "^10.4.15",
     "@types/socket.io": "^3.0.1",
     "rclnodejs": "^0.28.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "socket.io": "^4.8.1"
+<<<<<<< HEAD
 >>>>>>> 83fc4b2 (websockets done + robot position while in mission)
+=======
+>>>>>>> origin/websockets-position
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

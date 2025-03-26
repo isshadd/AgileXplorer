@@ -89,14 +89,24 @@ export class MissionService {
           this.logger.log(`Noeud de mission créé pour ${robotId}`);
 
           // Création du noeud et du publisher pour l’identification
-          const identificationNode = rclnodejs.createNode(`identification_service_node_${robotId}`);
-          const identificationPublisher = identificationNode.createPublisher('std_msgs/msg/Empty', `/${robotId}/identify`);
+          const identificationNode = rclnodejs.createNode(
+            `identification_service_node_${robotId}`,
+          );
+          const identificationPublisher = identificationNode.createPublisher(
+            'std_msgs/msg/Empty',
+            `/${robotId}/identify`,
+          );
           rclnodejs.spin(identificationNode);
           this.nodes.set(`${robotId}_identification`, identificationNode);
-          this.publishers.set(`${robotId}_identification`, identificationPublisher);
+          this.publishers.set(
+            `${robotId}_identification`,
+            identificationPublisher,
+          );
           this.logger.log(`Noeud d’identification créé pour ${robotId}`);
         });
-        this.logger.log('rclnodejs initialisé et tous les noeuds sont en exécution');
+        this.logger.log(
+          'rclnodejs initialisé et tous les noeuds sont en exécution',
+        );
       })
       .catch((err) => {
         this.logger.error('Échec de l’init de rclnodejs', err);

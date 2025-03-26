@@ -79,4 +79,19 @@ export class DashboardComponent {
             this.notificationService.identifySignal();
         });
     }
+
+    returnToBase(robotId: string): void {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            width: '400px',
+            data: { message: `Êtes-vous sûr de vouloir faire retourner le robot ${robotId} à sa base ?` }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.robotService.returnToBase(robotId).subscribe(() => {
+                    this.notificationService.returnToBase();
+                });
+            }
+        });
+    }
 }

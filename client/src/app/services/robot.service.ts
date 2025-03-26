@@ -23,6 +23,10 @@ export class RobotService {
     return this.http.post<void>(`${this.apiUrl}/${robotId}/identify`, {});
   }
 
+  returnToBase(robotId: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${robotId}/mission/return`, {});
+  }
+
   // Méthode globale pour démarrer la mission de tous les robots
   startAllMissions(): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/mission/start_all`, {});

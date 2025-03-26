@@ -33,19 +33,6 @@ def generate_launch_description():
             name='base_link_to_odom',
             arguments="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /odom".split(
                 ' ')),
-        # launch_ros.actions.Node(
-        #     package='robot_pose_ekf',
-        #     executable='robot_pose_ekf',
-        #     name='robot_pose_ekf',
-        #     parameters=[
-        #         {
-        #             'output_frame': 'odom'
-        #         },
-        #         {
-        #             'base_footprint_frame': 'base_link'
-        #         }
-        #     ]
-        # ),
          launch.actions.IncludeLaunchDescription(
              launch.launch_description_sources.PythonLaunchDescriptionSource(
                  os.path.join(get_package_share_directory('limo_base'),

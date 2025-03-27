@@ -25,13 +25,13 @@ def generate_launch_description():
             package='tf2_ros',
             executable='static_transform_publisher',
             name='base_link_to_imu',
-            arguments="0.0 0.0 0.0 0.0 0.0 0.0 limo1/base_link limo1/imu_link".split(
+            arguments="0.0 0.0 0.0 0.0 0.0 0.0 base_link imu_link".split(
                 ' ')),
         launch_ros.actions.Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             name='base_link_to_odom',
-            arguments="0.0 0.0 0.0 0.0 0.0 0.0 limo1/base_link limo1/odom".split(
+            arguments="0.0 0.0 0.0 0.0 0.0 0.0 base_link odom".split(
                 ' ')),
          launch.actions.IncludeLaunchDescription(
              launch.launch_description_sources.PythonLaunchDescriptionSource(

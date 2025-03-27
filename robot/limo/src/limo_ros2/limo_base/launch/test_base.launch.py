@@ -1,82 +1,70 @@
 import os
-import launch
-import launch_ros
+import sys
 
+import launch
+import launch_ros.actions
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess
-from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration, TextSubstitution
 
 
 def generate_launch_description():
-
-    id_arg = DeclareLaunchArgument(
-        'id',
-        default_value='limo1',
-        description='Namespace ID for the robot'
-    )
-
-    port_name_arg = DeclareLaunchArgument('port_name', default_value='ttyTHS1',
-                                         description='usb bus name, e.g. ttyTHS1')
-    odom_frame_arg = DeclareLaunchArgument('odom_frame', default_value='odom',
-                                           description='Odometry frame id')
-    base_link_frame_arg = DeclareLaunchArgument('base_frame', default_value='base_link',
-                                                description='Base link frame id')
-    odom_topic_arg = DeclareLaunchArgument('odom_topic_name', default_value='odom',
-                                           description='Odometry topic name')
-    odom_tf_arg = DeclareLaunchArgument('pub_odom_tf', default_value='True',
-                                           description='Odometry topic name')
-
-    # is_scout_mini_arg = DeclareLaunchArgument('is_scout_mini', default_value='false',
-    #                                       description='Scout mini model')
-    # is_omni_wheel_arg = DeclareLaunchArgument('is_omni_wheel', default_value='false',
-    #                                       description='Scout mini omni-wheel model')
-
-    # simulated_robot_arg = DeclareLaunchArgument('simulated_robot', default_value='false',
-    #                                                description='Whether running with simulator')
-    sim_control_rate_arg = DeclareLaunchArgument('control_rate', default_value='50',
-                                                 description='Simulation control loop update rate')
-    
-    limo_base_node = launch_ros.actions.Node(
-        package='limo_base',
-        executable='limo_base',
-        output='screen',
-        emulate_tty=True,
-        namespace=LaunchConfiguration('id'),
-        remappings=[
-            ('/cmd_vel', 'cmd_vel'),
-            ('/imu', 'imu'),
-            ('/limo_status', 'limo_status'),
-            ('/odom', 'odom'),
-            ('/parameter_events', 'parameter_events'),
-            ('/rosout', 'rosout'),
-            ('/tf', 'tf'),
-            ('/tf_static', 'tf_static'),
-        ],
-        parameters=[{
-                # 'use_sim_time': launch.substitutions.LaunchConfiguration('use_sim_time'),
-                'port_name': launch.substitutions.LaunchConfiguration('port_name'),                
-                'odom_frame': launch.substitutions.LaunchConfiguration('odom_frame'),
-                'base_frame': launch.substitutions.LaunchConfiguration('base_frame'),
-                'odom_topic_name': launch.substitutions.LaunchConfiguration('odom_topic_name'),
-                # 'is_scout_mini': launch.substitutions.LaunchConfiguration('is_scout_mini'),
-                # 'is_omni_wheel': launch.substitutions.LaunchConfiguration('is_omni_wheel'),
-                # 'simulated_robot': launch.substitutions.LaunchConfiguration('simulated_robot'),
-                'pub_odom_tf': launch.substitutions.LaunchConfiguration('pub_odom_tf'),
-                'control_rate': launch.substitutions.LaunchConfiguration('control_rate'),
-        }])
-
-    return LaunchDescription([
-        id_arg,
-        port_name_arg,        
-        odom_frame_arg,
-        base_link_frame_arg,
-        odom_topic_arg,
-        odom_tf_arg,
-        # is_scout_mini_arg,
-        # is_omni_wheel_arg,
-        # simulated_robot_arg,
-        sim_control_rate_arg,
-        limo_base_node
+    ld = launch.LaunchDescription([
+        launch.actions.DeclareLaunchArgument(name='id', default_value='limo1'),
+        launch.actions.DeclareLaunchArgument(name='port_name',
+                                             default_value='ttyTHS1'),
+        launch.actions.DeclareLaunchArgument(name='odom_topic_name',
+                                             default_value='odom'),
+        launch.actions.DeclareLaunchArgument(name='open_rviz',
+                                             default_value='false'),
+        launch_ros.actions.Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            on_exit=launch.actions.Shutdown(),
+            condition=launch.conditions.IfCondition(
+                launch.substitutions.LaunchConfiguration('open_rviz'))),
+        launch_ros.actions.Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='base_link_to_imu',
+            arguments=[
+                '0.0', '0.0', '0.0', '0.0', '0.0', '0.0',
+                (LaunchConfiguration('id') + TextSubstitution(text='/base_link')).perform(launch.context.LaunchContext()),
+                (LaunchConfiguration('id') + TextSubstitution(text='/imu_link')).perform(launch.context.LaunchContext())
+            ]),
+        launch_ros.actions.Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='base_link_to_odom',
+            arguments=[
+                '0.0', '0.0', '0.0', '0.0', '0.0', '0.0',
+                (LaunchConfiguration('id') + TextSubstitution(text='/base_link')).perform(launch.context.LaunchContext()),
+                (LaunchConfiguration('id') + TextSubstitution(text='/odom')).perform(launch.context.LaunchContext())
+            ]),
+        launch.actions.IncludeLaunchDescription(
+            launch.launch_description_sources.PythonLaunchDescriptionSource(
+                os.path.join(get_package_share_directory('limo_base'),
+                             'launch/test_base.launch.py')),
+            launch_arguments={
+                'port_name':
+                LaunchConfiguration('port_name'),
+                'odom_topic_name':
+                LaunchConfiguration('odom_topic_name'),
+                'id':
+                LaunchConfiguration('id')
+            }.items(),
+            namespace=LaunchConfiguration('id')),
+        launch.actions.IncludeLaunchDescription(
+            launch.launch_description_sources.PythonLaunchDescriptionSource(
+                os.path.join(get_package_share_directory('limo_base'),
+                             'launch', 'test_lidar.launch.py')),
+            namespace=LaunchConfiguration('id'),
+            launch_arguments={
+                'id': LaunchConfiguration('id')
+            }.items())
     ])
+    return ld
+
+
+if __name__ == '__main__':
+    generate_launch_description()

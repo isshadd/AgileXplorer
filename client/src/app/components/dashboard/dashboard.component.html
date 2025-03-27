@@ -1,111 +1,98 @@
 <div class="dashboard-container">
-  <app-connected-clients class="connected-clients"></app-connected-clients>
-    <div class="robots-container">
-        <mat-card *ngFor="let robotId of ['limo1', 'limo2']" class="robot-card">
-            <mat-card-header>
-                <mat-card-title>Contrôle du {{ robotId }}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="mission-controls">
-                    <button mat-raised-button
-                            color="primary"
-                            (click)="startMission(robotId)"
-                            [disabled]="robotStates[robotId].isMissionActive || !robotStates[robotId].isIdentified">
-                        Démarrer Mission
-                    </button>
-                    <button mat-raised-button 
-                            color="warn" 
-                            (click)="stopMission(robotId)" 
-                            [disabled]="!robotStates[robotId].isMissionActive">
-                        Arrêter Mission
-                    </button>
-                    <button mat-raised-button
-                            color="primary"
-                            (click)="identify(robotId)">
-                        Identifier
-                    </button>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    <app-mission-history></app-mission-history>
-  <div class="map-container">
-    <app-map></app-map>
+  <div class="header-controls">
+    <app-connected-clients class="connected-clients"></app-connected-clients>
+    <button mat-raised-button color="primary" (click)="toggleView()">
+      {{ showHistory ? 'Retour au tableau de bord' : 'Historique des missions' }}
+    </button>
   </div>
-  <div class="robots-container">
-    <mat-card *ngFor="let robotId of ['robot1_102', 'robot2_102']"
-              class="robot-card"
-              [class.mission-active]="robotStates[robotId].isMissionActive"
-              [class.identified]="!robotStates[robotId].isMissionActive && robotStates[robotId].isIdentified">
-        <mat-card-header>
+
+  <div class="main-content" [class.show-history]="showHistory">
+    <ng-container *ngIf="!showHistory">
+      <div class="map-container">
+        <app-map></app-map>
+      </div>
+      <div class="robots-container">
+        <mat-card *ngFor="let robotId of ['limo1', 'limo2']"
+                  class="robot-card"
+                  [class.mission-active]="robotStates[robotId].isMissionActive"
+                  [class.identified]="!robotStates[robotId].isMissionActive && robotStates[robotId].isIdentified">
+          <mat-card-header>
             <mat-card-title>Contrôle du {{ robotId }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
+          </mat-card-header>
+          <mat-card-content>
             <div class="status-indicator"
                  [class.mission-active]="robotStates[robotId].isMissionActive"
                  [class.identified]="!robotStates[robotId].isMissionActive && robotStates[robotId].isIdentified"
                  [class.inactive]="!robotStates[robotId].isMissionActive && !robotStates[robotId].isIdentified">
-                <mat-icon class="status-icon">
-                    {{robotStates[robotId].isMissionActive ? 'play_circle' :
-                      (robotStates[robotId].isIdentified ? 'check_circle' : 'radio_button_unchecked')}}
-                </mat-icon>
-                <span>
-                    {{robotStates[robotId].isMissionActive ? 'Mission en cours' :
-                      (robotStates[robotId].isIdentified ? 'Robot identifié' : 'En attente')}}
-                </span>
+              <mat-icon class="status-icon">
+                {{robotStates[robotId].isMissionActive ? 'play_circle' :
+                  (robotStates[robotId].isIdentified ? 'check_circle' : 'radio_button_unchecked')}}
+              </mat-icon>
+              <span>
+                {{robotStates[robotId].isMissionActive ? 'Mission en cours' :
+                  (robotStates[robotId].isIdentified ? 'Robot identifié' : 'En attente')}}
+              </span>
             </div>
             <div class="robot-status">
-                <div class="battery-status">
-                    <span class="battery-label">
-                        <mat-icon>battery_std</mat-icon>
-                        Niveau de batterie
-                    </span>
-                    <ng-container *ngIf="(robotStates[robotId].battery_level || 0) > 0; else batteryUnavailable">
-                        <mat-progress-bar
-                            mode="determinate"
-                            [value]="robotStates[robotId].battery_level"
-                            [class.low-battery]="(robotStates[robotId].battery_level || 0) < 30"
-                        ></mat-progress-bar>
-                        <span class="battery-percentage" [class.low-battery]="(robotStates[robotId].battery_level || 0) < 30">
-                            {{ robotStates[robotId].battery_level }}%
-                        </span>
-                    </ng-container>
-                    <ng-template #batteryUnavailable>
-                        <span class="battery-percentage">Non disponible</span>
-                    </ng-template>
-                </div>
+              <div class="battery-status">
+                <span class="battery-label">
+                  <mat-icon>battery_std</mat-icon>
+                  Niveau de batterie
+                </span>
+                <ng-container *ngIf="(robotStates[robotId].battery_level || 0) > 0; else batteryUnavailable">
+                  <mat-progress-bar
+                    mode="determinate"
+                    [value]="robotStates[robotId].battery_level"
+                    [class.low-battery]="(robotStates[robotId].battery_level || 0) < 30"
+                  ></mat-progress-bar>
+                  <span class="battery-percentage" [class.low-battery]="(robotStates[robotId].battery_level || 0) < 30">
+                    {{ robotStates[robotId].battery_level }}%
+                  </span>
+                </ng-container>
+                <ng-template #batteryUnavailable>
+                  <span class="battery-percentage">Non disponible</span>
+                </ng-template>
+              </div>
             </div>
             <div class="mission-controls">
-                <button mat-raised-button
-                        color="primary"
-                        (click)="startMission(robotId)"
-                        [disabled]="robotStates[robotId].isMissionActive || !robotStates[robotId].isIdentified || !isController"
-                        [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
-                    Démarrer Mission
-                </button>
-                <button mat-raised-button 
-                        color="warn" 
-                        (click)="stopMission(robotId)" 
-                        [disabled]="!robotStates[robotId].isMissionActive || !isController"
-                        [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
-                    Arrêter Mission
-                </button>
-                <button mat-raised-button
-                        color="primary"
-                        (click)="identify(robotId)"
-                        [disabled]="!isController"
-                        [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
-                    Identifier
-                </button>
-                <button mat-raised-button
-                        color="accent"
-                        (click)="returnToBase(robotId)"
-                        [disabled]="!robotStates[robotId].isMissionActive || !isController"
-                        [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
-                    Retour à la base
-                </button>
+              <button mat-raised-button
+                      class="mission-control"
+                      color="primary"
+                      (click)="startMission(robotId)"
+                      [disabled]="robotStates[robotId].isMissionActive || !robotStates[robotId].isIdentified || !isController"
+                      [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
+                Démarrer Mission
+              </button>
+              <button mat-raised-button
+                      class="mission-control"
+                      color="warn"
+                      (click)="stopMission(robotId)"
+                      [disabled]="!robotStates[robotId].isMissionActive || !isController"
+                      [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
+                Arrêter Mission
+              </button>
+              <button mat-raised-button
+                      class="mission-control"
+                      color="primary"
+                      (click)="identify(robotId)"
+                      [disabled]="!isController"
+                      [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
+                Identifier
+              </button>
+              <button mat-raised-button
+                      class="mission-control"
+                      color="accent"
+                      (click)="returnToBase(robotId)"
+                      [disabled]="!robotStates[robotId].isMissionActive || !isController"
+                      [matTooltip]="!isController ? 'Mode spectateur actif' : ''">
+                Retour à la base
+              </button>
             </div>
-        </mat-card-content>
-    </mat-card>
-  </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="showHistory">
+      <app-mission-history></app-mission-history>
+    </ng-container>
 </div>

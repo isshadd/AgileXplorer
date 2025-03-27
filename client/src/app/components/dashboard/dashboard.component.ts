@@ -34,10 +34,23 @@ import { WebSocketService } from '../../services/websocket.service';
     styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
+    showHistory = false;
     robotStates: { [key: string]: RobotState } = {
         'limo1': { isMissionActive: false, isIdentified: false },
         'limo2': { isMissionActive: false, isIdentified: false }
     };
+
+    anyRobotInMission(): boolean {
+        return Object.values(this.robotStates).some(state => state.isMissionActive);
+    }
+
+    allRobotsIdentified(): boolean {
+        return Object.values(this.robotStates).every(state => state.isIdentified);
+    }
+
+    toggleView(): void {
+        this.showHistory = !this.showHistory;
+    }
 
     constructor(
         private robotService: RobotService,
@@ -57,7 +70,7 @@ export class DashboardComponent {
     }
 
     startMission(robotId: string): void {
-        this.robotService.startMission(robotId).subscribe(() => {
+        this.robotService.startMission(robotId).subscribe(({ missionId }) => {
             this.robotStates[robotId].isMissionActive = true;
             this.notificationService.missionStarted();
         });
@@ -71,7 +84,7 @@ export class DashboardComponent {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.robotService.stopMission(robotId).subscribe(() => {
+                this.robotService.stopMission(robotId).subscribe(({ stoppedMissionId }) => {
                     this.robotStates[robotId].isMissionActive = false;
                     this.robotStates[robotId].isIdentified = false;
                     this.notificationService.missionEnded();

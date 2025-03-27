@@ -74,9 +74,9 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('startMission')
-  async handleStartMission() {
+  async handleStartMission(@MessageBody() robotId: string) {
     try {
-      const result = await this.missionService.startMission();
+      const result = await this.missionService.startMission(robotId);
       this.currentMissionId = result.missionId;
       this.startSensorDataLogging();
       this.server.emit('missionStarted', result);
@@ -258,7 +258,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
   @SubscribeMessage('stopMission')
-  async handleStopMission(client: Socket) {
+  async handleStopMission(client: Socket, robotId: string) {
     try {
       // Stop sensor logging first to prevent new logs during shutdown
       this.stopSensorDataLogging();
@@ -267,7 +267,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.currentMissionId = null;
 
       // Stop the mission and finalize logs
-      const result = await this.missionService.stopMission();
+      const result = await this.missionService.stopMission(robotId);
 
       // Notify all clients
       this.server.emit('missionStopped', result);
@@ -487,12 +487,12 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       switch (message.payload.type) {
         case 'START':
           for (const robotId of message.payload.robots) {
-            await this.missionService.startMission();
+            await this.missionService.startMission(robotId);
           }
           break;
         case 'STOP':
           for (const robotId of message.payload.robots) {
-            await this.missionService.stopMission();
+            await this.missionService.stopMission(robotId);
           }
           break;
         case 'RETURN':

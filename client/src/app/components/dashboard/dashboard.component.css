@@ -1,19 +1,39 @@
 .dashboard-container {
-    display: grid;
-    grid-template-columns: auto 400px;
-    grid-template-rows: auto 1fr;
-    height: calc(100vh - 64px);
-    gap: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding: 1rem;
+    height: calc(100vh - 64px);
+    padding: 0.5rem;
+    gap: 0.5rem;
 }
 
-.robots-container {
+.header-controls {
     display: flex;
-    height: calc(100vh - 64px); /* Hauteur totale moins la hauteur de la navbar */
-    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+mat-card-header{
+    padding: 0%;
+    padding-left: 8px;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 0.5rem;
+    flex: 1;
+    min-height: 0;
+}
+
+.main-content.show-history {
+    grid-template-columns: 1fr;
+}
+
+.map-container {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .connected-clients {
@@ -22,59 +42,44 @@
     width: 100%;
 }
 
-/* .map-container {
-    grid-column: 1;
-    grid-row: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 0;
-    min-height: 0;
-} */
-
-
-
 .robots-container {
-    grid-column: 2;
-    grid-row: 2;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    overflow-y: auto;
-    max-width: 400px;
+    gap: 0.5rem;
+    max-width: 350px;
 }
 
 .robot-card {
     width: 100%;
-    flex: 1;
-    max-width: 400px;
+    max-width: 350px;
     transition: all 0.3s ease;
 }
 
 .robot-card.mission-active {
-    border: 2px solid #4caf50;
-    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+    border: 1px solid #4caf50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
 }
 
 .robot-card.identified {
-    border: 2px solid #2196f3;
-    box-shadow: 0 0 15px rgba(33, 150, 243, 0.3);
+    border: 1px solid #2196f3;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.3);
 }
 
 .status-indicator {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 1rem;
-    padding: 8px;
+    gap: 4px;
+    margin-bottom: 0.5rem;
+    padding: 4px;
     border-radius: 4px;
     background-color: rgba(255, 255, 255, 0.1);
+    font-size: 0.9em;
 }
 
 .status-indicator .status-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 .status-indicator.mission-active {
@@ -92,40 +97,42 @@
     color: #9e9e9e;
 }
 
-.robot-status {
-    padding: 1rem;
-}
-
 .battery-status {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .battery-label {
-    min-width: 160px;
+    min-width: 120px;
     color: rgba(255, 255, 255, 0.87);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
+    font-size: 0.9em;
 }
 
 .battery-label mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.mission-control{
+    font-size: x-small;
 }
 
 .battery-percentage {
-    min-width: 50px;
+    min-width: 40px;
     text-align: right;
     color: rgba(255, 255, 255, 0.87);
+    font-size: 0.9em;
 }
 
 mat-progress-bar {
     flex-grow: 1;
-    height: 8px !important;
+    height: 6px !important;
 }
 
 /* Override Material progress bar colors */
@@ -146,82 +153,50 @@ mat-progress-bar.low-battery ::ng-deep .mdc-linear-progress__bar-inner {
 }
 
 .mission-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.1rem;
 }
 
 button {
     width: 100%;
+    font-size: 0.9em;
+    line-height: 32px;
+    padding: 0 8px;
 }
 
 mat-card-title {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     text-transform: capitalize;
+    font-size: 1em;
 }
 
 /* Ajustement pour les tablettes */
 @media (min-width: 768px) and (max-width: 1024px) {
-    .dashboard-container {
+    .main-content {
         grid-template-columns: 1fr 300px;
-        grid-template-rows: auto 1fr;
-        height: calc(100vh - 64px);
-        gap: 0.75rem;
-        padding: 0.75rem;
-    }
-
-    .connected-clients {
-        grid-column: 1 / -1;
-        grid-row: 1;
-    }
-
-    .map-container {
-        grid-column: 1;
-        grid-row: 2;
-        min-width: 0;
-        min-height: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
     .robots-container {
-        grid-column: 2;
-        grid-row: 2;
         max-width: 300px;
-        gap: 0.75rem;
     }
 
     .mission-controls {
-        gap: 0.75rem;
-        padding: 0.75rem;
+        grid-template-columns: 1fr;
     }
 }
 
 /* Ajustement pour les petits écrans */
 @media (max-width: 767px) {
-    .dashboard-container {
+    .main-content {
         grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto;
-        gap: 0.5rem;
-        padding: 0.5rem;
-    }
-
-    .map-container {
-        grid-column: 1;
-        grid-row: 2;
     }
 
     .robots-container {
-        grid-column: 1;
-        grid-row: 3;
         max-width: 100%;
-        gap: 0.5rem;
     }
 
     .mission-controls {
-        gap: 0.5rem;
-        padding: 0.5rem;
+        grid-template-columns: 1fr;
     }
 }

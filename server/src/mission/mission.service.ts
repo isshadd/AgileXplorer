@@ -80,40 +80,37 @@ export class MissionService {
     }
   }
 
-  async startMission() {
+  async startMission(robotId: string) {
     await this.initPromise;
     this.activeMissionId = uuidv4();
-    this.logger.log(`Starting mission with ID: ${this.activeMissionId}`);
+    this.logger.log(`Starting mission for robot ${robotId} with ID: ${this.activeMissionId}`);
 
     try {
       await this.logsService.initializeMissionLog(this.activeMissionId);
-      const robotIds = ['limo1', 'limo2'];
+      
+      await this.logsService.addLog(this.activeMissionId, {
+        type: 'COMMAND',
+        robotId,
+        data: {
+          command: 'START_MISSION',
+          timestamp: new Date().toISOString(),
+        },
+      });
 
-      for (const robotId of robotIds) {
-        await this.logsService.addLog(this.activeMissionId, {
-          type: 'COMMAND',
-          robotId,
-          data: {
-            command: 'START_MISSION',
-            timestamp: new Date().toISOString(),
-          },
-        });
-
-        const missionPublisher = this.publishers.get(`${robotId}_mission`);
-        if (missionPublisher) {
-          const message = {
-            data: JSON.stringify({
-              action: 'start_mission',
-              robot_id: robotId,
-            }),
-          };
-          missionPublisher.publish(message);
-          this.logger.log(
-            `Message start_mission publié sur /${robotId}/messages`,
-          );
-        } else {
-          this.logger.warn(`Publisher non trouvé pour ${robotId}`);
-        }
+      const missionPublisher = this.publishers.get(`${robotId}_mission`);
+      if (missionPublisher) {
+        const message = {
+          data: JSON.stringify({
+            action: 'start_mission',
+            robot_id: robotId,
+          }),
+        };
+        missionPublisher.publish(message);
+        this.logger.log(
+          `Message start_mission publié sur /${robotId}/messages`,
+        );
+      } else {
+        this.logger.warn(`Publisher non trouvé pour ${robotId}`);
       }
 
       return { missionId: this.activeMissionId };
@@ -123,18 +120,30 @@ export class MissionService {
     }
   }
 
-  async stopMission() {
+  async stopMission(robotId: string) {
     const stoppedMissionId = this.activeMissionId;
-    this.logger.log(`Stopping mission with ID: ${stoppedMissionId}`);
+    this.logger.log(`Stopping mission for robot ${robotId} with ID: ${stoppedMissionId}`);
 
     if (!stoppedMissionId) {
-      this.logger.warn('Attempted to stop mission but no active mission found');
+      this.logger.warn(`Attempted to stop mission for robot ${robotId} but no active mission found`);
       return { stoppedMissionId: null };
     }
 
     this.activeMissionId = null;
 
     try {
+      const missionPublisher = this.publishers.get(`${robotId}_mission`);
+      if (missionPublisher) {
+        const message = {
+          data: JSON.stringify({
+            action: 'end_mission',
+            robot_id: robotId,
+          }),
+        };
+        missionPublisher.publish(message);
+        this.logger.log(`Message end_mission publié sur /${robotId}/messages`);
+      }
+
       await this.logsService.finalizeMissionLog(stoppedMissionId);
       this.logger.debug('Mission log finalized');
       return { stoppedMissionId };

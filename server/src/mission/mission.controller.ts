@@ -47,7 +47,8 @@ export class MissionController {
 
   @Post()
   async startMission(): Promise<Mission> {
-    const { missionId } = await this.missionService.startMission();
+    // Par défaut, démarrer la mission pour limo1
+    const { missionId } = await this.missionService.startMission('limo1');
     return {
       id: missionId,
       startTime: new Date().toISOString(),
@@ -62,7 +63,8 @@ export class MissionController {
     const missions = await this.missionService.getMissions();
     const currentMission = missions.find((m) => m.status === 'ongoing');
     if (currentMission) {
-      await this.missionService.stopMission();
+      // Par défaut, arrêter la mission pour limo1
+      await this.missionService.stopMission('limo1');
     }
   }
 

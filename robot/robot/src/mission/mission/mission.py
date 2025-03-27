@@ -19,7 +19,7 @@ class MissionNode(Node):
         # f'/{self.robot_id}/odom' 
         start_topic = f'/{self.robot_id}/start_mission'
         end_topic = f'/{self.robot_id}/end_mission'
-        self.map_frame = f'map' # TODO : changer si pas de namspace
+        self.map_frame = f'{self.robot_id}/map' # TODO : changer si pas de namspace
         odom_topic = f'/odom'   # TODO : changer si pas de namspace
 
         self.start_subscription = self.create_subscription(Empty, start_topic, self.start_callback, 10)
@@ -27,7 +27,7 @@ class MissionNode(Node):
         self.map_subscription = self.create_subscription(OccupancyGrid, self.map_frame, self.map_callback, 10)
         self.pose_subscription = self.create_subscription(Odometry, odom_topic, self.pose_callback, 10)
 
-        self.nav_client = ActionClient(self, NavigateToPose, f'/navigate_to_pose')
+        self.nav_client = ActionClient(self, NavigateToPose, f'/navigate_to_pose') # TODO : changer si pas de namspace
 
         self.mission_active = False
         self.isFirstOdom = True
@@ -67,7 +67,7 @@ class MissionNode(Node):
     def end_callback(self, msg):
         self.mission_active = False
         self.get_logger().info(f"Ending mission, returning to: x={self.initial_pose.pose.position.x:.2f}, y={self.initial_pose.pose.position.y :.2f}")
-        
+
         goal_msg = NavigateToPose.Goal()
         goal_pose = PoseStamped()
         goal_pose.header.frame_id = "map" #self.map_frame
@@ -79,6 +79,10 @@ class MissionNode(Node):
 
         send_goal_future = self.nav_client.send_goal_async(goal_msg)
         send_goal_future.add_done_callback(self.goal_response_callback)
+
+        #self.get_logger().info("Canceling current navigation goal")
+        #self.current_goal_handle.cancel_goal_async()
+        #self.current_goal_handle = None
 
     def explore_map(self):
         if self.map_data is None:

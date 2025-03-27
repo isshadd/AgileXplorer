@@ -193,6 +193,8 @@ export class MissionService {
       }
     });
     return { message: responses.join(' | ') };
+  }
+
   async getMissions(): Promise<any[]> {
     try {
       const missionLogs = await this.logsService.findAllMissionLogs();

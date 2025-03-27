@@ -1,7 +1,7 @@
 .map-container {
   position: relative;
-  width: min(calc(100vh - 100px), 100%) !important;
-  height: min(calc(100vh - 100px), 100%) !important;
+  width: min(calc(100vh - 100px), 95%) !important;
+  height: min(calc(100vh - 100px), 95%) !important;
   background-color: #f5f5f5;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -15,8 +15,8 @@
 /* Ajustement pour les tablettes */
 @media (min-width: 768px) and (max-width: 1024px) {
   .map-container {
-    width: min(calc(100vh - 120px), 100%) !important;
-    height: min(calc(100vh - 120px), 100%) !important;
+    width: min(calc(100vh - 120px), 95%) !important;
+    height: min(calc(100vh - 120px), 95%) !important;
     margin: auto;
   }
 
@@ -58,21 +58,39 @@
 /* Ajustement pour les petits écrans */
 @media (max-width: 767px) {
   .map-container {
+    position: relative !important;
+    width: 95% !important;
+    height: min(calc(100vh - 150px), 95vw) !important;
+    min-height: 250px !important;
+    margin: auto !important;
+    border: 1px solid #333 !important;
+    background-color: #102b43 !important;
+    z-index: 10 !important;
+    aspect-ratio: 1/1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .map-canvas {
+    position: relative !important;
+    z-index: 5 !important;
     width: 100% !important;
-    height: min(calc(100vh - 150px), 100vw) !important;
-    margin: auto;
+    height: 100% !important;
   }
 
   .map-controls {
     top: 10px;
     right: 10px;
     gap: 6px;
+    z-index: 20 !important;
   }
 
   .control-button {
     width: 32px;
     height: 32px;
     font-size: 16px;
+    z-index: 20 !important;
   }
 
   .control-button.toggle-view {
@@ -81,16 +99,19 @@
     height: 28px;
     font-size: 12px;
     padding: 0 8px;
+    z-index: 20 !important;
   }
 
   .control-label {
     font-size: 10px;
+    z-index: 20 !important;
   }
 
   .map-legend {
     bottom: 10px;
     left: 10px;
     padding: 8px;
+    z-index: 20 !important;
   }
 
   .legend-item {

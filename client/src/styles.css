@@ -187,6 +187,10 @@ body {
 @media (max-width: 600px) {
     .mat-mdc-card {
         margin: 0.5rem;
+        position: relative;
+        z-index: 1;
+        background-color: #1e3a5f !important;
+        backdrop-filter: blur(0);
     }
 
     .mat-mdc-card-header {
@@ -196,4 +200,40 @@ body {
     .mat-mdc-card-content {
         padding: 0 0.75rem 0.75rem 0.75rem;
     }
+    
+    /* Corrections spécifiques pour le dashboard sur mobile */
+    .dashboard-container {
+        overflow: visible !important;
+    }
+    
+    .map-container {
+        overflow: hidden !important;
+        isolation: isolate !important;
+    }
+    
+    .robots-container .robot-card {
+        margin-bottom: 0.5rem !important;
+        overflow: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Force les boutons à être opaques */
+    .mission-controls button {
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 2 !important;
+    }
+}
+
+/* Corrections générales des problèmes de z-index et superposition */
+.robot-card {
+    isolation: isolate;
+    position: relative;
+    z-index: 1;
+}
+
+app-map {
+    isolation: isolate;
+    position: relative;
+    z-index: 1;
 }

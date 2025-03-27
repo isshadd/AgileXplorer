@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import io from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { MissionLog } from '../interfaces/mission-log.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -108,6 +109,18 @@ export class WebSocketService {
     this.socket.emit(event, {
       type: event,
       payload: data
+    });
+  }
+
+  public onMissionLogs(): Observable<MissionLog[]> {
+    return new Observable(observer => {
+      this.socket.on('missionLogs', (logs: MissionLog[]) => {
+        observer.next(logs);
+      });
+
+      return () => {
+        this.socket.off('missionLogs');
+      };
     });
   }
 

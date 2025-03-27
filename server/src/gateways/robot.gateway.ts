@@ -23,6 +23,7 @@ import {
   MapDataMessage,
   MapDataPayload,
   LimoStatusPayload,
+  WebSocketMessage,
 } from '../interfaces/websocket.interface';
 import { LogsService } from '../logs/logs.service';
 import { WebSocketEvent } from '../interfaces/websocket.interface';
@@ -80,6 +81,11 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.currentMissionId = result.missionId;
       this.startSensorDataLogging();
       this.server.emit('missionStarted', result);
+
+      // Get and emit initial mission logs
+      const missionLog = await this.logsService.findMissionLog(result.missionId);
+      this.server.emit('missionLogs', missionLog.logs);
+      
       return result;
     } catch (error) {
       this.logger.error('Error starting mission:', error);
@@ -301,9 +307,12 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.emit('MAP_DATA', message);
   }
   @SubscribeMessage('requestMissionLogs')
-  async handleRequestMissionLogs(client: Socket, missionId: string) {
+  async handleRequestMissionLogs(client: Socket, message: WebSocketMessage<{ missionId: string }>) {
     try {
-      const missionLog = await this.logsService.findMissionLog(missionId);
+      if (!message?.payload?.missionId) {
+        throw new Error('Missing missionId in request');
+      }
+      const missionLog = await this.logsService.findMissionLog(message.payload.missionId);
       client.emit('missionLogs', missionLog.logs);
     } catch (error) {
       client.emit('error', { message: 'Failed to fetch mission logs' });
@@ -376,6 +385,10 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
           timestamp: new Date().toISOString(),
         },
       });
+
+      // Emit updated logs to all clients
+      const missionLog = await this.logsService.findMissionLog(this.currentMissionId);
+      this.server.emit('missionLogs', missionLog.logs);
     } catch (error) {
       this.logger.error('Error logging command:', error);
     }

@@ -1,7 +1,7 @@
 .dashboard-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 64px);
+    height: 100%;
     padding: 0.5rem;
     gap: 0.5rem;
 }
@@ -13,17 +13,13 @@
     gap: 0.5rem;
 }
 
-mat-card-header{
-    padding: 0%;
-    padding-left: 8px;
-}
-
 .main-content {
     display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: 0.5rem;
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr) 350px;
+    gap: 1rem;
     flex: 1;
     min-height: 0;
+    height: 100%;
 }
 
 .main-content.show-history {
@@ -34,24 +30,26 @@ mat-card-header{
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
-.connected-clients {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    width: 100%;
+.mission-logs-container {
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .robots-container {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    min-height: 0;
+    overflow-y: auto;
     max-width: 350px;
 }
 
 .robot-card {
     width: 100%;
-    max-width: 350px;
     transition: all 0.3s ease;
 }
 
@@ -119,7 +117,7 @@ mat-card-header{
     height: 16px;
 }
 
-.mission-control{
+.mission-control {
     font-size: x-small;
 }
 
@@ -130,32 +128,10 @@ mat-card-header{
     font-size: 0.9em;
 }
 
-mat-progress-bar {
-    flex-grow: 1;
-    height: 6px !important;
-}
-
-/* Override Material progress bar colors */
-::ng-deep .mdc-linear-progress__buffer {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-::ng-deep .mdc-linear-progress__bar-inner {
-    background: linear-gradient(to right, #4caf50, #8bc34a) !important;
-}
-
-.low-battery {
-    color: #ff6b6b;
-}
-
-mat-progress-bar.low-battery ::ng-deep .mdc-linear-progress__bar-inner {
-    background: linear-gradient(to right, #ff6b6b, #ff4444) !important;
-}
-
 .mission-controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.1rem;
+    gap: 0.5rem;
 }
 
 button {
@@ -171,23 +147,19 @@ mat-card-title {
     font-size: 1em;
 }
 
-/* Ajustement pour les tablettes */
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (max-width: 1200px) {
     .main-content {
         grid-template-columns: 1fr 300px;
     }
 
-    .robots-container {
-        max-width: 300px;
-    }
-
-    .mission-controls {
-        grid-template-columns: 1fr;
+    .mission-logs-container {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        height: 200px;
     }
 }
 
-/* Ajustement pour les petits écrans */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .main-content {
         grid-template-columns: 1fr;
     }

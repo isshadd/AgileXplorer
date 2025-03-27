@@ -3,10 +3,9 @@ import { MissionService } from '../mission/mission.service';
 
 @Controller('robot')
 export class RobotController {
-  constructor(
-    private readonly missionService: MissionService,
-    private logger: Logger,
-  ) {}
+  private readonly logger = new Logger(RobotController.name);
+
+  constructor(private readonly missionService: MissionService) {}
 
   @Post('start-mission')
   async startMission() {

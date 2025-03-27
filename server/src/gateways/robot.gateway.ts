@@ -58,7 +58,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ]);
   private controllerClientId: string | null = null; // ID du client ayant le contrôle
 
-  private readonly SIMULATE_BATTERY = 'false';
+  private readonly SIMULATE_BATTERY = false;
   private readonly MIN_VOLTAGE = 9;
   private readonly MAX_VOLTAGE = 12.6;
 
@@ -74,12 +74,17 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('startMission')
-  handleStartMission() {
-    const result = this.missionService.startMission();
-    this.currentMissionId = result.missionId;
-    this.startSensorDataLogging();
-    this.server.emit('missionStarted', result);
-    return result;
+  async handleStartMission() {
+    try {
+      const result = await this.missionService.startMission();
+      this.currentMissionId = result.missionId;
+      this.startSensorDataLogging();
+      this.server.emit('missionStarted', result);
+      return result;
+    } catch (error) {
+      this.logger.error('Error starting mission:', error);
+      throw error;
+    }
   }
 
   private calculateBatteryPercentage(voltage: number): number {
@@ -118,14 +123,12 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
   private async initROS2() {
     try {
-      try {
-        await rclnodejs.init();
-      } catch (error) {
-        if (!error.message.includes('already been initialized')) {
-          throw error;
-        }
-      }
-      this.feedbackNode = rclnodejs.createNode('robot_feedback_node');
+      // Attendre l'initialisation de rclnodejs par MissionService
+      await this.missionService.waitForInitialization();
+
+      // Créer un noeud avec un identifiant unique
+      const nodeId = Math.random().toString(36).substring(7);
+      this.feedbackNode = rclnodejs.createNode(`robot_feedback_node_${nodeId}`);
 
       // Abonnement aux données de statut et de batterie
       this.feedbackNode.createSubscription(

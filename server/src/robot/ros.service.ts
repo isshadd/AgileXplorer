@@ -1,7 +1,12 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Logger,
+} from '@nestjs/common';
 import { MissionService } from '../mission/mission.service';
 import { LogsService } from '../logs/logs.service';
-import { RobotState, Position } from '../interfaces/robot.interface';
+import { Position } from '../interfaces/robot.interface';
 import * as rclnodejs from 'rclnodejs';
 
 @Injectable()
@@ -17,13 +22,15 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit() {
     try {
-      // Initialize ROS 2
-      await rclnodejs.init();
-      this.node = new rclnodejs.Node('robot_logger');
+      // Attendre l'initialisation de rclnodejs par MissionService
+      await this.missionService.waitForInitialization();
+
+      const nodeId = Math.random().toString(36).substring(7);
+      this.node = new rclnodejs.Node(`ros_service_${nodeId}`);
 
       // Subscribe to each robot's topics
-      const robotIds = ['robot1', 'robot2']; // Configure based on your setup
-      robotIds.forEach(robotId => this.setupRobotSubscribers(robotId));
+      const robotIds = ['robot1', 'robot2'];
+      robotIds.forEach((robotId) => this.setupRobotSubscribers(robotId));
 
       this.node.spin();
       this.logger.log('ROS 2 node initialized');
@@ -33,7 +40,7 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleDestroy() {
-    this.subscribers.forEach(subscriber => subscriber.dispose());
+    this.subscribers.forEach((subscriber) => subscriber.dispose());
     if (this.node) {
       this.node.destroy();
     }
@@ -50,10 +57,10 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
         const position: Position = {
           x: msg.pose.pose.position.x,
           y: msg.pose.pose.position.y,
-          z: msg.pose.pose.position.z
+          z: msg.pose.pose.position.z,
         };
         this.updateRobotPosition(robotId, position);
-      }
+      },
     );
     this.subscribers.set(`${robotId}_position`, positionSub);
 
@@ -63,7 +70,7 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
       `/${robotId}/range`,
       (msg: any) => {
         this.updateRobotDistance(robotId, msg.range);
-      }
+      },
     );
     this.subscribers.set(`${robotId}_sensor`, sensorSub);
 
@@ -73,7 +80,7 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
       `/${robotId}/battery_state`,
       (msg: any) => {
         this.updateRobotBattery(robotId, msg.percentage);
-      }
+      },
     );
     this.subscribers.set(`${robotId}_battery`, batterySub);
   }
@@ -81,48 +88,63 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
   private updateRobotPosition(robotId: string, position: Position) {
     const missionId = this.missionService.getActiveMissionId();
     if (missionId) {
-      this.logsService.addLog(missionId, {
-        type: 'SENSOR',
-        robotId,
-        data: {
-          position,
-          timestamp: new Date().toISOString()
-        }
-      }).catch(error => {
-        this.logger.error(`Failed to log position for robot ${robotId}:`, error);
-      });
+      this.logsService
+        .addLog(missionId, {
+          type: 'SENSOR',
+          robotId,
+          data: {
+            position,
+            timestamp: new Date().toISOString(),
+          },
+        })
+        .catch((error) => {
+          this.logger.error(
+            `Failed to log position for robot ${robotId}:`,
+            error,
+          );
+        });
     }
   }
 
   private updateRobotDistance(robotId: string, distance: number) {
     const missionId = this.missionService.getActiveMissionId();
     if (missionId) {
-      this.logsService.addLog(missionId, {
-        type: 'SENSOR',
-        robotId,
-        data: {
-          distance,
-          timestamp: new Date().toISOString()
-        }
-      }).catch(error => {
-        this.logger.error(`Failed to log distance for robot ${robotId}:`, error);
-      });
+      this.logsService
+        .addLog(missionId, {
+          type: 'SENSOR',
+          robotId,
+          data: {
+            distance,
+            timestamp: new Date().toISOString(),
+          },
+        })
+        .catch((error) => {
+          this.logger.error(
+            `Failed to log distance for robot ${robotId}:`,
+            error,
+          );
+        });
     }
   }
 
   private updateRobotBattery(robotId: string, batteryLevel: number) {
     const missionId = this.missionService.getActiveMissionId();
     if (missionId) {
-      this.logsService.addLog(missionId, {
-        type: 'SENSOR',
-        robotId,
-        data: {
-          batteryLevel,
-          timestamp: new Date().toISOString()
-        }
-      }).catch(error => {
-        this.logger.error(`Failed to log battery for robot ${robotId}:`, error);
-      });
+      this.logsService
+        .addLog(missionId, {
+          type: 'SENSOR',
+          robotId,
+          data: {
+            batteryLevel,
+            timestamp: new Date().toISOString(),
+          },
+        })
+        .catch((error) => {
+          this.logger.error(
+            `Failed to log battery for robot ${robotId}:`,
+            error,
+          );
+        });
     }
   }
 }

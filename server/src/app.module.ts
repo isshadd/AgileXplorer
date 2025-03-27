@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RobotModule } from './robot/robot.module';
@@ -20,5 +20,6 @@ config(); // Load environment variables
     GatewayModule,
   ],
   controllers: [RobotController],
+  providers: [Logger],
 })
 export class AppModule {}

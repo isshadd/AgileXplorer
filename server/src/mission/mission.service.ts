@@ -9,115 +9,118 @@ export class MissionService {
   private readonly logger = new Logger(MissionService.name);
   private missions: Map<string, Mission> = new Map();
   private currentMission: Mission | null = null;
-  // On stocke les noeuds et publishers dans des Maps
   private nodes: Map<string, any> = new Map();
   private publishers: Map<string, any> = new Map();
   private initPromise: Promise<void>;
   private activeMissionId: string | null = null;
+  private initialized = false;
 
   constructor(private readonly logsService: LogsService) {
-    // Initialiser rclnodejs une seule fois
-    this.initPromise = rclnodejs
-      .init()
-      .then(() => {
-        // Liste des identifiants de robots à gérer
-        const robotIds = ['limo1', 'limo2'];
-        robotIds.forEach((robotId) => {
-          // Création du noeud et du publisher pour les missions
-          const missionNode = rclnodejs.createNode(
-            `mission_service_node_${robotId}`,
-          );
-          const missionPublisher = missionNode.createPublisher(
-            'std_msgs/msg/String',
-            `/${robotId}/messages`,
-          );
-          rclnodejs.spin(missionNode);
-          this.nodes.set(`${robotId}_mission`, missionNode);
-          this.publishers.set(`${robotId}_mission`, missionPublisher);
-          this.logger.log(`Noeud de mission créé pour ${robotId}`);
-
-          // Création du noeud et du publisher pour l’identification
-          const identificationNode = rclnodejs.createNode(
-            `identification_service_node_${robotId}`,
-          );
-          const identificationPublisher = identificationNode.createPublisher(
-            'std_msgs/msg/Empty',
-            `/${robotId}/identify`,
-          );
-          rclnodejs.spin(identificationNode);
-          this.nodes.set(`${robotId}_identification`, identificationNode);
-          this.publishers.set(
-            `${robotId}_identification`,
-            identificationPublisher,
-          );
-          this.logger.log(`Noeud d’identification créé pour ${robotId}`);
-        });
-        this.logger.log(
-          'rclnodejs initialisé et tous les noeuds sont en exécution',
-        );
-      })
-      .catch((err) => {
-        this.logger.error('Échec de l’init de rclnodejs', err);
-      });
+    this.initPromise = this.initializeROS();
   }
 
-  startMission() {
+  async waitForInitialization(): Promise<void> {
+    return this.initPromise;
+  }
+
+  private async initializeROS(): Promise<void> {
+    if (this.initialized) {
+      return;
+    }
+
+    try {
+      try {
+        await rclnodejs.init();
+      } catch (error) {
+        if (!error.message.includes('already been initialized')) {
+          throw error;
+        }
+      }
+
+      const robotIds = ['limo1', 'limo2'];
+      for (const robotId of robotIds) {
+        const nodeId = Math.random().toString(36).substring(7);
+
+        // Création du noeud et du publisher pour les missions
+        const missionNode = rclnodejs.createNode(
+          `mission_service_node_${robotId}_${nodeId}`,
+        );
+        const missionPublisher = missionNode.createPublisher(
+          'std_msgs/msg/String',
+          `/${robotId}/messages`,
+        );
+        rclnodejs.spin(missionNode);
+        this.nodes.set(`${robotId}_mission`, missionNode);
+        this.publishers.set(`${robotId}_mission`, missionPublisher);
+        this.logger.log(`Noeud de mission créé pour ${robotId}`);
+
+        // Création du noeud et du publisher pour l'identification
+        const identificationNode = rclnodejs.createNode(
+          `identification_service_node_${robotId}_${nodeId}`,
+        );
+        const identificationPublisher = identificationNode.createPublisher(
+          'std_msgs/msg/Empty',
+          `/${robotId}/identify`,
+        );
+        rclnodejs.spin(identificationNode);
+        this.nodes.set(`${robotId}_identification`, identificationNode);
+        this.publishers.set(
+          `${robotId}_identification`,
+          identificationPublisher,
+        );
+        this.logger.log(`Noeud d'identification créé pour ${robotId}`);
+      }
+      this.logger.log(
+        'rclnodejs initialisé et tous les noeuds sont en exécution',
+      );
+      this.initialized = true;
+    } catch (error) {
+      this.logger.error("Échec de l'initialisation de rclnodejs", error);
+      throw error;
+    }
+  }
+
+  async startMission() {
+    await this.initPromise;
     this.activeMissionId = uuidv4();
     this.logger.log(`Starting mission with ID: ${this.activeMissionId}`);
 
-    // Initialize mission log
-    this.logsService
-      .initializeMissionLog(this.activeMissionId)
-      .then(() => {
-        // Liste des identifiants de robots à gérer
-        const robotIds = ['limo1', 'limo2'];
-        robotIds.forEach((robotId) => {
-          this.logsService.addLog(this.activeMissionId, {
-            type: 'COMMAND',
-            robotId: robotId,
-            data: {
-              command: 'START_MISSION',
-              timestamp: new Date().toISOString(),
-            },
-          });
-          // Création du noeud et du publisher pour les missions
-          const missionNode = rclnodejs.createNode(
-            `mission_service_node_${robotId}`,
-          );
-          const missionPublisher = missionNode.createPublisher(
-            'std_msgs/msg/String',
-            `/${robotId}/messages`,
-          );
-          rclnodejs.spin(missionNode);
-          this.nodes.set(`${robotId}_mission`, missionNode);
-          this.publishers.set(`${robotId}_mission`, missionPublisher);
-          this.logger.log(`Noeud de mission créé pour ${robotId}`);
+    try {
+      await this.logsService.initializeMissionLog(this.activeMissionId);
+      const robotIds = ['limo1', 'limo2'];
 
-          // Création du noeud et du publisher pour l’identification
-          const identificationNode = rclnodejs.createNode(
-            `identification_service_node_${robotId}`,
-          );
-          const identificationPublisher = identificationNode.createPublisher(
-            'std_msgs/msg/Empty',
-            `/${robotId}/identify`,
-          );
-          rclnodejs.spin(identificationNode);
-          this.nodes.set(`${robotId}_identification`, identificationNode);
-          this.publishers.set(
-            `${robotId}_identification`,
-            identificationPublisher,
-          );
-          this.logger.log(`Noeud d’identification créé pour ${robotId}`);
+      for (const robotId of robotIds) {
+        await this.logsService.addLog(this.activeMissionId, {
+          type: 'COMMAND',
+          robotId,
+          data: {
+            command: 'START_MISSION',
+            timestamp: new Date().toISOString(),
+          },
         });
-        this.logger.log(
-          'rclnodejs initialisé et tous les noeuds sont en exécution',
-        );
-      })
-      .catch((err) => {
-        this.logger.error('Échec de l’init de rclnodejs', err);
-      });
 
-    return { missionId: this.activeMissionId };
+        const missionPublisher = this.publishers.get(`${robotId}_mission`);
+        if (missionPublisher) {
+          const message = {
+            data: JSON.stringify({
+              action: 'start_mission',
+              robot_id: robotId,
+            }),
+          };
+          missionPublisher.publish(message);
+          this.logger.log(
+            `Message start_mission publié sur /${robotId}/messages`,
+          );
+        } else {
+          this.logger.warn(`Publisher non trouvé pour ${robotId}`);
+        }
+      }
+
+      return { missionId: this.activeMissionId };
+    } catch (error) {
+      this.logger.error('Échec du démarrage de la mission', error);
+      throw error;
+    }
   }
 
   async stopMission() {
@@ -129,13 +132,11 @@ export class MissionService {
       return { stoppedMissionId: null };
     }
 
-    // Clear the mission ID first to prevent any new logs
     this.activeMissionId = null;
 
     try {
-      // Add final stop command and finalize in one operation
       await this.logsService.finalizeMissionLog(stoppedMissionId);
-      this.logger.debug(`Mission log finalized`);
+      this.logger.debug('Mission log finalized');
       return { stoppedMissionId };
     } catch (error) {
       this.logger.error(
@@ -152,50 +153,46 @@ export class MissionService {
 
   async identify(robotId: string): Promise<{ message: string }> {
     await this.initPromise;
-    this.logger.log(`Envoi du signal d’identification pour ${robotId}`);
+    this.logger.log(`Envoi du signal d'identification pour ${robotId}`);
     const publisherKey = `${robotId}_identification`;
     const publisher = this.publishers.get(publisherKey);
+
     if (!publisher) {
       this.logger.error(
-        `Aucun publisher d’identification trouvé pour ${robotId}`,
+        `Aucun publisher d'identification trouvé pour ${robotId}`,
       );
       return {
-        message: `Aucun publisher d’identification trouvé pour ${robotId}`,
+        message: `Aucun publisher d'identification trouvé pour ${robotId}`,
       };
     }
+
     const message = {
       data: JSON.stringify({ action: 'identify', robot_id: robotId }),
     };
     publisher.publish(message);
-    this.logger.log(`Message d’identification publié sur /${robotId}/messages`);
-    return { message: `Signal d’identification envoyé pour ${robotId}` };
+    this.logger.log(`Message d'identification publié sur /${robotId}/messages`);
+    return { message: `Signal d'identification envoyé pour ${robotId}` };
   }
 
-  updateRobotData(
+  async updateRobotData(
     robotId: string,
     position: { x: number; y: number; z: number },
     distance: number,
   ) {
-    if (robotId) {
-      // Log robot data if mission is active
-      if (this.activeMissionId) {
-        this.logsService
-          .addLog(this.activeMissionId, {
-            type: 'SENSOR',
-            robotId,
-            data: {
-              position,
-              distance,
-              timestamp: new Date().toISOString(),
-            },
-          })
-          .catch((error) => {
-            this.logger.error(
-              `Error logging robot data: ${error.message}`,
-              error.stack,
-            );
-          });
-      }
+    if (!robotId || !this.activeMissionId) return;
+
+    try {
+      await this.logsService.addLog(this.activeMissionId, {
+        type: 'SENSOR',
+        robotId,
+        data: {
+          position,
+          distance,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    } catch (error) {
+      this.logger.error('Error logging robot data:', error);
     }
   }
 
@@ -218,12 +215,11 @@ export class MissionService {
 
   async startMissionsAll(): Promise<{ message: string }> {
     await this.initPromise;
-    this.logger.log(`Démarrage de la mission pour tous les robots`);
+    this.logger.log('Démarrage de la mission pour tous les robots');
     const responses: string[] = [];
-    // Itérer sur tous les publishers de mission
-    this.publishers.forEach((publisher, key) => {
+
+    for (const [key, publisher] of this.publishers.entries()) {
       if (key.endsWith('_mission')) {
-        // Récupérer l'identifiant du robot (la partie avant "_mission")
         const robotId = key.split('_mission')[0];
         const message = {
           data: JSON.stringify({ action: 'start_mission', robot_id: robotId }),
@@ -234,7 +230,8 @@ export class MissionService {
         );
         responses.push(`Mission démarrée pour ${robotId}`);
       }
-    });
+    }
+
     return { message: responses.join(' | ') };
   }
 
@@ -266,9 +263,10 @@ export class MissionService {
 
   async stopMissionsAll(): Promise<{ message: string }> {
     await this.initPromise;
-    this.logger.log(`Arrêt de la mission pour tous les robots`);
+    this.logger.log('Arrêt de la mission pour tous les robots');
     const responses: string[] = [];
-    this.publishers.forEach((publisher, key) => {
+
+    for (const [key, publisher] of this.publishers.entries()) {
       if (key.endsWith('_mission')) {
         const robotId = key.split('_mission')[0];
         const message = {
@@ -278,7 +276,8 @@ export class MissionService {
         this.logger.log(`Message end_mission publié sur /${robotId}/messages`);
         responses.push(`Mission arrêtée pour ${robotId}`);
       }
-    });
+    }
+
     return { message: responses.join(' | ') };
   }
 
@@ -287,10 +286,12 @@ export class MissionService {
     this.logger.log(`Retour à la base pour ${robotId}`);
     const publisherKey = `${robotId}_mission`;
     const publisher = this.publishers.get(publisherKey);
+
     if (!publisher) {
       this.logger.error(`Aucun publisher trouvé pour ${robotId}`);
       return { message: `Aucun publisher trouvé pour ${robotId}` };
     }
+
     const message = {
       data: JSON.stringify({ action: 'return_to_base', robot_id: robotId }),
     };
@@ -307,10 +308,12 @@ export class MissionService {
     this.logger.log(`Changement de mode de roues pour ${robotId}: ${mode}`);
     const publisherKey = `${robotId}_mission`;
     const publisher = this.publishers.get(publisherKey);
+
     if (!publisher) {
       this.logger.error(`Aucun publisher trouvé pour ${robotId}`);
       return { message: `Aucun publisher trouvé pour ${robotId}` };
     }
+
     const message = {
       data: JSON.stringify({
         action: 'set_wheel_mode',
@@ -324,7 +327,6 @@ export class MissionService {
   }
 
   async getRobotStates(): Promise<any[]> {
-    // Cette méthode retourne l'état actuel des robots
     return Array.from(this.nodes.keys())
       .filter((key) => key.endsWith('_mission'))
       .map((key) => {

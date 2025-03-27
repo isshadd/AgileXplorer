@@ -43,12 +43,13 @@ def generate_launch_description():
 
     driver_node = LifecycleNode(
         package='ydlidar_ros2_driver',
-        namespace=LaunchConfiguration('id'),
+        namespace="/",
         executable='ydlidar_ros2_driver_node',
         name='ydlidar_ros2_driver_node',
         output='screen',
         emulate_tty=True,
         parameters=[parameter_file],
+        remappings=[('/scan', '/limo1/scan')],
     )
     tf2_node = Node(
         package='tf2_ros',

@@ -16,17 +16,17 @@ class MissionNode(Node):
         self.declare_parameter('robot_id', 'limo1')
         self.robot_id = self.get_parameter('robot_id').value
 
-        start_topic = f'/{self.robot_id}/start_mission'
-        end_topic = f'/{self.robot_id}/end_mission'
-        self.map_frame = f'{self.robot_id}/map' # TODO : changer si pas de namspace
-        odom_topic = f'/{self.robot_id}/odom'   # TODO : changer si pas de namspace
+        start_topic = f'/start_mission'
+        end_topic = f'/end_mission'
+        self.map_frame = f'map' # TODO : changer si pas de namspace
+        odom_topic = f'/odom'   # TODO : changer si pas de namspace
 
         self.start_subscription = self.create_subscription(Empty, start_topic, self.start_callback, 10)
         self.end_subscription = self.create_subscription(Empty, end_topic, self.end_callback, 10)
         self.map_subscription = self.create_subscription(OccupancyGrid, self.map_frame, self.map_callback, 10)
         self.pose_subscription = self.create_subscription(Odometry, odom_topic, self.pose_callback, 10)
 
-        self.nav_client = ActionClient(self, NavigateToPose, f'/{self.robot_id}/navigate_to_pose')
+        self.nav_client = ActionClient(self, NavigateToPose, f'/navigate_to_pose')
 
         self.mission_active = False
         self.isFirstOdom = True
@@ -69,7 +69,7 @@ class MissionNode(Node):
         
         goal_msg = NavigateToPose.Goal()
         goal_pose = PoseStamped()
-        goal_pose.header.frame_id = self.map_frame
+        goal_pose.header.frame_id = "map" #self.map_frame
         goal_pose.header.stamp = self.get_clock().now().to_msg()
         goal_pose.pose.position.x = self.initial_pose.pose.position.x
         goal_pose.pose.position.y = self.initial_pose.pose.position.y
@@ -136,7 +136,7 @@ class MissionNode(Node):
         
         goal_msg = NavigateToPose.Goal()
         goal_pose = PoseStamped()
-        goal_pose.header.frame_id = self.map_frame
+        goal_pose.header.frame_id = "map" # self.map_frame
         goal_pose.pose.position.x = goal_x
         goal_pose.pose.position.y = goal_y
         goal_pose.pose.orientation.w = 1.0

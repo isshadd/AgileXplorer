@@ -66,10 +66,11 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}],
             arguments=['-configuration_directory', cartographer_config_dir,
                        '-configuration_basename', configuration_basename],
-            remappings=[
-                ('/tf', 'tf'),
-                ('/tf_static', 'tf_static')
-            ]),
+            #remappings=[
+              #  ('/tf', 'tf'),
+              #  ('/tf_static', 'tf_static')
+            #]
+            ),
 
         DeclareLaunchArgument(
             'resolution',
@@ -89,6 +90,5 @@ def generate_launch_description():
                 'publish_period_sec': publish_period_sec,
                 'id': LaunchConfiguration('id') 
             }.items(),
-            namespace=LaunchConfiguration('id') 
         ),
     ])

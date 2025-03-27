@@ -48,17 +48,12 @@ def generate_launch_description():
             default_value='false',
             description='Use simulation (Gazebo) clock if true'),
 
-        Node(
+        Node( 
             package='cartographer_ros',
             executable='cartographer_occupancy_grid_node',
             name='occupancy_grid_node',
-            namespace=LaunchConfiguration('id'),  
+            namespace='limo1',  
             output='screen',
-            parameters=[{'use_sim_time': use_sim_time}, 
-                        # {
-                        #     'map_frame': [LaunchConfiguration('id'), '/map'],
-                        #     'tracking_frame': [LaunchConfiguration('id'), '/base_link']
-                        # }
-                        ],
+            parameters=[{'use_sim_time': use_sim_time}],
             arguments=['-resolution', resolution, '-publish_period_sec', publish_period_sec]),
     ])

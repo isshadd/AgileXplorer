@@ -20,10 +20,10 @@ include "trajectory_builder.lua"
 options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
-  map_frame = "map", -- à changer pour un limo1/map? comment juste changer le topci? sensible au namespace?
+  map_frame = "map",
   tracking_frame = "base_link",
   published_frame = "base_link",
-  odom_frame = "limo1/odom",
+  odom_frame = "odom",
   provide_odom_frame = false,
   publish_frame_projected_to_2d = true,
   use_odometry = false,

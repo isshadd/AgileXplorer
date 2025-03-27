@@ -29,7 +29,7 @@ def generate_launch_description():
             get_package_share_directory('limo_bringup'),
             'maps'))
 
-    param_file_name = 'navigation2.yaml'
+    param_file_name = 'nav2_test1.yaml'
     param_dir = LaunchConfiguration(
         'params_file',
         default=os.path.join(
@@ -68,17 +68,15 @@ def generate_launch_description():
             description='Use simulation (Gazebo) clock if true'),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/bringup_launch.py']),
+            PythonLaunchDescriptionSource([get_package_share_directory('limo_bringup'), '/launch/bringup_launch.py']),
             launch_arguments={
                 'map': map_dir,
                 'use_sim_time': use_sim_time,
                 'params_file': param_dir,
-                'namespace': LaunchConfiguration('id'),
-                # Update frame parameters with namespace
-                'robot_base_frame': [LaunchConfiguration('id'), '/base_link'],
-                'odom_frame_id': [LaunchConfiguration('id'), '/odom']
+                'namespace': 'limo1',
+                'use_namespace': 'true',
             }.items(),
-            namespace=LaunchConfiguration('id')
+            #namespace='limo1'
         ),
 
         Node(
@@ -89,7 +87,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}],
             output='screen',
             remappings=[
-                ('/tf', 'tf'),
-                ('/tf_static', 'tf_static')
+                #('/tf', 'tf'),
+                #('/tf_static', 'tf_static')
             ]),
     ])

@@ -13,6 +13,7 @@ import { RobotState } from '../../interfaces/robot-state.interface';
 import { MissionHistoryComponent } from '../mission-history/mission-history.component';
 import { MapComponent } from '../map/map.component';
 import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
+import { MissionLogsComponent } from '../mission-logs/mission-logs.component';
 import { WebSocketService } from '../../services/websocket.service';
 
 @Component({
@@ -28,7 +29,8 @@ import { WebSocketService } from '../../services/websocket.service';
         MatTooltipModule,
         MissionHistoryComponent,
         ConnectedClientsComponent,
-        MapComponent
+        MapComponent,
+        MissionLogsComponent
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'

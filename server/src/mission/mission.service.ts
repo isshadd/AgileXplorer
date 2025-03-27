@@ -132,6 +132,16 @@ export class MissionService {
     this.activeMissionId = null;
 
     try {
+      // Log the stop mission command
+      await this.logsService.addLog(stoppedMissionId, {
+        type: 'COMMAND',
+        robotId,
+        data: {
+          command: 'STOP_MISSION',
+          timestamp: new Date().toISOString(),
+        },
+      });
+
       const missionPublisher = this.publishers.get(`${robotId}_mission`);
       if (missionPublisher) {
         const message = {
@@ -293,6 +303,19 @@ export class MissionService {
   async returnToBase(robotId: string): Promise<{ message: string }> {
     await this.initPromise;
     this.logger.log(`Retour à la base pour ${robotId}`);
+
+    // Log the return to base command if there's an active mission
+    if (this.activeMissionId) {
+      await this.logsService.addLog(this.activeMissionId, {
+        type: 'COMMAND',
+        robotId,
+        data: {
+          command: 'RETURN_TO_BASE',
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
+
     const publisherKey = `${robotId}_mission`;
     const publisher = this.publishers.get(publisherKey);
 

@@ -1,0 +1,25 @@
+mat-card {
+  max-height: 80vh;
+  width: 600px;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+mat-card-content {
+  max-height: calc(80vh - 100px);
+  overflow-y: auto;
+}
+
+.timestamp {
+  margin-right: 16px;
+  color: #666;
+}
+
+.message {
+  flex: 1;
+}

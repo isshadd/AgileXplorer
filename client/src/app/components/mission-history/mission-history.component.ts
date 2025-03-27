@@ -1,34 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { MatCardModule } from '@angular/material/card';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import { Mission } from '../../models/mission.model';
 import { MissionService } from '../../services/mission.service';
 import { MissionLogsDialogComponent } from '../mission-logs-dialog/mission-logs-dialog.component';
 
 @Component({
     selector: 'app-mission-history',
-    standalone: true,
-    imports: [
-        CommonModule,
-        MatTableModule,
-        MatSortModule,
-        MatPaginatorModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDialogModule,
-        MatCardModule,
-        MatTooltipModule
-    ],
     templateUrl: './mission-history.component.html',
-    styleUrl: './mission-history.component.css'
+    styleUrls: ['./mission-history.component.css']
 })
 export class MissionHistoryComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['id', 'startTime', 'endTime'];

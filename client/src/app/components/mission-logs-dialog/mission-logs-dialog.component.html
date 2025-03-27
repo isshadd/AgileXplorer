@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Logs de la Mission {{data.missionId}}</mat-card-title>
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item *ngFor="let log of data.logs">
+        <span class="timestamp">{{log.type}}</span>
+        <span class="timestamp">{{log.robotId}}</span>
+        <span class="timestamp">{{log.timestamp | date:'HH:mm:ss'}}</span>
+        <span *ngIf="log.type === 'SENSOR'" class="message">Distance: {{log.data.distance}} </span>
+        <span *ngIf="log.type === 'SENSOR' && log.data.position" class="message">Position x:{{log.data.position.x}}, y:{{log.data.position.y}}, z:{{log.data.position.z}}</span>
+        <span *ngIf="log.type === 'COMMAND'" class="message">Commande: {{log.data.command}}</span>            
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

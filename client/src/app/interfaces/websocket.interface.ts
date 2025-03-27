@@ -1,52 +1,20 @@
-// WebSocket interfaces temporarily disabled
+import { Log } from './log.interface';
 
-// export interface WebSocketMessage<T = any> {
-//     type: string;
-//     payload: T;
-// }
+export interface WebSocketMessage<T> {
+  type: string;
+  payload: T;
+}
 
-// export interface MissionCommandMessage extends WebSocketMessage {
-//     type: 'MISSION_COMMAND';
-//     payload: {
-//         type: 'START' | 'STOP' | 'RETURN';
-//         robots: string[];
-//     };
-// }
+export interface RobotStatesMessage extends WebSocketMessage<{
+  [robotId: string]: {
+    isIdentified: boolean;
+    isMissionActive: boolean;
+  };
+}> {}
 
-// export interface P2PCommandMessage extends WebSocketMessage {
-//     type: 'P2P_COMMAND';
-//     payload: {
-//         type: 'ENABLE' | 'DISABLE';
-//         robots: string[];
-//     };
-// }
+export interface MissionLogMessage extends WebSocketMessage<Log> {}
 
-// export interface WheelModeMessage extends WebSocketMessage {
-//     type: 'WHEEL_MODE';
-//     payload: {
-//         robotId: string;
-//         mode: 'ackerman' | 'differential';
-//     };
-// }
-
-// export interface RobotStatesMessage extends WebSocketMessage {
-//     type: 'ROBOT_STATES';
-//     payload: {
-//         states: any[];
-//     };
-// }
-
-// export interface MissionLogMessage extends WebSocketMessage {
-//     type: 'MISSION_LOG';
-//     payload: {
-//         log: any;
-//     };
-// }
-
-// export interface ErrorMessage extends WebSocketMessage {
-//     type: 'error';
-//     payload: {
-//         message: string;
-//         code: string;
-//     };
-// }
+export interface ErrorMessage extends WebSocketMessage<{
+  message: string;
+  code?: string;
+}> {}

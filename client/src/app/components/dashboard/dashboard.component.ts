@@ -1,38 +1,44 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { RobotService } from '../../services/robot.service';
+import { WebSocketService } from '../../services/websocket.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
-import { MissionHistoryComponent } from '../mission-history/mission-history.component';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',
-    standalone: true,
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatCardModule,
-        MatDialogModule,
-        MissionHistoryComponent
-    ],
     templateUrl: './dashboard.component.html',
-    styleUrl: './dashboard.component.css'
+    styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit, OnDestroy {
     robotStates: { [key: string]: RobotState } = {
         'limo1': { isMissionActive: false, isIdentified: false },
         'limo2': { isMissionActive: false, isIdentified: false }
     };
 
+    private stateSubscription?: Subscription;
+
     constructor(
         private robotService: RobotService,
+        private webSocketService: WebSocketService,
         private notificationService: NotificationService,
         private dialog: MatDialog,
     ) {}
+
+    ngOnInit() {
+        this.stateSubscription = this.webSocketService.getRobotStates()
+            .subscribe(states => {
+                this.robotStates = states;
+            });
+    }
+
+    ngOnDestroy() {
+        if (this.stateSubscription) {
+            this.stateSubscription.unsubscribe();
+        }
+    }
 
     startMission(robotId: string): void {
         this.robotService.startMission(robotId).subscribe(() => {

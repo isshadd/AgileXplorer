@@ -1,0 +1,31 @@
+<mat-card class="logs-container">
+  <mat-card-header>
+    <mat-card-title>Mission Logs (Live)</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="logs-list">
+      <div *ngFor="let log of logs" class="log-entry" [ngClass]="log.type.toLowerCase()">
+        <span class="log-icon">{{ getLogIcon(log.type) }}</span>
+        <span class="log-time">{{ formatTimestamp(log.timestamp) }}</span>
+        <span class="log-robot">{{ log.robotId }}</span>
+        <span class="log-content">
+          <ng-container [ngSwitch]="log.type">
+            <span *ngSwitchCase="'SENSOR'" class="log-data">
+              <ng-container *ngIf="log.data.position">
+                Position: ({{ log.data.position.x | number:'1.1-1' }}, 
+                          {{ log.data.position.y | number:'1.1-1' }}, 
+                          {{ log.data.position.z | number:'1.1-1' }})
+              </ng-container>
+              <ng-container *ngIf="log.data.distance">
+                Distance: {{ log.data.distance | number:'1.1-1' }}m
+              </ng-container>
+            </span>
+            <span *ngSwitchCase="'COMMAND'" class="log-data">
+              Command: {{ log.data.command }}
+            </span>
+          </ng-container>
+        </span>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

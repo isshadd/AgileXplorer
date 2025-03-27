@@ -26,8 +26,9 @@ import { WebSocketService } from '../../services/websocket.service';
         MatProgressBarModule,
         MatIconModule,
         MatTooltipModule,
-        MissionHistoryComponent
-        ConnectedClientsComponent
+        MissionHistoryComponent,
+        ConnectedClientsComponent,
+        MapComponent
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'

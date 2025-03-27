@@ -15,9 +15,10 @@ class MissionNode(Node):
         super().__init__('mission_node')
         self.declare_parameter('robot_id', 'limo1')
         self.robot_id = self.get_parameter('robot_id').value
-
-        start_topic = f'/start_mission'
-        end_topic = f'/end_mission'
+        
+        # f'/{self.robot_id}/odom' 
+        start_topic = f'/{self.robot_id}/start_mission'
+        end_topic = f'/{self.robot_id}/end_mission'
         self.map_frame = f'map' # TODO : changer si pas de namspace
         odom_topic = f'/odom'   # TODO : changer si pas de namspace
 

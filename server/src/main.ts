@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import mongoose from 'mongoose';
+import 'dotenv/config';
 
 async function checkDBConnection() {
   try {
@@ -13,7 +14,6 @@ async function checkDBConnection() {
 
 checkDBConnection();
 
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -24,7 +24,9 @@ async function bootstrap() {
 
   // Pour permettre l'accès depuis le réseau local, écoutez sur toutes les interfaces
   await app.listen(3000, '0.0.0.0');
-  console.log(`L'application est disponible sur http://localhost:3000 et sur le réseau local`);
+  console.log(
+    `L'application est disponible sur http://localhost:3000 et sur le réseau local`,
+  );
 }
 
 bootstrap();

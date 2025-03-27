@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -8,7 +9,6 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Injectable, Logger } from '@nestjs/common';
 import { MissionService } from '../mission/mission.service';
 import * as rclnodejs from 'rclnodejs';
 import {
@@ -50,10 +50,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private reconnectionAttempts: Map<string, number> = new Map();
   private readonly MAX_RECONNECTION_ATTEMPTS = 5;
   private robotPositions: Map<string, RobotPosition[]> = new Map();
-  private readonly logger = new Logger(RobotGateway.name);
   private feedbackNode: rclnodejs.Node;
-    private readonly missionService: MissionService,
-    private readonly logsService: LogsService,
   private batteryInterval: NodeJS.Timeout;
   private robotBatteryLevels: Map<string, number> = new Map([
     ['robot1_102', 100],
@@ -65,12 +62,17 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private readonly MIN_VOLTAGE = 9;
   private readonly MAX_VOLTAGE = 12.6;
 
-  constructor(private readonly missionService: MissionService) {
+  constructor(
+    private readonly missionService: MissionService,
+    private readonly logsService: LogsService,
+  ) {
     this.initROS2();
     if (this.SIMULATE_BATTERY) {
       this.logger.log('Starting battery simulation mode');
       // this.startBatterySimulation();
     }
+  }
+
   @SubscribeMessage('startMission')
   handleStartMission() {
     const result = this.missionService.startMission();
@@ -127,7 +129,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       // Abonnement aux données de statut et de batterie
       this.feedbackNode.createSubscription(
-        'limo_msgs/msg/LimoStatus',
+        'limo_msgs/msg/LimoStatus' as any,
         '/robot1_102/limo_status',
         (rosMsg: any) => {
           // Transform ROS message to our interface format
@@ -247,27 +249,32 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
           }
         },
       );
+      rclnodejs.spin(this.feedbackNode);
+    } catch (error) {
+      this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
+    }
+  }
   @SubscribeMessage('stopMission')
   async handleStopMission(client: Socket) {
     try {
       // Stop sensor logging first to prevent new logs during shutdown
       this.stopSensorDataLogging();
-      
+
       // Clear mission ID to prevent any new logs
       this.currentMissionId = null;
-      
+
       // Stop the mission and finalize logs
       const result = await this.missionService.stopMission();
-      
+
       // Notify all clients
       this.server.emit('missionStopped', result);
-      
+
       return {
         event: 'stopMission',
         data: {
           success: true,
-          ...result
-        }
+          ...result,
+        },
       };
     } catch (error) {
       this.logger.error('Error stopping mission:', error);
@@ -276,15 +283,9 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data: {
           success: false,
           message: 'Failed to stop mission',
-          error: error.message
-        }
+          error: error.message,
+        },
       };
-    }
-  }
-
-      rclnodejs.spin(this.feedbackNode);
-    } catch (error) {
-      this.logger.error("Erreur lors de l'initialisation de ROS2:", error);
     }
   }
 
@@ -306,10 +307,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @Cron(CronExpression.EVERY_SECOND)
-  private async logSensorData() {
-    if (!this.currentMissionId) return;
-
   ngOnDestroy() {
     if (this.feedbackNode) {
       this.feedbackNode.destroy();
@@ -318,6 +315,10 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       clearInterval(this.batteryInterval);
     }
   }
+
+  @Cron(CronExpression.EVERY_SECOND)
+  private async logSensorData() {
+    if (!this.currentMissionId) return;
     try {
       // Get sensor data for each robot and log it
       const robotIds = ['limo1', 'limo2'];
@@ -326,10 +327,10 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
           type: 'SENSOR',
           robotId: robotId,
           data: {
-            position: {x:0, y:0, z:0},
+            position: { x: 0, y: 0, z: 0 },
             distance: 0,
-            timestamp: new Date().toISOString()
-          }
+            timestamp: new Date().toISOString(),
+          },
         });
       }
     } catch (error) {
@@ -340,13 +341,11 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: Socket) {
     this.connectedClients.add(client);
     this.reconnectionAttempts.set(client.id, 0);
-  async logCommand(robotId: string, command: string) {
-    if (!this.currentMissionId) return;
 
     // Envoyer l'état initial des robots et leurs positions au nouveau client
     this.sendRobotStates(client);
     this.sendStoredPositions(client);
-    
+
     // Si c'est le seul client ou s'il n'y a pas de contrôleur, lui donner le contrôle
     if (this.connectedClients.size === 1 || !this.controllerClientId) {
       this.controllerClientId = client.id;
@@ -358,16 +357,21 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // Informer tous les clients du nouveau nombre de clients connectés
     this.broadcastClientCount();
-    this.logger.log(`Client ${client.id} connecté. Nombre total: ${this.connectedClients.size}. Contrôleur: ${this.controllerClientId}`);
+    this.logger.log(
+      `Client ${client.id} connecté. Nombre total: ${this.connectedClients.size}. Contrôleur: ${this.controllerClientId}`,
+    );
   }
+
+  async logCommand(robotId: string, command: string) {
+    if (!this.currentMissionId) return;
     try {
       await this.logsService.addLog(this.currentMissionId, {
         type: 'COMMAND',
         robotId,
         data: {
           command,
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       });
     } catch (error) {
       this.logger.error('Error logging command:', error);
@@ -380,6 +384,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
     this.sensorDataInterval = setInterval(() => this.logSensorData(), 1000);
   }
+
   handleDisconnect(client: Socket) {
     this.connectedClients.delete(client);
 
@@ -399,7 +404,19 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // Mettre à jour le nombre de clients connectés
     this.broadcastClientCount();
-    
+
+    const attempts = this.reconnectionAttempts.get(client.id) || 0;
+    if (attempts < this.MAX_RECONNECTION_ATTEMPTS) {
+      this.reconnectionAttempts.set(client.id, attempts + 1);
+      setTimeout(() => {
+        if (!this.connectedClients.has(client)) {
+          this.handleReconnectionTimeout(client);
+        }
+      }, 3000);
+    } else {
+      this.reconnectionAttempts.delete(client.id);
+    }
+  }
 
   private stopSensorDataLogging() {
     if (this.sensorDataInterval) {
@@ -417,18 +434,6 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       clearInterval(this.sensorDataInterval);
     }
     this.activeConnections.clear();
-  }
-    const attempts = this.reconnectionAttempts.get(client.id) || 0;
-    if (attempts < this.MAX_RECONNECTION_ATTEMPTS) {
-      this.reconnectionAttempts.set(client.id, attempts + 1);
-      setTimeout(() => {
-        if (!this.connectedClients.has(client)) {
-          this.handleReconnectionTimeout(client);
-        }
-      }, 3000);
-    } else {
-      this.reconnectionAttempts.delete(client.id);
-    }
   }
 
   private sendControllerStatus(client: Socket, isController: boolean) {
@@ -479,12 +484,12 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       switch (message.payload.type) {
         case 'START':
           for (const robotId of message.payload.robots) {
-            await this.missionService.startMission(robotId);
+            await this.missionService.startMission();
           }
           break;
         case 'STOP':
           for (const robotId of message.payload.robots) {
-            await this.missionService.stopMission(robotId);
+            await this.missionService.stopMission();
           }
           break;
         case 'RETURN':

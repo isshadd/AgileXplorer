@@ -15,7 +15,6 @@ export class MissionService {
   private initPromise: Promise<void>;
   private activeMissionId: string | null = null;
 
-
   constructor(private readonly logsService: LogsService) {
     // Initialiser rclnodejs une seule fois
     this.initPromise = rclnodejs
@@ -65,9 +64,10 @@ export class MissionService {
   startMission() {
     this.activeMissionId = uuidv4();
     this.logger.log(`Starting mission with ID: ${this.activeMissionId}`);
-    
+
     // Initialize mission log
-    this.logsService.initializeMissionLog(this.activeMissionId)
+    this.logsService
+      .initializeMissionLog(this.activeMissionId)
       .then(() => {
         // Liste des identifiants de robots à gérer
         const robotIds = ['limo1', 'limo2'];
@@ -77,12 +77,17 @@ export class MissionService {
             robotId: robotId,
             data: {
               command: 'START_MISSION',
-              timestamp: new Date().toISOString()
-            }
+              timestamp: new Date().toISOString(),
+            },
           });
           // Création du noeud et du publisher pour les missions
-          const missionNode = rclnodejs.createNode(`mission_service_node_${robotId}`);
-          const missionPublisher = missionNode.createPublisher('std_msgs/msg/String', `/${robotId}/messages`);
+          const missionNode = rclnodejs.createNode(
+            `mission_service_node_${robotId}`,
+          );
+          const missionPublisher = missionNode.createPublisher(
+            'std_msgs/msg/String',
+            `/${robotId}/messages`,
+          );
           rclnodejs.spin(missionNode);
           this.nodes.set(`${robotId}_mission`, missionNode);
           this.publishers.set(`${robotId}_mission`, missionPublisher);
@@ -118,12 +123,12 @@ export class MissionService {
   async stopMission() {
     const stoppedMissionId = this.activeMissionId;
     this.logger.log(`Stopping mission with ID: ${stoppedMissionId}`);
-    
+
     if (!stoppedMissionId) {
       this.logger.warn('Attempted to stop mission but no active mission found');
       return { stoppedMissionId: null };
     }
-    
+
     // Clear the mission ID first to prevent any new logs
     this.activeMissionId = null;
 
@@ -133,7 +138,10 @@ export class MissionService {
       this.logger.debug(`Mission log finalized`);
       return { stoppedMissionId };
     } catch (error) {
-      this.logger.error(`Error finalizing mission log: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error finalizing mission log: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -142,21 +150,51 @@ export class MissionService {
     return this.activeMissionId;
   }
 
-  updateRobotData(robotId: string, position: { x: number; y: number; z: number }, distance: number) {
+  async identify(robotId: string): Promise<{ message: string }> {
+    await this.initPromise;
+    this.logger.log(`Envoi du signal d’identification pour ${robotId}`);
+    const publisherKey = `${robotId}_identification`;
+    const publisher = this.publishers.get(publisherKey);
+    if (!publisher) {
+      this.logger.error(
+        `Aucun publisher d’identification trouvé pour ${robotId}`,
+      );
+      return {
+        message: `Aucun publisher d’identification trouvé pour ${robotId}`,
+      };
+    }
+    const message = {
+      data: JSON.stringify({ action: 'identify', robot_id: robotId }),
+    };
+    publisher.publish(message);
+    this.logger.log(`Message d’identification publié sur /${robotId}/messages`);
+    return { message: `Signal d’identification envoyé pour ${robotId}` };
+  }
+
+  updateRobotData(
+    robotId: string,
+    position: { x: number; y: number; z: number },
+    distance: number,
+  ) {
     if (robotId) {
       // Log robot data if mission is active
       if (this.activeMissionId) {
-        this.logsService.addLog(this.activeMissionId, {
-          type: 'SENSOR',
-          robotId,
-          data: {
-            position,
-            distance,
-            timestamp: new Date().toISOString()
-          }
-        }).catch(error => {
-          this.logger.error(`Error logging robot data: ${error.message}`, error.stack);
-        });
+        this.logsService
+          .addLog(this.activeMissionId, {
+            type: 'SENSOR',
+            robotId,
+            data: {
+              position,
+              distance,
+              timestamp: new Date().toISOString(),
+            },
+          })
+          .catch((error) => {
+            this.logger.error(
+              `Error logging robot data: ${error.message}`,
+              error.stack,
+            );
+          });
       }
     }
   }
@@ -165,10 +203,15 @@ export class MissionService {
     this.logger.log(`Getting logs for mission ID: ${missionId}`);
     try {
       const missionLog = await this.logsService.findMissionLog(missionId);
-      this.logger.debug(`Found mission log with ${missionLog.logs.length} entries`);
+      this.logger.debug(
+        `Found mission log with ${missionLog.logs.length} entries`,
+      );
       return missionLog;
     } catch (error) {
-      this.logger.error(`Error getting mission log: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error getting mission log: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -198,18 +241,25 @@ export class MissionService {
   async getMissions(): Promise<any[]> {
     try {
       const missionLogs = await this.logsService.findAllMissionLogs();
-      return missionLogs.map(log => ({
+      return missionLogs.map((log) => ({
         id: log.missionId,
         startTime: log.startTime,
         endTime: log.endTime,
         status: log.endTime ? 'completed' : 'ongoing',
         robots: log.logs
-          .filter(entry => entry.type === 'COMMAND' && entry.data.command === 'START_MISSION')
-          .map(entry => entry.robotIds),
-        logs: log.logs
+          .filter(
+            (entry) =>
+              entry.type === 'COMMAND' &&
+              entry.data.command === 'START_MISSION',
+          )
+          .map((entry) => entry.robotIds),
+        logs: log.logs,
       }));
     } catch (error) {
-      this.logger.error(`Error getting missions: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error getting missions: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

@@ -32,12 +32,12 @@ def generate_launch_description():
 
     params_declare = DeclareLaunchArgument(
         'params_file',
-        default_value=os.path.join(share_dir, 'param', 'ydlidar.yaml'),
+        default_value=os.path.join(share_dir, 'param', 'lidar_test.yaml'),
         description='Path to the ROS2 parameters file to use.')
 
     driver_node = LifecycleNode(
         package='ydlidar_ros2_driver',
-        namespace=LaunchConfiguration('id'),
+        namespace='limo1',
         executable='ydlidar_ros2_driver_node',
         name='ydlidar_ros2_driver_node',
         output='screen',
@@ -50,9 +50,7 @@ def generate_launch_description():
         executable='static_transform_publisher',
         name='static_tf_pub_laser',
         arguments=[
-            '0', '0', '0.02', '0', '0', '0', '1',
-            [LaunchConfiguration('id'), '/base_link'],
-            [LaunchConfiguration('id'), '/laser_frame']
+            '0', '0', '0.02', '0', '0', '0', '1', 'limo1/base_link', 'limo1/laser_frame' # TODO peut etre changer
         ],
     )
 

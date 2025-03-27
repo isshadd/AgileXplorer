@@ -4,12 +4,10 @@ import sys
 import launch
 import launch_ros.actions
 from ament_index_python.packages import get_package_share_directory
-from launch.substitutions import LaunchConfiguration, TextSubstitution
 
 
 def generate_launch_description():
     ld = launch.LaunchDescription([
-        launch.actions.DeclareLaunchArgument(name='id', default_value='limo1'),
         launch.actions.DeclareLaunchArgument(name='port_name',
                                              default_value='ttyTHS1'),
         launch.actions.DeclareLaunchArgument(name='odom_topic_name',
@@ -27,41 +25,28 @@ def generate_launch_description():
             package='tf2_ros',
             executable='static_transform_publisher',
             name='base_link_to_imu',
-            arguments=[
-                '0.0', '0.0', '0.0', '0.0', '0.0', '0.0',
-                (LaunchConfiguration('id') + TextSubstitution(text='/base_link')).perform(launch.context.LaunchContext()),
-                (LaunchConfiguration('id') + TextSubstitution(text='/imu_link')).perform(launch.context.LaunchContext())
-            ]),
+            arguments="0.0 0.0 0.0 0.0 0.0 0.0 limo1/base_link limo1/imu_link".split(
+                ' ')),
         launch_ros.actions.Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             name='base_link_to_odom',
-            arguments=[
-                '0.0', '0.0', '0.0', '0.0', '0.0', '0.0',
-                (LaunchConfiguration('id') + TextSubstitution(text='/base_link')).perform(launch.context.LaunchContext()),
-                (LaunchConfiguration('id') + TextSubstitution(text='/odom')).perform(launch.context.LaunchContext())
-            ]),
-        launch.actions.IncludeLaunchDescription(
-            launch.launch_description_sources.PythonLaunchDescriptionSource(
-                os.path.join(get_package_share_directory('limo_base'),
-                             'launch/test_base.launch.py')),
-            launch_arguments={
-                'port_name':
-                LaunchConfiguration('port_name'),
-                'odom_topic_name':
-                LaunchConfiguration('odom_topic_name'),
-                'id':
-                LaunchConfiguration('id')
-            }.items(),
-            namespace=LaunchConfiguration('id')),
-        launch.actions.IncludeLaunchDescription(
-            launch.launch_description_sources.PythonLaunchDescriptionSource(
-                os.path.join(get_package_share_directory('limo_base'),
-                             'launch', 'test_lidar.launch.py')),
-            namespace=LaunchConfiguration('id'),
-            launch_arguments={
-                'id': LaunchConfiguration('id')
-            }.items())
+            arguments="0.0 0.0 0.0 0.0 0.0 0.0 limo1/base_link limo1/odom".split(
+                ' ')),
+         launch.actions.IncludeLaunchDescription(
+             launch.launch_description_sources.PythonLaunchDescriptionSource(
+                 os.path.join(get_package_share_directory('limo_base'),
+                              'launch/test_base.launch.py')),
+             launch_arguments={
+                 'port_name':
+                 launch.substitutions.LaunchConfiguration('port_name'),
+                 'odom_topic_name':
+                 launch.substitutions.LaunchConfiguration('odom_topic_name')
+             }.items()),
+         launch.actions.IncludeLaunchDescription(
+             launch.launch_description_sources.PythonLaunchDescriptionSource(
+                 os.path.join(get_package_share_directory('limo_base'),
+                              'launch','test_lidar.launch.py')))
     ])
     return ld
 

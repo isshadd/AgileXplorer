@@ -29,8 +29,8 @@ def generate_launch_description():
             name='base_link_to_imu',
             arguments=[
                 '0.0', '0.0', '0.0', '0.0', '0.0', '0.0',
-                LaunchConfiguration('id') + '/base_link',
-                LaunchConfiguration('id') + '/imu_link'
+                (LaunchConfiguration('id') + TextSubstitution(text='/base_link')).perform(launch.context.LaunchContext()),
+                (LaunchConfiguration('id') + TextSubstitution(text='/imu_link')).perform(launch.context.LaunchContext())
             ]),
         launch_ros.actions.Node(
             package='tf2_ros',
@@ -38,8 +38,8 @@ def generate_launch_description():
             name='base_link_to_odom',
             arguments=[
                 '0.0', '0.0', '0.0', '0.0', '0.0', '0.0',
-                LaunchConfiguration('id') + '/base_link',
-                LaunchConfiguration('id') + '/odom'
+                (LaunchConfiguration('id') + TextSubstitution(text='/base_link')).perform(launch.context.LaunchContext()),
+                (LaunchConfiguration('id') + TextSubstitution(text='/odom')).perform(launch.context.LaunchContext())
             ]),
         launch.actions.IncludeLaunchDescription(
             launch.launch_description_sources.PythonLaunchDescriptionSource(

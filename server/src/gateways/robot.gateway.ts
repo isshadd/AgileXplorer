@@ -53,8 +53,8 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private feedbackNode: rclnodejs.Node;
   private batteryInterval: NodeJS.Timeout;
   private robotBatteryLevels: Map<string, number> = new Map([
-    ['robot1_102', 100],
-    ['robot2_102', 100],
+    ['limo1', 85],
+    ['limo2', 100],
   ]);
   private controllerClientId: string | null = null; // ID du client ayant le contrôle
 
@@ -69,7 +69,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.initROS2();
     if (this.SIMULATE_BATTERY) {
       this.logger.log('Starting battery simulation mode');
-      // this.startBatterySimulation();
+      this.startBatterySimulation();
     }
   }
 
@@ -133,11 +133,11 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       // Abonnement aux données de statut et de batterie
       this.feedbackNode.createSubscription(
         'limo_msgs/msg/LimoStatus' as any,
-        '/robot1_102/limo_status',
+        '/limo1/limo_status',
         (rosMsg: any) => {
           // Transform ROS message to our interface format
           const msg: LimoStatusPayload = {
-            robotId: 'robot1_102', // You might want to make this dynamic
+            robotId: 'limo1', // You might want to make this dynamic
             vehicle_state: rosMsg.vehicle_state,
             control_mode: rosMsg.control_mode,
             battery_voltage: rosMsg.battery_voltage,
@@ -164,11 +164,11 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       this.feedbackNode.createSubscription(
         'limo_msgs/msg/LimoStatus' as any,
-        '/robot2_102/limo_status',
+        '/limo2/limo_status',
         (rosMsg: any) => {
           // Transform ROS message to our interface format
           const msg: LimoStatusPayload = {
-            robotId: 'robot2_102', // You might want to make this dynamic
+            robotId: 'limo2', // You might want to make this dynamic
             vehicle_state: rosMsg.vehicle_state,
             control_mode: rosMsg.control_mode,
             battery_voltage: rosMsg.battery_voltage,

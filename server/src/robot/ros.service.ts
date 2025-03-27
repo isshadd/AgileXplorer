@@ -29,7 +29,7 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
       this.node = new rclnodejs.Node(`ros_service_${nodeId}`);
 
       // Subscribe to each robot's topics
-      const robotIds = ['robot1', 'robot2'];
+      const robotIds = ['limo1', 'limo2'];
       robotIds.forEach((robotId) => this.setupRobotSubscribers(robotId));
 
       this.node.spin();

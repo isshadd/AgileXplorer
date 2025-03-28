@@ -259,7 +259,7 @@ export class MissionService {
     }
   }
 
-  async startMissionsAll(): Promise<{ message: string }> {
+  async startMissionsAll(): Promise<{ message: string; missionId: string }> {
     await this.initPromise;
     this.logger.log('Démarrage de la mission pour tous les robots');
     const responses: string[] = [];

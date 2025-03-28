@@ -1,0 +1,10 @@
+<div class="connected-clients-container">
+  <div class="client-info">
+    <mat-icon>devices</mat-icon>
+    <span>{{ clientCount }} appareil(s) connecté(s)</span>
+  </div>
+  <div class="controller-status" [ngClass]="{'controller': isController, 'viewer': !isController}">
+    <mat-icon>{{ isController ? 'touch_app' : 'visibility' }}</mat-icon>
+    <span>{{ isController ? 'Contrôle actif' : 'Mode spectateur' }}</span>
+  </div>
+</div>

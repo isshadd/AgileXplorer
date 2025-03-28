@@ -1,0 +1,60 @@
+<div class="map-container">
+  <canvas #mapCanvas class="map-canvas"></canvas>
+  <div class="map-controls">
+    <div class="view-controls">
+      <span class="control-label">Vue:</span>
+      <button (click)="toggleDisplayMode()"
+             [matTooltip]="displayMode === 'background' ? 'Afficher la cartographie' : 'Afficher la carte'"
+             class="control-button toggle-view">
+        {{ displayMode === 'background' ? 'Carte' : 'SLAM' }}
+      </button>
+    </div>
+    <div class="zoom-group">
+      <span class="control-label">Zoom:</span>
+      <div class="zoom-controls">
+        <button (click)="zoomIn()"
+               [disabled]="!isController"
+               [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+               class="control-button small">+</button>
+        <button (click)="zoomOut()"
+               [disabled]="!isController"
+               [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+               class="control-button small">-</button>
+      </div>
+    </div>
+    <div class="distance-controls">
+      <span class="control-label">Distance:</span>
+      <button (click)="setDistanceFactor(DISTANCE_FACTOR - 0.1)"
+             [disabled]="!isController"
+             [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+             class="control-button">-</button>
+      <span class="factor-value">{{DISTANCE_FACTOR.toFixed(1)}}</span>
+      <button (click)="setDistanceFactor(DISTANCE_FACTOR + 0.1)"
+             [disabled]="!isController"
+             [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+             class="control-button">+</button>
+    </div>
+    <div class="distance-controls">
+      <span class="control-label">Angle:</span>
+      <button (mousedown)="startAngleIncrement(-1.0)"
+              (mouseup)="stopAngleIncrement()"
+              (mouseleave)="stopAngleIncrement()"
+              [disabled]="!isController"
+              [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+              class="control-button">-</button>
+      <span class="factor-value">{{ANGLE_OFFSET.toFixed(1)}}</span>
+      <button (mousedown)="startAngleIncrement(1.0)"
+              (mouseup)="stopAngleIncrement()"
+              (mouseleave)="stopAngleIncrement()"
+              [disabled]="!isController"
+              [matTooltip]="!isController ? 'Mode spectateur actif' : ''"
+              class="control-button">+</button>
+    </div>
+  </div>
+  <div class="map-legend">
+    <div *ngFor="let trail of robotTrails | keyvalue" class="legend-item">
+      <div class="legend-color" [style.background-color]="trail.value.color"></div>
+      <span>{{ trail.value.robotId }}</span>
+    </div>
+  </div>
+</div>

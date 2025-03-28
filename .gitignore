@@ -11,3 +11,6 @@ robot/build/
 robot/install/
 robot/log/
 robot/src/
+robot/gazebo2/build/
+robot/gazebo2/install/
+robot/gazebo2/log/

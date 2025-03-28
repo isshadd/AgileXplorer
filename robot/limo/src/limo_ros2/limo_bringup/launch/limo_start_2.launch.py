@@ -35,17 +35,17 @@ def generate_launch_description():
                 ' ')),
          launch.actions.IncludeLaunchDescription(
              launch.launch_description_sources.PythonLaunchDescriptionSource(
-                 os.path.join(get_package_share_directory('limo_base'),
+                 os.path.join(get_package_share_directory('limo_base2'),
                               'launch/limo_base.launch.py')),
              launch_arguments={
                  'port_name':
                  launch.substitutions.LaunchConfiguration('port_name'),
                  'odom_topic_name':
                  launch.substitutions.LaunchConfiguration('odom_topic_name')
-             }.items()),
+             }.items()),    
          launch.actions.IncludeLaunchDescription(
              launch.launch_description_sources.PythonLaunchDescriptionSource(
-                 os.path.join(get_package_share_directory('limo_base'),
+                 os.path.join(get_package_share_directory('limo_base2'),
                               'launch','open_ydlidar_launch.py')))
     ])
     return ld

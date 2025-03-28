@@ -26,8 +26,8 @@ def generate_random_walls(num_walls=3):
         orientation = round(random.uniform(0, 3.14159), 2)
 
         # Dimensions du mur aléatoire
-        length = 0.3
-        thickness = 0.3
+        length = 0.7
+        thickness = 0.1
         height = 0.8
 
         # Bloc <model> SDF pour un mur aléatoire
@@ -114,20 +114,19 @@ def main():
 
     <model name="limo1">
       <self_collide>true</self_collide>
-      <pose>-1.3 -1.6 0.35 0 0 0</pose>
+      <pose>-1.5 -1.1 0.35 0 0 1.3</pose>
       <include merge="true">
         <uri>package://ros_gz_example_description/models/limo_diff_drive1</uri>
       </include>
     </model>
-    <!--
+
     <model name="limo2">
       <self_collide>true</self_collide>
-      <pose>0 -1.3 0.35 0 0 0</pose>
+      <pose>0.0 0.0 0.35 0 0 0.5</pose>
       <include merge="true">
         <uri>package://ros_gz_example_description/models/limo_diff_drive2</uri>
       </include>
     </model>
-    -->
     <!-- Murs fixes formant un carré de 4 m de côté -->
     <!-- Mur fixe au nord -->
     <model name="fixed_wall_north">

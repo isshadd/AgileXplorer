@@ -9,8 +9,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Define robot namespaces
-    robot_names = ['limo1'] 
-    robot_models = ['limo1']
+    robot_names = ['limo1', 'limo2'] 
 
     # Setup paths
     pkg_project_bringup = get_package_share_directory('ros_gz_example_bringup')
@@ -32,7 +31,7 @@ def generate_launch_description():
 
     # Create nodes for each robot
     nodes = []
-    for i, (robot_name, model_name) in enumerate(zip(robot_names, robot_models)):
+    for i, (robot_name, model_name) in enumerate(zip(robot_names, robot_names)):
         # Robot State Publisher (namespaced)
         robot_sdf = f'limo{i+1}.sdf'
         diff_drive_dir = f'limo_diff_drive{i+1}'

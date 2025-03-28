@@ -9,13 +9,16 @@ colcon build # --packages-select common_msgs
 source install/setup.bash
 
 # launch gazebo
-ros2 launch ros_gz_example_bringup diff_drive.launch.py & sleep 10
+ros2 launch ros_gz_example_bringup diff_drive.launch.py & sleep 5
 
 # launch slam_toolbox mapper
 ros2 launch ros_gz_example_bringup map.launch.py use_sim_time:=true & sleep 5
 
-# launch nav2
-ros2 launch ros_gz_example_bringup navigation2.launch.py use_sim_time:=true   autostart:=true & sleep 10
+# launch nav2 robot 1
+ros2 launch ros_gz_example_bringup navigation2.launch.py use_sim_time:=true   autostart:=true & sleep 7
+
+# launch nav2 robot 2
+ros2 launch ros_gz_example_bringup navigation22.launch.py use_sim_time:=true   autostart:=true & sleep 7
 
 # launch rviz
 LD_PRELOAD=/lib/x86_64-linux-gnu/libpthread.so.0 rviz2

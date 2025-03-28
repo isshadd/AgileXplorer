@@ -1,25 +1,45 @@
-import { Controller, Post, Get, Param, Body } from '@nestjs/common';
+import { Controller, Post, Get, Param, Logger } from '@nestjs/common';
 import { MissionService } from '../mission/mission.service';
 
 @Controller('robot')
 export class RobotController {
+  private readonly logger = new Logger(RobotController.name);
+
   constructor(private readonly missionService: MissionService) {}
 
-  @Post('start-mission')
-  async startMission() {
-    const result = await this.missionService.startMission();
-    return result; // This will now return { missionId: string }
+  @Post(':robot_id/mission/start')
+  async startMission(@Param('robot_id') robotId: string) {
+    this.logger.log(`Démarrage de la mission pour ${robotId}`);
+    const result = await this.missionService.startMission(robotId);
+    return result;
   }
 
-  @Post('stop-mission')
-  async stopMission() {
-    const result = await this.missionService.stopMission();
-    return result; // This will return { stoppedMissionId: string }
+  @Post(':robot_id/mission/stop')
+  async stopMission(@Param('robot_id') robotId: string) {
+    this.logger.log(`Arrêt de la mission pour ${robotId}`);
+    const result = await this.missionService.stopMission(robotId);
+    return result;
   }
 
   @Get('mission/:missionId/logs')
   async getMissionLogs(@Param('missionId') missionId: string) {
     return await this.missionService.getMissionLogs(missionId);
+  }
+
+  @Post(':robot_id/mission/return')
+  async returnToBase(
+    @Param('robot_id') robotId: string,
+  ): Promise<{ message: string }> {
+    this.logger.log(`Requête de retour à la base pour ${robotId}`);
+    return await this.missionService.returnToBase(robotId);
+  }
+
+  @Post(':robot_id/identify')
+  async identify(
+    @Param('robot_id') robotId: string,
+  ): Promise<{ message: string }> {
+    this.logger.log(`Requête d’identification pour ${robotId}`);
+    return await this.missionService.identify(robotId);
   }
 
   @Get('active-mission')

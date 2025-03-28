@@ -1,0 +1,253 @@
+.map-container {
+  position: relative;
+  width: min(calc(100vh - 100px), 95%) !important;
+  height: min(calc(100vh - 100px), 95%) !important;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Ajustement pour les tablettes */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .map-container {
+    width: min(calc(100vh - 120px), 95%) !important;
+    height: min(calc(100vh - 120px), 95%) !important;
+    margin: auto;
+  }
+
+  .map-controls {
+    top: 15px;
+    right: 15px;
+    gap: 8px;
+  }
+
+  .control-button {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .control-button.toggle-view {
+    width: auto;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .map-legend {
+    bottom: 15px;
+    left: 15px;
+    padding: 12px;
+  }
+
+  .legend-item {
+    margin: 6px 0;
+  }
+
+  .legend-color {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+  }
+}
+
+/* Ajustement pour les petits écrans */
+@media (max-width: 767px) {
+  .map-container {
+    position: relative !important;
+    width: 95% !important;
+    height: min(calc(100vh - 150px), 95vw) !important;
+    min-height: 250px !important;
+    margin: auto !important;
+    border: 1px solid #333 !important;
+    background-color: #102b43 !important;
+    z-index: 10 !important;
+    aspect-ratio: 1/1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .map-canvas {
+    position: relative !important;
+    z-index: 5 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .map-controls {
+    top: 10px;
+    right: 10px;
+    gap: 6px;
+    z-index: 20 !important;
+  }
+
+  .control-button {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    z-index: 20 !important;
+  }
+
+  .control-button.toggle-view {
+    width: auto;
+    min-width: 80px;
+    height: 28px;
+    font-size: 12px;
+    padding: 0 8px;
+    z-index: 20 !important;
+  }
+
+  .control-label {
+    font-size: 10px;
+    z-index: 20 !important;
+  }
+
+  .map-legend {
+    bottom: 10px;
+    left: 10px;
+    padding: 8px;
+    z-index: 20 !important;
+  }
+
+  .legend-item {
+    margin: 4px 0;
+  }
+
+  .legend-color {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+  }
+}
+
+.map-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: none !important;
+}
+
+.map-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 1000;
+  align-items: flex-end;
+}
+
+.control-button {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 3px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #333;
+  padding: 0;
+}
+
+.control-button.small {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+.control-button.toggle-view {
+  width: auto;
+  min-width: 45px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 11px;
+  background-color: #2196F3;
+  color: white;
+  font-weight: 500;
+}
+
+.control-button.toggle-view:hover {
+  background-color: #1976D2;
+}
+
+.control-button:hover {
+  background-color: #f0f0f0;
+}
+
+.zoom-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.control-label {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.distance-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.control-label {
+  opacity: 0.8;
+  margin-right: 2px;
+}
+
+.factor-value {
+  min-width: 20px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: black;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 50%;
+}

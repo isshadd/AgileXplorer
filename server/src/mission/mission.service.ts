@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { v4 as uuidv4 } from 'uuid';
 import { Mission } from '../interfaces/mission.interface';
 import { LogsService } from '../logs/logs.service';
@@ -14,6 +15,10 @@ export class MissionService {
   private initPromise: Promise<void>;
   private activeMissionId: string | null = null;
   private initialized = false;
+  private robotStates: Map<string, string> = new Map([
+    ['limo1', 'en arrêt'],
+    ['limo2', 'en arrêt'],
+  ]);
 
   constructor(private readonly logsService: LogsService) {
     this.initPromise = this.initializeROS();
@@ -80,14 +85,30 @@ export class MissionService {
     }
   }
 
+  @Cron(CronExpression.EVERY_SECOND)
+  private logRobotStates() {
+    for (const [robotId, state] of this.robotStates.entries()) {
+      this.logger.verbose(`État du robot ${robotId}: ${state}`);
+    }
+  }
+
+  private updateRobotState(robotId: string, state: 'en mission' | 'en arrêt') {
+    this.robotStates.set(robotId, state);
+    this.logger.verbose(`Mise à jour de l'état du robot ${robotId}: ${state}`);
+  }
+
   async startMission(robotId: string) {
     await this.initPromise;
     this.activeMissionId = uuidv4();
-    this.logger.log(`Starting mission for robot ${robotId} with ID: ${this.activeMissionId}`);
+    this.logger.log(
+      `Starting mission for robot ${robotId} with ID: ${this.activeMissionId}`,
+    );
 
     try {
+      // Mettre à jour l'état du robot
+      this.updateRobotState(robotId, 'en mission');
       await this.logsService.initializeMissionLog(this.activeMissionId);
-      
+
       await this.logsService.addLog(this.activeMissionId, {
         type: 'COMMAND',
         robotId,
@@ -122,25 +143,22 @@ export class MissionService {
 
   async stopMission(robotId: string) {
     const stoppedMissionId = this.activeMissionId;
-    this.logger.log(`Stopping mission for robot ${robotId} with ID: ${stoppedMissionId}`);
+    this.logger.log(
+      `Stopping mission for robot ${robotId} with ID: ${stoppedMissionId}`,
+    );
 
     if (!stoppedMissionId) {
-      this.logger.warn(`Attempted to stop mission for robot ${robotId} but no active mission found`);
+      this.logger.warn(
+        `Attempted to stop mission for robot ${robotId} but no active mission found`,
+      );
       return { stoppedMissionId: null };
     }
 
     this.activeMissionId = null;
 
     try {
-      // Log the stop mission command
-      await this.logsService.addLog(stoppedMissionId, {
-        type: 'COMMAND',
-        robotId,
-        data: {
-          command: 'STOP_MISSION',
-          timestamp: new Date().toISOString(),
-        },
-      });
+      // Mettre à jour l'état du robot
+      this.updateRobotState(robotId, 'en arrêt');
 
       const missionPublisher = this.publishers.get(`${robotId}_mission`);
       if (missionPublisher) {
@@ -303,19 +321,6 @@ export class MissionService {
   async returnToBase(robotId: string): Promise<{ message: string }> {
     await this.initPromise;
     this.logger.log(`Retour à la base pour ${robotId}`);
-
-    // Log the return to base command if there's an active mission
-    if (this.activeMissionId) {
-      await this.logsService.addLog(this.activeMissionId, {
-        type: 'COMMAND',
-        robotId,
-        data: {
-          command: 'RETURN_TO_BASE',
-          timestamp: new Date().toISOString(),
-        },
-      });
-    }
-
     const publisherKey = `${robotId}_mission`;
     const publisher = this.publishers.get(publisherKey);
 

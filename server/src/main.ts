@@ -15,7 +15,9 @@ async function checkDBConnection() {
 checkDBConnection();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'verbose'],
+  });
 
   app.enableCors({
     origin: '*', // Permet les connexions depuis n'importe quelle origine

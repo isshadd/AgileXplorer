@@ -160,6 +160,15 @@ export class MissionService {
       // Mettre à jour l'état du robot
       this.updateRobotState(robotId, 'en arrêt');
 
+      await this.logsService.addLog(stoppedMissionId, {
+        type: 'COMMAND',
+        robotId,
+        data: {
+          command: 'STOP_MISSION',
+          timestamp: new Date().toISOString(),
+        },
+      });
+
       const missionPublisher = this.publishers.get(`${robotId}_mission`);
       if (missionPublisher) {
         const message = {
@@ -254,10 +263,25 @@ export class MissionService {
     await this.initPromise;
     this.logger.log('Démarrage de la mission pour tous les robots');
     const responses: string[] = [];
+    this.activeMissionId = uuidv4();
+
+    await this.logsService.initializeMissionLog(this.activeMissionId);
 
     for (const [key, publisher] of this.publishers.entries()) {
       if (key.endsWith('_mission')) {
         const robotId = key.split('_mission')[0];
+
+        // Update robot state and add log entry
+        this.updateRobotState(robotId, 'en mission');
+        await this.logsService.addLog(this.activeMissionId, {
+          type: 'COMMAND',
+          robotId,
+          data: {
+            command: 'START_MISSION',
+            timestamp: new Date().toISOString(),
+          },
+        });
+
         const message = {
           data: JSON.stringify({ action: 'start_mission', robot_id: robotId }),
         };
@@ -269,7 +293,7 @@ export class MissionService {
       }
     }
 
-    return { message: responses.join(' | ') };
+    return { message: responses.join(' | '), missionId: this.activeMissionId };
   }
 
   async getMissions(): Promise<any[]> {
@@ -303,16 +327,31 @@ export class MissionService {
     this.logger.log('Arrêt de la mission pour tous les robots');
     const responses: string[] = [];
 
-    for (const [key, publisher] of this.publishers.entries()) {
-      if (key.endsWith('_mission')) {
-        const robotId = key.split('_mission')[0];
-        const message = {
-          data: JSON.stringify({ action: 'end_mission', robot_id: robotId }),
-        };
-        publisher.publish(message);
-        this.logger.log(`Message end_mission publié sur /${robotId}/messages`);
-        responses.push(`Mission arrêtée pour ${robotId}`);
+    if (this.activeMissionId) {
+      for (const [key, publisher] of this.publishers.entries()) {
+        if (key.endsWith('_mission')) {
+          const robotId = key.split('_mission')[0];
+          
+          await this.logsService.addLog(this.activeMissionId, {
+            type: 'COMMAND',
+            robotId,
+            data: {
+              command: 'STOP_MISSION',
+              timestamp: new Date().toISOString(),
+            },
+          });
+
+          const message = {
+            data: JSON.stringify({ action: 'end_mission', robot_id: robotId }),
+          };
+          publisher.publish(message);
+          this.logger.log(`Message end_mission publié sur /${robotId}/messages`);
+          responses.push(`Mission arrêtée pour ${robotId}`);
+        }
       }
+
+      await this.logsService.finalizeMissionLog(this.activeMissionId);
+      this.activeMissionId = null;
     }
 
     return { message: responses.join(' | ') };
@@ -329,6 +368,18 @@ export class MissionService {
       return { message: `Aucun publisher trouvé pour ${robotId}` };
     }
 
+    if (this.activeMissionId) {
+      await this.logsService.addLog(this.activeMissionId, {
+        type: 'COMMAND',
+        robotId,
+        data: {
+          command: 'RETURN_TO_BASE',
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
+    
+    this.updateRobotState(robotId, 'en arrêt');
     const message = {
       data: JSON.stringify({ action: 'return_to_base', robot_id: robotId }),
     };

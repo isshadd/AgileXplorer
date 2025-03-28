@@ -7,5 +7,6 @@ if [ -n "$PID" ]; then
 fi
 
 source /opt/ros/humble/setup.bash
-export ROS_DOMAIN_ID=102
+# export ROS_DOMAIN_ID=102
+export ROS_DOMAIN_ID=103
 npm run start:dev

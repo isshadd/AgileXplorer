@@ -43,7 +43,7 @@ def generate_launch_description():
         executable='limo_base',
         output='screen',
         emulate_tty=True,
-        namespace='limo1',
+        namespace=LaunchConfiguration('id'),
         remappings=[
             ('/cmd_vel', 'cmd_vel'),
             ('/imu', 'imu'),

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { RobotController } from '../controllers/robot.controller';
 import { RobotGateway } from '../gateways/robot.gateway';
-import { MissionService } from '../mission/mission.service';
 import { LogsModule } from '../logs/logs.module';
+import { MissionModule } from '../mission/mission.module';
 import { RosService } from './ros.service';
 
 @Module({
-  imports: [LogsModule],
+  imports: [LogsModule, MissionModule],
   controllers: [RobotController],
-  providers: [RobotGateway, MissionService, RosService],
-  exports: [RobotGateway, MissionService, RosService]
+  providers: [RobotGateway, RosService],
+  exports: [RobotGateway, RosService]
 })
 export class RobotModule {}

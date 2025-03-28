@@ -24,4 +24,10 @@ export class NotificationService {
       duration: 3000
     });
   }
+
+  returnToBase(): void {
+    this.snackBar.open('Retour à la base initié', 'Fermer', {
+      duration: 3000
+    });
+  }
 }

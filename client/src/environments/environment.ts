@@ -1,4 +1,8 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:3000' // À changer selon l'adresse ubuntu ou localhost (celui qui marche mieux)
+    // Utilise l'adresse IP/hostname actuel au lieu d'une adresse codée en dur
+    // Cela permet à l'application de fonctionner sur différents appareils sans modification
+    apiUrl: window.location.hostname === 'localhost'
+        ? 'http://localhost:3000'
+        : `http://${window.location.hostname}:3000`
 };

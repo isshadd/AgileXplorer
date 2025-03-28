@@ -41,13 +41,15 @@ LimoDriver::LimoDriver(std::string node_name):rclcpp::Node(node_name),keep_runni
     this->declare_parameter("base_frame", "base_link");
     this->declare_parameter("pub_odom_tf", false);
     this->declare_parameter("use_mcnamu", false);
-    this->declare_parameter("control_rate", 50);  
+    this->declare_parameter("control_rate", 50);
+    this->declare_parameter("initial_yaw_offset", 0.0);  // Nouvel offset d'orientation initial
 
     this->get_parameter_or<std::string>("port_name", port_name, "ttyTHS1");//获取参数
     this->get_parameter_or<std::string>("odom_frame", odom_frame_, "odom");
     this->get_parameter_or<std::string>("base_frame", base_frame_, "base_link");
     this->get_parameter_or<bool>("pub_odom_tf", pub_odom_tf_, false);
     this->get_parameter_or<bool>("use_mcnamu", use_mcnamu_, false);
+    this->get_parameter_or<double>("initial_yaw_offset", initial_yaw_offset_, 0.0);
 
     std::cout << "Loading parameters: " << std::endl;
     std::cout << "- port name: " << port_name << std::endl;
@@ -490,13 +492,14 @@ void LimoDriver::publishIMUData(double stamp) {
 
     if (flag==0)
     {
-        double present_theta_ =imu_data_.yaw;
-        double last_theta_ = imu_data_.yaw;
-        flag=1;    
-        
+        // Initialisation avec l'offset
+        double present_theta_ = imu_data_.yaw + initial_yaw_offset_;
+        double last_theta_ = imu_data_.yaw + initial_yaw_offset_;
+        real_theta_ = initial_yaw_offset_;  // Démarrer avec l'offset initial
+        flag=1;
     }
-    //ROS_INFO("flag:%d",flag);
-    present_theta_ = imu_data_.yaw;
+    
+    present_theta_ = imu_data_.yaw + initial_yaw_offset_;  // Appliquer l'offset à chaque lecture
     delta_theta_ = present_theta_ - last_theta_;
     if(delta_theta_< 0.1 && delta_theta_> -0.1) delta_theta_=0;
     real_theta_ = real_theta_ + delta_theta_;

@@ -68,21 +68,21 @@ class MissionNode(Node):
         self.mission_active = False
         self.get_logger().info(f"Ending mission, returning to: x={self.initial_pose.pose.position.x:.2f}, y={self.initial_pose.pose.position.y :.2f}")
 
-        # goal_msg = NavigateToPose.Goal()
-        # goal_pose = PoseStamped()
-        # goal_pose.header.frame_id = self.map_frame
-        # goal_pose.header.stamp = self.get_clock().now().to_msg()
-        # goal_pose.pose.position.x = self.initial_pose.pose.position.x
-        # goal_pose.pose.position.y = self.initial_pose.pose.position.y
-        # goal_pose.pose.orientation.w = 1.0
-        # goal_msg.pose = goal_pose
+        goal_msg = NavigateToPose.Goal()
+        goal_pose = PoseStamped()
+        goal_pose.header.frame_id = "map" #self.map_frame
+        goal_pose.header.stamp = self.get_clock().now().to_msg()
+        goal_pose.pose.position.x = self.initial_pose.pose.position.x
+        goal_pose.pose.position.y = self.initial_pose.pose.position.y
+        goal_pose.pose.orientation.w = 1.0
+        goal_msg.pose = goal_pose
 
-        # send_goal_future = self.nav_client.send_goal_async(goal_msg)
-        # send_goal_future.add_done_callback(self.goal_response_callback)
+        send_goal_future = self.nav_client.send_goal_async(goal_msg)
+        send_goal_future.add_done_callback(self.goal_response_callback)
 
-        self.get_logger().info("Canceling current navigation goal")
-        self.current_goal_handle.cancel_goal_async()
-        self.current_goal_handle = None
+        # self.get_logger().info("Canceling current navigation goal")
+        # self.current_goal_handle.cancel_goal_async()
+        # self.current_goal_handle = None
 
     def explore_map(self):
         if self.map_data is None:
@@ -111,6 +111,14 @@ class MissionNode(Node):
                 (robot_x - 1, robot_y - 1), 
                 (robot_x - 1, robot_y),
                 (robot_x - 1, robot_y + 1)
+                (robot_x, robot_y + 0.5),   
+                (robot_x + 0.5, robot_y + 0.5),
+                (robot_x + 0.5, robot_y),
+                (robot_x + 0.5, robot_y - 0.5),
+                (robot_x, robot_y - 0.5),
+                (robot_x - 0.5, robot_y - 0.5), 
+                (robot_x - 0.5, robot_y),
+                (robot_x - 0.5, robot_y + 0.5)
             ]
         else :
             candidates = [
@@ -141,7 +149,7 @@ class MissionNode(Node):
         
         goal_msg = NavigateToPose.Goal()
         goal_pose = PoseStamped()
-        goal_pose.header.frame_id = self.map_frame
+        goal_pose.header.frame_id = "map" #self.map_frame
         goal_pose.pose.position.x = goal_x
         goal_pose.pose.position.y = goal_y
         goal_pose.pose.orientation.w = 1.0

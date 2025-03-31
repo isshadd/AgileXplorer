@@ -44,7 +44,8 @@ def generate_launch_description():
         emulate_tty=True,
         parameters=[parameter_file],
         remappings=[
-            ('scan', [LaunchConfiguration('id'), '/scan'])
+            ('scan', [LaunchConfiguration('id'), '/scan']),
+            ('ydlidar_ros2_driver_node/transition_event', [LaunchConfiguration('id'), '/ydlidar_ros2_driver_node/transition_event']),
         ]
     )
 

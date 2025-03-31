@@ -147,6 +147,7 @@ class MissionNode(Node):
             self.get_logger().warn("No free candidate points found, remove obstacles!")
             return
         goal_x, goal_y = free_candidates[0]
+        self.get_logger().info(f"Current position: x={robot_x:.2f}, y={robot_y:.2f}")
         self.get_logger().info(f"Selected goal: x={goal_x:.2f}, y={goal_y:.2f}")
         
         goal_msg = NavigateToPose.Goal()

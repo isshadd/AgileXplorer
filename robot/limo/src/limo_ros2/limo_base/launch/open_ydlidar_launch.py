@@ -32,7 +32,7 @@ def generate_launch_description():
 
     params_declare = DeclareLaunchArgument(
         'params_file',
-        default_value=os.path.join(share_dir, 'param', 'lidar_test.yaml'),
+        default_value=os.path.join(share_dir, 'param', 'ydlidar.yaml'),
         description='Path to the ROS2 parameters file to use.')
 
     driver_node = LifecycleNode(
@@ -45,7 +45,7 @@ def generate_launch_description():
         parameters=[parameter_file],
         remappings=[
             ('scan', [LaunchConfiguration('id'), '/scan']),
-            ('ydlidar_ros2_driver_node/transition_event', [LaunchConfiguration('id'), '/ydlidar_ros2_driver_node/transition_event']),
+            #('ydlidar_ros2_driver_node/transition_event', [LaunchConfiguration('id'), '/ydlidar_ros2_driver_node/transition_event']),
         ]
     )
 

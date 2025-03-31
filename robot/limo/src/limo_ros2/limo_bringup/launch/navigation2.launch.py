@@ -39,7 +39,7 @@ def generate_launch_description():
             get_package_share_directory('limo_bringup'),
             'maps'))
 
-    param_file_name = 'navigation2.yaml'
+    param_file_name = 'nav2_' + LaunchConfiguration('id') + '.yaml'
     param_dir = LaunchConfiguration(
         'params_file',
         default=os.path.join(
@@ -72,11 +72,14 @@ def generate_launch_description():
             description='Use simulation (Gazebo) clock if true'),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/bringup_launch.py']),
+            PythonLaunchDescriptionSource([get_package_share_directory('limo_bringup'), '/launch/bringup_launch.py']),
             launch_arguments={
                 'map': map_dir,
                 'use_sim_time': use_sim_time,
-                'params_file': param_dir}.items(),
+                'params_file': param_dir,
+                'namespace': LaunchConfiguration('id'),
+                'use_namespace': 'true',
+            }.items(),
         ),
 
         Node(

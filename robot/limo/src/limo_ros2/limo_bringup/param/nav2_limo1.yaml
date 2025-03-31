@@ -37,7 +37,7 @@ amcl:
     z_max: 0.05
     z_rand: 0.5
     z_short: 0.05
-    scan_topic: limo2/scan
+    scan_topic: limo1/scan
 
 amcl_map_client:
   ros__parameters:
@@ -52,7 +52,7 @@ bt_navigator:
     use_sim_time: False
     global_frame: map
     robot_base_frame: base_link
-    odom_topic: limo2/odom
+    odom_topic: /limo1/odom
     default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml"
     bt_loop_duration: 10
     default_server_timeout: 20
@@ -118,7 +118,7 @@ controller_server:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
       xy_goal_tolerance: 0.20
-      yaw_goal_tolerance: 0.5
+      yaw_goal_tolerance: 6.28
 
     # DWB parameters
     FollowPath:
@@ -151,7 +151,7 @@ controller_server:
       trans_stopped_velocity: 0.25
       short_circuit_trajectory_evaluation: True
       stateful: True
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      critics: ["Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
       BaseObstacle.scale: 0.02
       PathAlign.scale: 32.0
       PathAlign.forward_point_distance: 0.1
@@ -190,7 +190,7 @@ local_costmap:
         enabled: True
         observation_sources: scan
         scan:
-          topic: limo2/scan
+          topic: limo1/scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -206,7 +206,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: scan
         scan:
-          topic: limo2/scan
+          topic: limo1/scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -242,7 +242,7 @@ global_costmap:
         enabled: True
         observation_sources: scan
         scan:
-          topic: limo2/scan
+          topic: limo1/scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -262,7 +262,7 @@ global_costmap:
         mark_threshold: 0
         observation_sources: scan
         scan:
-          topic: limo2/scan
+          topic: limo1/scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -316,8 +316,8 @@ planner_server_rclcpp_node:
 
 recoveries_server:
   ros__parameters:
-    costmap_topic: limo2/local_costmap/costmap_raw
-    footprint_topic: limo2/local_costmap/published_footprint
+    costmap_topic: limo1/local_costmap/costmap_raw
+    footprint_topic: limo1/local_costmap/published_footprint
     cycle_frequency: 10.0
     recovery_plugins: ["spin", "backup", "wait"]
     spin:

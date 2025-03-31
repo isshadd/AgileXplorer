@@ -21,11 +21,19 @@ from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
+
+    id_arg = DeclareLaunchArgument(
+        'id',
+        default_value='limo1',
+        description='Namespace ID for the robot'
+    )
+        
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     resolution = LaunchConfiguration('resolution', default='0.05')
     publish_period_sec = LaunchConfiguration('publish_period_sec', default='1.0')
 
     return LaunchDescription([
+        id_arg,
         DeclareLaunchArgument(
             'resolution',
             default_value=resolution,

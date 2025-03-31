@@ -26,6 +26,13 @@ from launch.substitutions import ThisLaunchFileDir
 
 
 def generate_launch_description():
+
+    id_arg = DeclareLaunchArgument(
+        'id',
+        default_value='limo1',
+        description='Namespace ID for the robot'
+    )
+
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     limo_cartographer_prefix = get_package_share_directory('limo_bringup')
     cartographer_config_dir = LaunchConfiguration('cartographer_config_dir', default=os.path.join(
@@ -40,6 +47,7 @@ def generate_launch_description():
                                    'rviz', 'demo_2d.rviz')
 
     return LaunchDescription([
+        id_arg,
         DeclareLaunchArgument(
             'cartographer_config_dir',
             default_value=cartographer_config_dir,
@@ -52,16 +60,19 @@ def generate_launch_description():
             'use_sim_time',
             default_value='false',
             description='Use simulation (Gazebo) clock if true'),
-
         Node(
             package='cartographer_ros',
             executable='cartographer_node',
             name='cartographer_node',
             output='screen',
+            namespace=LaunchConfiguration('id'),
             parameters=[{'use_sim_time': use_sim_time}],
             arguments=['-configuration_directory', cartographer_config_dir,
-                       '-configuration_basename', configuration_basename]),
-
+                       '-configuration_basename', configuration_basename],
+            remappings=[
+              #  ('/tf', 'tf'),
+              #  ('/tf_static', 'tf_static')
+            ]),
         DeclareLaunchArgument(
             'resolution',
             default_value=resolution,
@@ -74,15 +85,11 @@ def generate_launch_description():
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/occupancy_grid.launch.py']),
-            launch_arguments={'use_sim_time': use_sim_time, 'resolution': resolution,
-                              'publish_period_sec': publish_period_sec}.items(),
+            launch_arguments={
+                'use_sim_time': use_sim_time, 
+                'resolution': resolution,
+                'publish_period_sec': publish_period_sec,
+                'id': LaunchConfiguration('id'),
+                }.items(),
         ),
-
-        # Node(
-        #     package='rviz2',
-        #     executable='rviz2',
-        #     name='rviz2',
-        #     arguments=['-d', rviz_config_dir],
-        #     parameters=[{'use_sim_time': use_sim_time}],
-        #     output='screen'),
     ])

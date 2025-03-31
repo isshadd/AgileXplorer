@@ -39,11 +39,7 @@ def generate_launch_description():
             get_package_share_directory('limo_bringup'),
             'maps'))
     
-    param_file_name = PythonExpression([
-        "'nav2_' + str(",
-        LaunchConfiguration('id'),
-        ") + '.yaml'"
-    ])
+    param_file_name = 'nav2_limo1.yaml' # TODO : à changer
     param_dir = LaunchConfiguration(
         'params_file',
         default=os.path.join(

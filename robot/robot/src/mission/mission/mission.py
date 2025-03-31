@@ -10,6 +10,8 @@ from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from nav2_msgs.action import NavigateToPose
 from std_msgs.msg import Empty
 
+# ros2 action send_goal /limo1/navigate_to_pose nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'map'}, pose: {position: {x: 2.0, y: 0.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}"
+
 class MissionNode(Node):
     def __init__(self):
         super().__init__('mission_node')
@@ -110,7 +112,7 @@ class MissionNode(Node):
                 (robot_x, robot_y - 1),
                 (robot_x - 1, robot_y - 1), 
                 (robot_x - 1, robot_y),
-                (robot_x - 1, robot_y + 1)
+                (robot_x - 1, robot_y + 1),
                 (robot_x, robot_y + 0.5),   
                 (robot_x + 0.5, robot_y + 0.5),
                 (robot_x + 0.5, robot_y),

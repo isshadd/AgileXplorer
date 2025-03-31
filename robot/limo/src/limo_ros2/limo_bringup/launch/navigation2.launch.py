@@ -25,6 +25,13 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
+
+    id_arg = DeclareLaunchArgument(
+        'id',
+        default_value='limo1',
+        description='Namespace ID for the robot'
+    )
+
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     map_dir = LaunchConfiguration(
         'map',
@@ -48,6 +55,7 @@ def generate_launch_description():
         'nav2_default_view.rviz')
 
     return LaunchDescription([
+        id_arg,
         DeclareLaunchArgument(
             'map',
             default_value=map_dir,

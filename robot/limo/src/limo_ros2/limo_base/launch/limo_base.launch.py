@@ -60,7 +60,7 @@ def generate_launch_description():
         executable='static_transform_publisher',
         arguments=['0', '0', '0', '0', '0', '0', 
                 [LaunchConfiguration('id'), '/map'], 
-                [LaunchConfiguration('id'), '/base_link']]
+                ['/base_link']]
     )
 
     return LaunchDescription([

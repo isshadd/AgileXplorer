@@ -21,7 +21,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 
 def generate_launch_description():
@@ -38,11 +38,12 @@ def generate_launch_description():
         default=os.path.join(
             get_package_share_directory('limo_bringup'),
             'maps'))
-    param_file_name = ''
-    if LaunchConfiguration('id') == 'limo1':
-        map_dir = os.path.join(map_dir, 'nav2_limo1.yaml')
-    else:
-        map_dir = os.path.join(map_dir, 'nav2_limo2.yaml')
+    
+    param_file_name = PythonExpression([
+        "'nav2_' + str(",
+        LaunchConfiguration('id'),
+        ") + '.yaml'"
+    ])
     param_dir = LaunchConfiguration(
         'params_file',
         default=os.path.join(

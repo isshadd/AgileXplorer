@@ -54,6 +54,14 @@ def generate_launch_description():
                 'pub_odom_tf': launch.substitutions.LaunchConfiguration('pub_odom_tf'),
                 'control_rate': launch.substitutions.LaunchConfiguration('control_rate'),
         }])
+    
+    static_tf_pub = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=['0', '0', '0', '0', '0', '0', 
+                [LaunchConfiguration('id'), '/map'], 
+                [LaunchConfiguration('id'), '/base_link']]
+    )
 
     return LaunchDescription([
         id_arg,
@@ -63,5 +71,6 @@ def generate_launch_description():
         odom_topic_arg,
         odom_tf_arg,
         sim_control_rate_arg,
-        limo_base_node
+        limo_base_node,
+        static_tf_pub,
     ])

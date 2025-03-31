@@ -132,6 +132,14 @@ class MissionNode(Node):
                 (robot_x - 1, robot_y + 1),
                 (robot_x - 1, robot_y),
                 (robot_x - 1, robot_y - 1), 
+                (robot_x, robot_y - 0.5),
+                (robot_x + 0.5, robot_y - 0.5),
+                (robot_x + 0.5, robot_y),
+                (robot_x + 0.5, robot_y + 0.5),
+                (robot_x, robot_y + 0.5), 
+                (robot_x - 0.5, robot_y + 0.5),
+                (robot_x - 0.5, robot_y),
+                (robot_x - 0.5, robot_y - 0.5), 
             ]
 
         def is_free(x, y):

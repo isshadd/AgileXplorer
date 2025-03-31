@@ -72,7 +72,7 @@ class MissionNode(Node):
 
         goal_msg = NavigateToPose.Goal()
         goal_pose = PoseStamped()
-        goal_pose.header.frame_id = "map" #self.map_frame
+        goal_pose.header.frame_id = self.map_frame
         goal_pose.header.stamp = self.get_clock().now().to_msg()
         goal_pose.pose.position.x = self.initial_pose.pose.position.x
         goal_pose.pose.position.y = self.initial_pose.pose.position.y
@@ -152,7 +152,7 @@ class MissionNode(Node):
         
         goal_msg = NavigateToPose.Goal()
         goal_pose = PoseStamped()
-        goal_pose.header.frame_id = "map" #self.map_frame
+        goal_pose.header.frame_id = self.map_frame
         goal_pose.pose.position.x = goal_x
         goal_pose.pose.position.y = goal_y
         goal_pose.pose.orientation.w = 1.0

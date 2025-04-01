@@ -74,8 +74,8 @@ class MissionNode(Node):
         goal_pose = PoseStamped()
         goal_pose.header.frame_id = self.map_frame
         goal_pose.header.stamp = self.get_clock().now().to_msg()
-        goal_pose.pose.position.x = self.initial_pose.pose.position.x
-        goal_pose.pose.position.y = self.initial_pose.pose.position.y
+        goal_pose.pose.position.x = self.initial_pose.pose.position.x -0.1
+        goal_pose.pose.position.y = self.initial_pose.pose.position.y -0.1
         goal_pose.pose.orientation.w = 1.0
         goal_msg.pose = goal_pose
 
@@ -85,6 +85,28 @@ class MissionNode(Node):
         # self.get_logger().info("Canceling current navigation goal")
         # self.current_goal_handle.cancel_goal_async()
         # self.current_goal_handle = None
+
+    def generate_candidates(robot_x, robot_y, robot_id):
+        # Distances at which to look for candidate points
+        radii = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+        
+        # Define angles in degrees for candidate ordering.
+        # For limo1, we want to prioritize left (90°) so list left-first angles.
+        # For limo2, prioritize right (-90°).
+        if robot_id == 'limo1':
+            angles = [90, 135, 180, 225, 270, 315, 360, 45]
+        else:  # For limo2, prioritize right side.
+            angles = [90, 45, 0, -45, -90, -135, -180, -225]
+        
+        candidates = []
+        # Loop through each radius and angle in the specified order.
+        for r in radii:
+            for angle in angles:
+                angle_rad = math.radians(angle)
+                x = robot_x + r * math.cos(angle_rad)
+                y = robot_y + r * math.sin(angle_rad)
+                candidates.append((x, y))
+        return candidates
 
     def explore_map(self):
         if self.map_data is None:
@@ -101,46 +123,8 @@ class MissionNode(Node):
         height = self.map_data.info.height
         robot_x = self.current_pose.pose.position.x
         robot_y = self.current_pose.pose.position.y
-        
-        candidates = []
-        if self.robot_id == 'limo1':
-            candidates = [
-                (robot_x, robot_y + 1),   
-                (robot_x + 1, robot_y + 1),
-                (robot_x + 1, robot_y),
-                (robot_x + 1, robot_y - 1),
-                (robot_x, robot_y - 1),
-                (robot_x - 1, robot_y - 1), 
-                (robot_x - 1, robot_y),
-                (robot_x - 1, robot_y + 1),
-                (robot_x, robot_y + 0.5),   
-                (robot_x + 0.5, robot_y + 0.5),
-                (robot_x + 0.5, robot_y),
-                (robot_x + 0.5, robot_y - 0.5),
-                (robot_x, robot_y - 0.5),
-                (robot_x - 0.5, robot_y - 0.5), 
-                (robot_x - 0.5, robot_y),
-                (robot_x - 0.5, robot_y + 0.5)
-            ]
-        else :
-            candidates = [
-                (robot_x, robot_y - 1),
-                (robot_x + 1, robot_y - 1),
-                (robot_x + 1, robot_y),
-                (robot_x + 1, robot_y + 1),
-                (robot_x, robot_y + 1), 
-                (robot_x - 1, robot_y + 1),
-                (robot_x - 1, robot_y),
-                (robot_x - 1, robot_y - 1), 
-                (robot_x, robot_y - 0.5),
-                (robot_x + 0.5, robot_y - 0.5),
-                (robot_x + 0.5, robot_y),
-                (robot_x + 0.5, robot_y + 0.5),
-                (robot_x, robot_y + 0.5), 
-                (robot_x - 0.5, robot_y + 0.5),
-                (robot_x - 0.5, robot_y),
-                (robot_x - 0.5, robot_y - 0.5), 
-            ]
+    
+        candidates = self.generate_candidates(robot_x, robot_y, self.robot_id)
 
         def is_free(x, y):
             mx = int((x - origin_x) / resolution)

@@ -12,7 +12,7 @@ amcl:
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
     do_beamskip: false
-    global_frame_id: "map"
+    global_frame_id: "limo1/map"
     lambda_short: 0.1
     laser_likelihood_max_dist: 2.0
     laser_max_range: 100.0
@@ -51,8 +51,8 @@ map_server:
   ros__parameters:
     use_sim_time: False
     yaml_filename: "limo.yaml"
-    topic_name: "map"
-    frame_id: "map"
+    topic_name: "limo1/map"
+    frame_id: "limo1/map"
     free_thresh: 0.196
 
 planner_server:

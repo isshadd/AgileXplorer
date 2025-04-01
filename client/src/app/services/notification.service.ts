@@ -30,4 +30,10 @@ export class NotificationService {
       duration: 3000
     });
   }
+
+  p2pStateChanged(message: string): void {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 3000
+    });
+  }
 }

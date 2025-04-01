@@ -15,10 +15,33 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
   private node: rclnodejs.Node;
   private subscribers: Map<string, any> = new Map();
 
+  private publishers: Map<string, any> = new Map();
+
   constructor(
     private readonly missionService: MissionService,
     private readonly logsService: LogsService,
   ) {}
+
+  /**
+   * Active ou désactive le mode P2P pour un robot spécifique
+   */
+  public publishP2PCommand(robotId: string, enable: boolean) {
+    const publisherId = `${robotId}_p2p_command`;
+    let publisher = this.publishers.get(publisherId);
+
+    if (!publisher) {
+      publisher = this.node.createPublisher(
+        'std_msgs/msg/Bool',
+        `/${robotId}/p2p_command`,
+      );
+      this.publishers.set(publisherId, publisher);
+    }
+
+    const message = new rclnodejs.std_msgs.msg.Bool();
+    message.data = enable;
+    publisher.publish(message);
+    this.logger.log(`P2P command sent to ${robotId}: ${enable}`);
+  }
 
   async onModuleInit() {
     try {

@@ -38,8 +38,8 @@ import { WebSocketService } from '../../services/websocket.service';
 export class DashboardComponent {
     showHistory = false;
     robotStates: { [key: string]: RobotState } = {
-        'limo1': { isMissionActive: false, isIdentified: false },
-        'limo2': { isMissionActive: false, isIdentified: false }
+        'limo1': { isMissionActive: false, isIdentified: false, isP2PActive: false },
+        'limo2': { isMissionActive: false, isIdentified: false, isP2PActive: false }
     };
 
     anyRobotInMission(): boolean {
@@ -112,6 +112,25 @@ export class DashboardComponent {
             if (result) {
                 this.robotService.returnToBase(robotId).subscribe(() => {
                     this.notificationService.returnToBase();
+                });
+            }
+        });
+    }
+
+    toggleP2P(robotId: string): void {
+        const newP2PState = !this.robotStates[robotId].isP2PActive;
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            width: '400px',
+            data: { message: `Voulez-vous ${newP2PState ? 'activer' : 'désactiver'} le mode P2P pour le robot ${robotId} ?` }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.robotService.toggleP2P(robotId, newP2PState).subscribe(() => {
+                    this.robotStates[robotId].isP2PActive = newP2PState;
+                    this.notificationService.p2pStateChanged(
+                        `Mode P2P ${newP2PState ? 'activé' : 'désactivé'} pour le robot ${robotId}`
+                    );
                 });
             }
         });

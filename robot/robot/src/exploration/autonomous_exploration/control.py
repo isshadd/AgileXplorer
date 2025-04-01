@@ -333,11 +333,9 @@ def localControl(scan):
 class navigationControl(Node):
     def __init__(self):
         super().__init__('Exploration')
-
-        #self.declare_parameter('robot_id', 'limo1')
-        self.robot_id = 'limo1' # self.get_parameter('robot_id').value
+        self.robot_id = 'limo1'
         
-        self.map_topic = f'/{self.robot_id}/map'
+        self.map_topic = f'{self.robot_id}/map'
         self.odom_topic = f'/{self.robot_id}/odom'
         self.scan_topic = f'/{self.robot_id}/scan'
         self.cmd_vel_topic = f'/{self.robot_id}/cmd_vel'

@@ -14,12 +14,15 @@ import heapq , math , random , yaml
 import scipy.interpolate as si
 import sys , threading , time
 import math
+from ament_index_python.packages import get_package_share_directory
 
 from pathlib import Path
 cwd = Path.cwd()
 print(cwd)
 
-with open("autonomous_exploration/config/params.yaml", 'r') as file:
+package_path = get_package_share_directory("autonomous_exploration")
+params_path = os.path.join(package_path, "config", "params.yaml")
+with open(params_path, 'r') as file: # take relative directory
     params = yaml.load(file, Loader=yaml.FullLoader)
 
 lookahead_distance = params["lookahead_distance"]

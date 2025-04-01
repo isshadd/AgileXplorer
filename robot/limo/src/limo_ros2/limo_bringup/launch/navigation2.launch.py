@@ -50,9 +50,9 @@ def generate_launch_description():
     nav2_launch_file_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
 
     rviz_config_dir = os.path.join(
-        get_package_share_directory('nav2_bringup'),
-        'rviz',
-        'nav2_default_view.rviz') #nav2_default_view # nav2_namespaced_view
+        get_package_share_directory('limo_bringup'),
+        'config_files',
+        'limo1.rviz') #nav2_default_view # nav2_namespaced_view
 
     return LaunchDescription([
         id_arg,

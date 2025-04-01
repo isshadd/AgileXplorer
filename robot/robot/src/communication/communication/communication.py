@@ -17,7 +17,8 @@ if "DISPLAY" not in environ:
 
 gi.require_version('AppIndicator3', '0.1')
 gi.require_version('Gtk', '3.0')
-from gi.repository import AppIndicator3, Gtk
+gi.require_version('GLib', '2.0')
+from gi.repository import AppIndicator3, Gtk, GLib
 
 class Icon:
     INITIAL = "dialog-information-symbolic"

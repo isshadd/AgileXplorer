@@ -37,8 +37,9 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
       this.publishers.set(publisherId, publisher);
     }
 
-    const message = new rclnodejs.std_msgs.msg.Bool();
-    message.data = enable;
+    const message = {
+      data: enable
+    };
     publisher.publish(message);
     this.logger.log(`P2P command sent to ${robotId}: ${enable}`);
   }

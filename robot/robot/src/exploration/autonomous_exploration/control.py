@@ -8,6 +8,7 @@ import heapq , math , random , yaml
 import scipy.interpolate as si
 import sys , threading , time
 from ament_index_python.packages import get_package_share_directory
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 import os
 
 package_path = get_package_share_directory("autonomous_exploration")
@@ -334,14 +335,26 @@ class navigationControl(Node):
     def __init__(self):
         super().__init__('Exploration')
         self.robot_id = 'limo1'
+
+        odom_qos = QoSProfile(
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=10
+        )
         
+        scan_qos = QoSProfile(
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=10
+        )
+
         self.map_topic = f'{self.robot_id}/map'
         self.odom_topic = f'/{self.robot_id}/odom'
         self.scan_topic = f'/{self.robot_id}/scan'
         self.cmd_vel_topic = f'/{self.robot_id}/cmd_vel'
         self.subscription = self.create_subscription(OccupancyGrid,self.map_topic ,self.map_callback,10)
-        self.subscription = self.create_subscription(Odometry,self.odom_topic,self.odom_callback,10)
-        self.subscription = self.create_subscription(LaserScan,self.scan_topic,self.scan_callback,10)
+        self.subscription = self.create_subscription(Odometry,self.odom_topic,self.odom_callback,odom_qos)
+        self.subscription = self.create_subscription(LaserScan,self.scan_topic,self.scan_callback,scan_qos)
         self.publisher = self.create_publisher(Twist, self.cmd_vel_topic, 10)
         self.kesif = True
         threading.Thread(target=self.exp).start() #Kesif fonksiyonunu thread olarak calistirir.

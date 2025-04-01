@@ -11,7 +11,7 @@ source /opt/ros/humble/setup.bash
 source install/setup.bash
 colcon build
 source install/setup.bash
-ros2 run autonomous_exploration control id:=limo1
+ros2 run autonomous_exploration control
 
 # [BILGI] HEDEFE ULASILDI
 # [BILGI] YENI HEDEF BELİRLENDI

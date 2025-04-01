@@ -7,9 +7,12 @@ import numpy as np
 import heapq , math , random , yaml
 import scipy.interpolate as si
 import sys , threading , time
+from ament_index_python.packages import get_package_share_directory
+import os
 
-
-with open("src/autonomous_exploration/config/params.yaml", 'r') as file:
+package_path = get_package_share_directory("autonomous_exploration")
+params_path = os.path.join(package_path, "config", "params.yaml")
+with open(params_path, 'r') as file: # take relative directory
     params = yaml.load(file, Loader=yaml.FullLoader)
 
 lookahead_distance = params["lookahead_distance"]
@@ -331,16 +334,16 @@ class navigationControl(Node):
     def __init__(self):
         super().__init__('Exploration')
 
-        self.declare_parameter('robot_id', 'limo1')
-        self.robot_id = self.get_parameter('robot_id').value
+        #self.declare_parameter('robot_id', 'limo1')
+        self.robot_id = 'limo1' # self.get_parameter('robot_id').value
         
-        self.map_topic = f'{self.robot_id}/map'
-        self.odom_topic = f'{self.robot_id}/odom'
-        self.scan_topic = f'{self.robot_id}/scan'
-        self.cmd_vel_topic = f'{self.robot_id}/cmd_vel'
+        self.map_topic = f'/{self.robot_id}/map'
+        self.odom_topic = f'/{self.robot_id}/odom'
+        self.scan_topic = f'/{self.robot_id}/scan'
+        self.cmd_vel_topic = f'/{self.robot_id}/cmd_vel'
         self.subscription = self.create_subscription(OccupancyGrid,self.map_topic ,self.map_callback,10)
         self.subscription = self.create_subscription(Odometry,self.odom_topic,self.odom_callback,10)
-        self.subscription = self.create_subscription(LaserScan,self.scan_data,self.scan_callback,10)
+        self.subscription = self.create_subscription(LaserScan,self.scan_topic,self.scan_callback,10)
         self.publisher = self.create_publisher(Twist, self.cmd_vel_topic, 10)
         self.kesif = True
         threading.Thread(target=self.exp).start() #Kesif fonksiyonunu thread olarak calistirir.

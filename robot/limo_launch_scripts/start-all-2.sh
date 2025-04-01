@@ -14,7 +14,7 @@ source install/setup.bash
 
 ros2 launch limo_bringup limo_start.launch.py id:=limo2 pub_odom_tf:=false & sleep 10
 
-ros2 launch limo_bringup cartographer.launch.py id:=limo2 & sleep 5
+ros2 launch limo_bringup cartographer2.launch.py id:=limo2 & sleep 5
 
 ros2 launch limo_bringup navigation22.launch.py id:=limo2
 

@@ -125,22 +125,27 @@ class CommunicationController(Node):
 
     def p2p_command_callback(self, msg):
         """Gestion de l'activation/désactivation du mode P2P"""
+        self.get_logger().debug(f"Reçu commande P2P: {msg.data}")
         if msg.data and self.is_relay:
             self.get_logger().warn("Ce robot est déjà un relais, impossible d'activer le mode P2P")
             return
 
         self.p2p_active = msg.data
+        self.get_logger().debug(f"État P2P mis à jour: {self.p2p_active}")
+        
         if self.p2p_active:
             self.get_logger().info("Mode P2P activé")
             self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
             self.indicator.set_icon(Icon.INITIAL)
             # Publier le statut P2P
+            self.get_logger().debug("Publication du statut P2P (actif)")
             self.publish_p2p_status()
         else:
             self.get_logger().info("Mode P2P désactivé")
             self.indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
             self.is_relay = False
             self.other_robot_odom = None
+            self.get_logger().debug("Publication du statut P2P (inactif)")
             self.publish_p2p_status()
 
     def p2p_status_callback(self, msg):
@@ -184,12 +189,15 @@ class CommunicationController(Node):
     def publish_p2p_status(self):
         """Publie le statut P2P actuel"""
         try:
+            self.get_logger().debug("Préparation du message de statut P2P")
             status_msg = String()
             status_msg.data = json.dumps({
                 "robot_id": self.robot_id,
                 "p2p_active": self.p2p_active
             })
+            self.get_logger().debug(f"Publication du message de statut: {status_msg.data}")
             self.p2p_status_pub.publish(status_msg)
+            self.get_logger().debug("Message de statut P2P publié")
         except Exception as e:
             self.get_logger().error(f"Erreur lors de la publication du statut P2P: {str(e)}")
 

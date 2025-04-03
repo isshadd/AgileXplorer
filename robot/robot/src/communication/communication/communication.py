@@ -39,9 +39,10 @@ class CommunicationController(Node):
 
         # État P2P
         self.p2p_active = False
-        self.initial_position = None
-        self.current_distance = None
-        self.other_distance = None
+        self.is_relay = False
+        self.last_p2p_message_time = None
+        self.p2p_timeout = 5.0  # 5 secondes de timeout
+        self.other_robot_odom = None
 
         # Topics pour la communication des commandes
         messages_topic = f'/{self.robot_id}/messages'
@@ -78,16 +79,32 @@ class CommunicationController(Node):
             10
         )
 
-        # Communication P2P directe
-        p2p_distance_topic = f'/{self.robot_id}/p2p_distance'
-        self.p2p_distance_pub = self.create_publisher(String, p2p_distance_topic, 10)
-        other_p2p_distance_topic = f'/{self.other_robot_id}/p2p_distance'
-        self.p2p_distance_sub = self.create_subscription(
+        # Topics pour le relais P2P
+        p2p_odom_relay_topic = f'/{self.robot_id}/p2p_odom_relay'
+        self.p2p_odom_pub = self.create_publisher(String, p2p_odom_relay_topic, 10)
+        
+        other_p2p_odom_topic = f'/{self.other_robot_id}/p2p_odom_relay'
+        self.p2p_odom_sub = self.create_subscription(
             String,
-            other_p2p_distance_topic,
-            self.p2p_distance_callback,
+            other_p2p_odom_topic,
+            self.p2p_odom_callback,
             10
         )
+
+        # Topic pour vérifier si l'autre robot est en mode P2P
+        p2p_status_topic = f'/{self.robot_id}/p2p_status'
+        self.p2p_status_pub = self.create_publisher(String, p2p_status_topic, 10)
+        
+        other_p2p_status_topic = f'/{self.other_robot_id}/p2p_status'
+        self.p2p_status_sub = self.create_subscription(
+            String,
+            other_p2p_status_topic,
+            self.p2p_status_callback,
+            10
+        )
+
+        # Timer pour vérifier le timeout P2P
+        self.create_timer(1.0, self.check_p2p_timeout)
 
         # Initialisation de l'indicateur GTK
         self.indicator = AppIndicator3.Indicator.new(
@@ -108,45 +125,77 @@ class CommunicationController(Node):
 
     def p2p_command_callback(self, msg):
         """Gestion de l'activation/désactivation du mode P2P"""
+        if msg.data and self.is_relay:
+            self.get_logger().warn("Ce robot est déjà un relais, impossible d'activer le mode P2P")
+            return
+
         self.p2p_active = msg.data
         if self.p2p_active:
             self.get_logger().info("Mode P2P activé")
             self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
             self.indicator.set_icon(Icon.INITIAL)
+            # Publier le statut P2P
+            self.publish_p2p_status()
         else:
             self.get_logger().info("Mode P2P désactivé")
             self.indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
-            self.initial_position = None
-            self.current_distance = None
-            self.other_distance = None
+            self.is_relay = False
+            self.other_robot_odom = None
+            self.publish_p2p_status()
 
-    def p2p_distance_callback(self, msg):
-        """Réception de la distance de l'autre robot"""
-        if not self.p2p_active:
-            return
-        
+    def p2p_status_callback(self, msg):
+        """Réception du statut P2P de l'autre robot"""
         try:
             data = json.loads(msg.data)
-            self.other_distance = data['distance']
-            self.compare_distances()
+            if data['p2p_active']:
+                self.is_relay = True
+                self.get_logger().info("Devenu relais pour l'autre robot")
+            else:
+                self.is_relay = False
+                self.other_robot_odom = None
         except Exception as e:
-            self.get_logger().error(f"Erreur dans le traitement de la distance P2P: {str(e)}")
+            self.get_logger().error(f"Erreur dans le traitement du statut P2P: {str(e)}")
 
-    def compare_distances(self):
-        """Compare les distances et met à jour l'icône"""
-        if self.current_distance is None or self.other_distance is None:
-            return
+    def p2p_odom_callback(self, msg):
+        """Réception des données d'odométrie de l'autre robot"""
+        try:
+            self.last_p2p_message_time = self.get_clock().now()
+            data = json.loads(msg.data)
+            self.other_robot_odom = data
+            if self.is_relay:
+                # Publier les données au serveur
+                self.position_publisher.publish(msg)
+        except Exception as e:
+            self.get_logger().error(f"Erreur dans le traitement de l'odom P2P: {str(e)}")
 
-        if self.current_distance > self.other_distance:
-            self.indicator.set_icon(Icon.FAR)
-            self.get_logger().info("Ce robot est le plus éloigné")
-        else:
-            self.indicator.set_icon(Icon.NEAR)
-            self.get_logger().info("Ce robot est le plus proche")
+    def check_p2p_timeout(self):
+        """Vérifie si la communication P2P est active"""
+        if self.p2p_active or self.is_relay:
+            if self.last_p2p_message_time is not None:
+                current_time = self.get_clock().now()
+                time_diff = (current_time - self.last_p2p_message_time).nanoseconds / 1e9
+                if time_diff > self.p2p_timeout:
+                    self.get_logger().warn("Timeout P2P détecté!")
+                    self.p2p_active = False
+                    self.is_relay = False
+                    self.other_robot_odom = None
+                    self.publish_p2p_status()
+
+    def publish_p2p_status(self):
+        """Publie le statut P2P actuel"""
+        try:
+            status_msg = String()
+            status_msg.data = json.dumps({
+                "robot_id": self.robot_id,
+                "p2p_active": self.p2p_active
+            })
+            self.p2p_status_pub.publish(status_msg)
+        except Exception as e:
+            self.get_logger().error(f"Erreur lors de la publication du statut P2P: {str(e)}")
 
     def odom_callback(self, msg):
         try:
-            # Transmission des données brutes d'odométrie
+            # Préparation des données d'odométrie
             odom_data = {
                 "robot_id": self.robot_id,
                 "odom": {
@@ -159,27 +208,22 @@ class CommunicationController(Node):
             
             position_msg = String()
             position_msg.data = json.dumps(odom_data)
-            self.position_publisher.publish(position_msg)
 
-            # Gestion P2P
+            # En mode P2P, envoyer uniquement à l'autre robot
             if self.p2p_active:
-                # Sauvegarde de la position initiale si nécessaire
-                if self.initial_position is None:
-                    self.initial_position = msg.pose.pose
-
-                # Calcul de la distance depuis le point initial
-                current_pose = msg.pose.pose
-                dx = current_pose.position.x - self.initial_position.position.x
-                dy = current_pose.position.y - self.initial_position.position.y
-                self.current_distance = math.sqrt(dx**2 + dy**2)
-
-                # Envoi de la distance aux autres robots
-                distance_msg = String()
-                distance_msg.data = json.dumps({
-                    "robot_id": self.robot_id,
-                    "distance": self.current_distance
-                })
-                self.p2p_distance_pub.publish(distance_msg)
+                self.p2p_odom_pub.publish(position_msg)
+            # Si relais ou mode normal, envoyer au serveur
+            elif self.is_relay:
+                # Envoyer ses propres données au serveur
+                self.position_publisher.publish(position_msg)
+                # Si on a des données de l'autre robot, les envoyer aussi
+                if self.other_robot_odom is not None:
+                    other_msg = String()
+                    other_msg.data = json.dumps(self.other_robot_odom)
+                    self.position_publisher.publish(other_msg)
+            else:
+                # Mode normal : envoyer directement au serveur
+                self.position_publisher.publish(position_msg)
                 
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")

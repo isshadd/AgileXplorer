@@ -273,6 +273,7 @@ def pathLength(path):
 
 def costmap(data,width,height,resolution):
     data = np.array(data).reshape(height,width)
+    # data = data * resolution
     wall = np.where(data == 100)
     for i in range(-expansion_size,expansion_size+1):
         for j in range(-expansion_size,expansion_size+1):
@@ -283,14 +284,20 @@ def costmap(data,width,height,resolution):
             x = np.clip(x,0,height-1)
             y = np.clip(y,0,width-1)
             data[x,y] = 100
-    data = data*resolution
+    #data = data*resolution
+    data[data >= 100] = 1
+    data[data < 0] = -1
+    data[data == 0] = 0
     return data
 
 def exploration(data,width,height,resolution,column,row,originX,originY):
         global pathGlobal
         data = costmap(data,width,height,resolution)
         data[row][column] = 0
-        data[data > 5] = 1
+        # data[data > 5] = 1
+        data[data >= 1] = 1  # Occupied
+        data[data < 0] = -1    # Unknown
+        data[data == 0] = 0    # Free
         data = frontierB(data)
         data,groups = assign_groups(data)
         groups = fGroups(groups)
@@ -407,6 +414,10 @@ class MissionNode(Node):
         column = int((self.x - self.originX) / self.resolution)
         row = int((self.y - self.originY) / self.resolution)
 
+        if not (0 <= row < self.height and 0 <= column < self.width):
+            self.get_logger().warn(f"Pose out of map bounds (row={row}, col={column})")
+            return
+
         exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
 
         if len(pathGlobal) == 0:
@@ -506,6 +517,9 @@ class MissionNode(Node):
             time.sleep(0.1)
         twist.angular.z = 0.0
         self.cmd_publisher.publish(twist)
+
+    def is_stock(self):
+        self.get_logger().info("The robot is stock")
 
 def main(args=None):
     rclpy.init(args=args)

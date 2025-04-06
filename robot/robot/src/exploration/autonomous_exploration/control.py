@@ -177,6 +177,9 @@ class MissionNode(Node):
         goal_msg.pose = goal_pose
         send_goal_future = self.nav_client.send_goal_async(goal_msg)
 
+    def is_stock():
+        print("Robot is stock")
+
 def main(args=None):
     rclpy.init(args=args)
     navigation_control = MissionNode()

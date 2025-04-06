@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import find_packages,setup
 
 package_name = 'autonomous_exploration'
 
@@ -21,7 +21,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'control = autonomous_exploration.control:main'
+            'mission_node = autonomous_exploration.control:main'
         ],
     },
 )

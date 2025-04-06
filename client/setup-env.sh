@@ -102,7 +102,7 @@ ng_version=$(ng version | grep "@angular/cli")
 info "Angular CLI version: $ng_version"
 
 # Navigation vers le répertoire du projet
-PROJECT_DIR="$HOME/INF3995-102/client"
+PROJECT_DIR="$HOME/Desktop/INF3995-102/client"
 cd "$PROJECT_DIR" || error "Impossible de trouver le répertoire du projet"
 
 # Nettoyage complet

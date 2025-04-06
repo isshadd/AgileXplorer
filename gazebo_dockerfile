@@ -1,0 +1,59 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y \
+      lsb-release \
+      wget \
+      curl \
+      gnupg \
+      python3-pip \
+      git \
+      software-properties-common \
+      mesa-utils \
+      libglu1-mesa-dev \
+      freeglut3-dev \
+      mesa-common-dev
+
+# Install gazebo
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list && \
+    apt-get update && apt-get install -y ignition-fortress
+
+# Install ros2
+RUN pip3 install vcstool colcon-common-extensions
+
+RUN add-apt-repository universe && \
+    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" > /etc/apt/sources.list.d/ros2.list && \
+    apt-get update && apt-get install -y ros-humble-desktop && \
+    pip3 install rosdep && \
+    rosdep init && rosdep update && \
+    echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc && \
+    echo "export GZ_VERSION=fortress" >> /root/.bashrc
+
+# Install other necessities
+RUN cp -r /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs /usr/local/include/
+
+RUN apt-get install -y \
+      ros-humble-slam-toolbox \
+      ros-humble-navigation2 \
+      ros-humble-nav2-bringup
+
+# Create a workspace directory and set it as working directory
+WORKDIR /gazebo_workspace
+
+# Copy your gazebo package folder (adjust the folder name as needed)
+COPY robot/gazebo/ ./gazebo_workspace
+
+# Copy the launch script into the workspace.
+# The script should be named "launch_script.sh" and include your provided commands.
+COPY robot/gazebo_launch_script/start-all.sh ./gazebo_workspace
+
+# Ensure the launch script is executable
+RUN chmod +x gazebo_workspace/start-all.sh
+
+# Default command launches the script
+CMD ["./start-all.sh"]
+

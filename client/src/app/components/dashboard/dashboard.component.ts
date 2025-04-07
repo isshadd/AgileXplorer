@@ -15,6 +15,14 @@ import { MapComponent } from '../map/map.component';
 import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
 import { MissionLogsComponent } from '../mission-logs/mission-logs.component';
 import { WebSocketService } from '../../services/websocket.service';
+import { Subscription } from 'rxjs';
+
+interface RobotPosition {
+    x: number;
+    y: number;
+    timestamp?: number;
+}
+  
 
 @Component({
     selector: 'app-dashboard',
@@ -36,6 +44,8 @@ import { WebSocketService } from '../../services/websocket.service';
     styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
+    robots: string[] = [];
+    private subscription: Subscription = new Subscription();
     showHistory = false;
     robotStates: { [key: string]: RobotState } = {
         'limo1': { isMissionActive: false, isIdentified: false },
@@ -65,6 +75,16 @@ export class DashboardComponent {
               this.robotStates[data.robotId].battery_level = data.battery_level;
             }
           });
+    }
+
+    ngOnInit(): void {
+        this.subscription.add(
+            this.websocketService.onRobotPosition().subscribe((data: { robotId: string; position: RobotPosition }) => {
+              if (data.robotId && data.position && typeof data.position.x === 'number' && typeof data.position.y === 'number') {
+                if (!this.robots.includes(data.robotId)) this.robots.push(data.robotId);
+              }
+            })
+          );
     }
 
     get isController(): boolean {
@@ -115,5 +135,9 @@ export class DashboardComponent {
                 });
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 }

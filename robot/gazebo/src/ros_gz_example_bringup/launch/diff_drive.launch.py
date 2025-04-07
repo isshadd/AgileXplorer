@@ -8,38 +8,33 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    # Define robot namespaces
+    robot_count = 1
     robot_names = ['limo1', 'limo2'] 
 
-    # Setup paths
     pkg_project_bringup = get_package_share_directory('ros_gz_example_bringup')
     pkg_project_gazebo = get_package_share_directory('ros_gz_example_gazebo')
     pkg_project_description = get_package_share_directory('ros_gz_example_description')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
-    # Generate random world (same as before)
+
     random_generator_script = os.path.join(pkg_project_bringup, 'launch', 'random_generator.py')
-    subprocess.run(["python3", random_generator_script], check=True)
+    subprocess.run(["python3", random_generator_script, str(robot_count)], check=True)
     random_world_path = os.path.join(pkg_project_bringup, 'launch', 'random_world.sdf')
 
-    # Launch Gazebo
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
         launch_arguments={'gz_args': random_world_path}.items(),
     )
 
-    # Create nodes for each robot
     nodes = []
     for i, (robot_name, model_name) in enumerate(zip(robot_names, robot_names)):
-        # Robot State Publisher (namespaced)
         robot_sdf = f'limo{i+1}.sdf'
         diff_drive_dir = f'limo_diff_drive{i+1}'
         sdf_file = os.path.join(pkg_project_description, 'models', diff_drive_dir, robot_sdf)
         with open(sdf_file, 'r') as f:
             robot_desc = f.read()
 
-        # Parameter Bridge 
         bridge_config = f'ros_gz_example_bridge{i+1}.yaml'
         bridge = Node(
             package="ros_gz_bridge",

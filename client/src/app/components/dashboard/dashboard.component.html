@@ -13,7 +13,7 @@
       </div>
       <app-mission-logs class="mission-logs-container"></app-mission-logs>
       <div class="robots-container">
-        <mat-card *ngFor="let robotId of ['limo1', 'limo2']"
+        <mat-card *ngFor="let robotId of robots"
                   class="robot-card"
                   [class.mission-active]="robotStates[robotId].isMissionActive"
                   [class.identified]="!robotStates[robotId].isMissionActive && robotStates[robotId].isIdentified">

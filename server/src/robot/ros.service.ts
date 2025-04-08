@@ -30,9 +30,15 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
     let publisher = this.publishers.get(publisherId);
 
     if (!publisher) {
+      const qos = new rclnodejs.QoS();
+      qos.reliability = rclnodejs.QoS.ReliabilityPolicy.RELIABLE;
+      qos.durability = rclnodejs.QoS.DurabilityPolicy.TRANSIENT_LOCAL;
+      qos.depth = 1;
+
       publisher = this.node.createPublisher(
         'std_msgs/msg/Bool',
         `/${robotId}/p2p_command`,
+        { qos: qos }
       );
       this.publishers.set(publisherId, publisher);
     }
@@ -40,7 +46,13 @@ export class RosService implements OnModuleInit, OnModuleDestroy {
     const message = {
       data: enable
     };
-    publisher.publish(message);
+
+    // Publier plusieurs fois pour assurer la réception
+    for (let i = 0; i < 3; i++) {
+      publisher.publish(message);
+      this.logger.debug(`P2P command attempt ${i + 1} sent to ${robotId}: ${enable}`);
+    }
+
     this.logger.log(`P2P command sent to ${robotId}: ${enable}`);
   }
 

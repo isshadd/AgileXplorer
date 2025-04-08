@@ -40,8 +40,6 @@ class CommunicationController(Node):
         # État P2P
         self.p2p_active = False
         self.is_relay = False
-        self.last_p2p_message_time = None
-        self.p2p_timeout = 5.0  # 5 secondes de timeout
         self.other_robot_odom = None
 
         # Topics pour la communication des commandes
@@ -71,12 +69,19 @@ class CommunicationController(Node):
         self.position_publisher = self.create_publisher(String, '/robot_odom', 10)
 
         # Topics P2P
+        # Configuration du QoS pour les commandes P2P
+        p2p_qos = QoSProfile(
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            durability=QoSReliabilityPolicy.TRANSIENT_LOCAL,
+            depth=1
+        )
+
         p2p_command_topic = f'/{self.robot_id}/p2p_command'
         self.p2p_command_sub = self.create_subscription(
             Bool,
             p2p_command_topic,
             self.p2p_command_callback,
-            10
+            qos_profile=p2p_qos
         )
 
         # Topics pour le relais P2P
@@ -102,9 +107,6 @@ class CommunicationController(Node):
             self.p2p_status_callback,
             10
         )
-
-        # Timer pour vérifier le timeout P2P
-        self.create_timer(1.0, self.check_p2p_timeout)
 
         # Initialisation de l'indicateur GTK
         self.indicator = AppIndicator3.Indicator.new(
@@ -173,7 +175,6 @@ class CommunicationController(Node):
     def p2p_odom_callback(self, msg):
         """Réception des données d'odométrie de l'autre robot"""
         try:
-            self.last_p2p_message_time = self.get_clock().now()
             data = json.loads(msg.data)
             self.other_robot_odom = data
             if self.is_relay:
@@ -181,19 +182,6 @@ class CommunicationController(Node):
                 self.position_publisher.publish(msg)
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement de l'odom P2P: {str(e)}")
-
-    def check_p2p_timeout(self):
-        """Vérifie si la communication P2P est active"""
-        if self.p2p_active or self.is_relay:
-            if self.last_p2p_message_time is not None:
-                current_time = self.get_clock().now()
-                time_diff = (current_time - self.last_p2p_message_time).nanoseconds / 1e9
-                if time_diff > self.p2p_timeout:
-                    self.get_logger().warn("Timeout P2P détecté!")
-                    self.p2p_active = False
-                    self.is_relay = False
-                    self.other_robot_odom = None
-                    self.publish_p2p_status()
 
     def publish_p2p_status(self):
         """Publie le statut P2P actuel"""

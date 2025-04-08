@@ -407,6 +407,51 @@ class MissionNode(Node):
         column = int((self.x - self.originX) / self.resolution)
         row = int((self.y - self.originY) / self.resolution)
 
+        resolution = self.map_data.info.resolution
+        origin_x = self.map_data.info.origin.position.x
+        origin_y = self.map_data.info.origin.position.y
+        width = self.map_data.info.width
+        height = self.map_data.info.height
+        robot_x = self.current_pose.pose.position.x
+        robot_y = self.current_pose.pose.position.y
+
+        # if self.robot_id == 'limo1':
+        #     candidates = [
+        #         (robot_x, robot_y + 1),   
+        #         (robot_x + 1, robot_y + 1),
+        #         (robot_x + 1, robot_y),
+        #         (robot_x + 1, robot_y - 1),
+        #         (robot_x, robot_y - 1),
+        #         (robot_x - 1, robot_y - 1), 
+        #         (robot_x - 1, robot_y),
+        #         (robot_x - 1, robot_y + 1)
+        #     ]
+        # else :
+        #     candidates = [
+        #         (robot_x, robot_y - 1),
+        #         (robot_x + 1, robot_y - 1),
+        #         (robot_x + 1, robot_y),
+        #         (robot_x + 1, robot_y + 1),
+        #         (robot_x, robot_y + 1), 
+        #         (robot_x - 1, robot_y + 1),
+        #         (robot_x - 1, robot_y),
+        #         (robot_x - 1, robot_y - 1), 
+        #     ]
+
+        # def is_free(x, y):
+        #     mx = int((x - origin_x) / resolution)
+        #     my = int((y - origin_y) / resolution)
+        #     if 0 <= mx < width and 0 <= my < height:
+        #         index = my * width + mx
+        #         return self.map_data.data[index] <= 20  # avant 0, mais maintenant <= 20
+        #     return False
+        # free_candidates = [c for c in candidates if is_free(*c)]
+        # if not free_candidates:
+        #     self.get_logger().warn("No free candidate points found, remove obstacles!")
+        #     return
+        # goal_x, goal_y = free_candidates[0]
+
+
         exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
 
         if len(pathGlobal) == 0:

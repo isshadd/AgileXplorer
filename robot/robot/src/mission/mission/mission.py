@@ -9,7 +9,7 @@ from nav_msgs.msg import OccupancyGrid, Odometry  # Updated import
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from nav2_msgs.action import NavigateToPose
 from std_msgs.msg import Empty
-
+import subprocess
 import rclpy
 import os
 from rclpy.node import Node
@@ -381,6 +381,9 @@ class MissionNode(Node):
             cancel_future.add_done_callback(self.cancel_done_callback)
 
     def end_callback(self, msg):
+
+        self.play_sound("return")
+
         self.mission_active = False
         self.get_logger().info(f"Ending mission, returning to: x={self.initial_pose.pose.position.x:.2f}, y={self.initial_pose.pose.position.y :.2f}")
 
@@ -554,6 +557,14 @@ class MissionNode(Node):
 
     def is_stock(self):
         self.get_logger().info("The robot is stock")
+
+    def play_sound(self, sound_id):
+        sound_dir = '/home/equipe102/Desktop/INF3995-102/robot/common'
+        sound_file = f'{sound_dir}/{sound_id}.mp3'
+        if os.path.exists(sound_file):
+            subprocess.Popen(['aplay', sound_file])
+        else:
+            self.get_logger().error(f"Fichier son introuvable: {sound_file}")
 
 def main(args=None):
     rclpy.init(args=args)

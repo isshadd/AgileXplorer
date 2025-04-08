@@ -290,7 +290,7 @@ def exploration(data,width,height,resolution,column,row,originX,originY):
         global pathGlobal
         data = costmap(data,width,height,resolution)
         data[row][column] = 0
-        data[data > 5] = 1
+        data[data > 30] = 1 # changé depuis 5
         data = frontierB(data)
         data,groups = assign_groups(data)
         groups = fGroups(groups)

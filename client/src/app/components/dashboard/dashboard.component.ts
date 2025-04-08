@@ -9,6 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
 import { MissionHistoryComponent } from '../mission-history/mission-history.component';
 import { MapComponent } from '../map/map.component';
@@ -119,6 +120,14 @@ export class DashboardComponent {
         this.robotService.identify(robotId).subscribe(() => {
             this.robotStates[robotId].isIdentified = true;
             this.notificationService.identifySignal();
+        });
+    }
+    
+    openHelpDialog(): void {
+        this.dialog.open(HelpDialogComponent, {
+            width: '800px',
+            maxWidth: '90vw',
+            maxHeight: '80vh'
         });
     }
 

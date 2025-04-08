@@ -41,6 +41,7 @@ export class DashboardComponent {
         'limo1': { isMissionActive: false, isIdentified: false },
         'limo2': { isMissionActive: false, isIdentified: false }
     };
+    private autoReturnTriggered = new Set<string>();
 
     anyRobotInMission(): boolean {
         return Object.values(this.robotStates).some(state => state.isMissionActive);
@@ -54,6 +55,27 @@ export class DashboardComponent {
         this.showHistory = !this.showHistory;
     }
 
+    private checkBatteryAndAutoReturn(robotId: string, batteryLevel: number): void {
+        const robotState = this.robotStates[robotId];
+        
+        if (!robotState || batteryLevel === undefined) return;
+
+        if (batteryLevel > 30) {
+            this.autoReturnTriggered.delete(robotId);
+            return;
+        }
+
+        if (robotState.isMissionActive &&
+            batteryLevel >= 1 &&
+            batteryLevel <= 30 &&
+            !this.autoReturnTriggered.has(robotId)) {
+            
+            this.notificationService.warning(`Robot ${robotId}: Niveau de batterie bas (${batteryLevel}%). Retour automatique à la base.`);
+            this.returnToBase(robotId, true);
+            this.autoReturnTriggered.add(robotId);
+        }
+    }
+
     constructor(
         private robotService: RobotService,
         private notificationService: NotificationService,
@@ -62,9 +84,10 @@ export class DashboardComponent {
     ) {
         this.websocketService.onBatteryData().subscribe((data: { robotId: string, battery_level: number }) => {
             if (this.robotStates[data.robotId]) {
-              this.robotStates[data.robotId].battery_level = data.battery_level;
+                this.robotStates[data.robotId].battery_level = data.battery_level;
+                this.checkBatteryAndAutoReturn(data.robotId, data.battery_level);
             }
-          });
+        });
     }
 
     get isController(): boolean {
@@ -102,18 +125,26 @@ export class DashboardComponent {
         });
     }
 
-    returnToBase(robotId: string): void {
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            width: '400px',
-            data: { message: `Êtes-vous sûr de vouloir faire retourner le robot ${robotId} à sa base ?` }
-        });
+    returnToBase(robotId: string, skipConfirmation: boolean = false): void {
+        const executeReturn = () => {
+            this.robotService.returnToBase(robotId).subscribe(() => {
+                this.notificationService.returnToBase();
+            });
+        };
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.robotService.returnToBase(robotId).subscribe(() => {
-                    this.notificationService.returnToBase();
-                });
-            }
-        });
+        if (skipConfirmation) {
+            executeReturn();
+        } else {
+            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+                width: '400px',
+                data: { message: `Êtes-vous sûr de vouloir faire retourner le robot ${robotId} à sa base ?` }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    executeReturn();
+                }
+            });
+        }
     }
 }

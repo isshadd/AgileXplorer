@@ -152,12 +152,21 @@ class CommunicationController(Node):
         """Réception du statut P2P de l'autre robot"""
         try:
             data = json.loads(msg.data)
+            
+            # Si l'autre robot active P2P
             if data['p2p_active']:
-                self.is_relay = True
-                self.get_logger().info("Devenu relais pour l'autre robot")
-            else:
-                self.is_relay = False
-                self.other_robot_odom = None
+                if not self.p2p_active:  # Seulement si on n'est pas déjà en mode P2P
+                    self.is_relay = True
+                    self.get_logger().info("Devenu relais pour l'autre robot")
+                    self.indicator.set_icon(Icon.NEAR)
+            else:  # Si l'autre robot désactive P2P
+                if self.is_relay:  # Si on était en mode relais
+                    self.is_relay = False
+                    self.other_robot_odom = None
+                    self.get_logger().info("Mode relais désactivé")
+                    self.indicator.set_icon(Icon.INITIAL)
+                    self.indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
+            
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement du statut P2P: {str(e)}")
 
@@ -217,20 +226,25 @@ class CommunicationController(Node):
             position_msg = String()
             position_msg.data = json.dumps(odom_data)
 
-            # En mode P2P, envoyer uniquement à l'autre robot
+            # Logique de publication selon le mode
             if self.p2p_active:
+                # En mode P2P, envoyer uniquement à l'autre robot
+                self.get_logger().debug(f"Mode P2P: envoi des données à l'autre robot")
                 self.p2p_odom_pub.publish(position_msg)
-            # Si relais ou mode normal, envoyer au serveur
             elif self.is_relay:
-                # Envoyer ses propres données au serveur
+                # En mode relais :
+                self.get_logger().debug(f"Mode relais: envoi des données au serveur")
+                # 1. Envoyer ses propres données
                 self.position_publisher.publish(position_msg)
-                # Si on a des données de l'autre robot, les envoyer aussi
+                # 2. Relayer les données de l'autre robot si disponibles
                 if self.other_robot_odom is not None:
+                    self.get_logger().debug(f"Mode relais: relai des données de l'autre robot")
                     other_msg = String()
                     other_msg.data = json.dumps(self.other_robot_odom)
                     self.position_publisher.publish(other_msg)
             else:
                 # Mode normal : envoyer directement au serveur
+                self.get_logger().debug(f"Mode normal: envoi des données au serveur")
                 self.position_publisher.publish(position_msg)
                 
         except Exception as e:

@@ -12,33 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-# 1 = trop de remapping
-# 2 = [behavior_server-5] [WARN] [1742847042.249186297] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
-# 2 = local_costmap est blanche
-
-#envoyer manuellement à nav2 = 
-# ros2 topic pub /limo1/goal_pose geometry_msgs/msg/PoseStamped "{
-#   header: {
-#     frame_id: 'limo1/map'
-#   },
-#   pose: {
-#     position: {x: 0, y: -1.3, z: 0.0},
-#     orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
-#   }
-# }" --once
-
-# envoyer manuellement à nav2 = 
-#  ros2 topic pub limo1/goal_pose geometry_msgs/msg/PoseStamped "{
-#    header: {
-#      frame_id: 'map'
-#    },
-#    pose: {
-#      position: {x: 0.5, y: 0.0, z: 0.0},
-#      orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
-#    }
-#  }" --once
-
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -54,7 +27,6 @@ from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
-    # Get the launch directory
     pkg_share = get_package_share_directory('ros_gz_example_bringup')
 
     namespace = LaunchConfiguration('namespace')
@@ -67,6 +39,11 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
 
+    params_file = PythonExpression([
+        '"', os.path.join(pkg_share, 'config', 'nav2_config'), '" + ',
+        '("2" if "', LaunchConfiguration('namespace'), '" == "limo2" else "1") + ".yaml"'
+    ])
+
     lifecycle_nodes = ['controller_server',
                        'smoother_server',
                        'planner_server',
@@ -75,8 +52,7 @@ def generate_launch_description():
                        'waypoint_follower',
                        'velocity_smoother']
 
-    # Remap global topics to namespace
-    remappings = [] # [('tf', '/tf'), ('tf_static', '/tf_static')] # TODO : quoi faire avec lui
+    remappings = []
 
     param_substitutions = {
         'use_sim_time': 'true',
@@ -103,10 +79,10 @@ def generate_launch_description():
         default_value='true',
         description='Use simulation (Gazebo) clock if true')
 
-    declare_params_file_cmd = DeclareLaunchArgument(
-        'params_file',
-        default_value=os.path.join(pkg_share, 'config', 'nav2_config1.yaml'),
-        description='Full path to the ROS2 parameters file to use for all launched nodes')
+    # declare_params_file_cmd = DeclareLaunchArgument(
+    #     'params_file',
+    #     default_value=os.path.join(pkg_share, 'config', 'nav2_config1.yaml'),
+    #     description='Full path to the ROS2 parameters file to use for all launched nodes')
 
     declare_autostart_cmd = DeclareLaunchArgument(
         'autostart', default_value='true',
@@ -292,22 +268,18 @@ def generate_launch_description():
         ],
     )
 
-    # Create the launch description and populate
     ld = LaunchDescription()
 
-    # Set environment variables
     ld.add_action(stdout_linebuf_envvar)
 
-    # Declare the launch options
     ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_use_sim_time_cmd)
-    ld.add_action(declare_params_file_cmd)
+    #ld.add_action(declare_params_file_cmd)
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_use_composition_cmd)
     ld.add_action(declare_container_name_cmd)
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
-    # Add the actions to launch all of the navigation nodes
     ld.add_action(load_nodes)
     ld.add_action(load_composable_nodes)
 

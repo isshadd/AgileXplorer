@@ -18,12 +18,12 @@
 # 2 = local_costmap est blanche
 
 #envoyer manuellement à nav2 = 
-# ros2 topic pub /limo1/goal_pose geometry_msgs/msg/PoseStamped "{
+# ros2 topic pub /limo2/goal_pose geometry_msgs/msg/PoseStamped "{
 #   header: {
-#     frame_id: 'limo1/map'
+#     frame_id: 'limo2/map'
 #   },
 #   pose: {
-#     position: {x: 0, y: -1.3, z: 0.0},
+#     position: {x: 0, y: 0.0, z: 0.0},
 #     orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
 #   }
 # }" --once

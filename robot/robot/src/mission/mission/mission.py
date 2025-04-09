@@ -443,6 +443,7 @@ class MissionNode(Node):
         def is_free(x, y):
             mx = int((x - origin_x) / resolution)
             my = int((y - origin_y) / resolution)
+            
             if 0 <= mx < width and 0 <= my < height:
                 index = my * width + mx
                 return self.map_data.data[index] <= 80  # avant 0, mais maintenant <= 20

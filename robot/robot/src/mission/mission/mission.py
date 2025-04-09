@@ -364,11 +364,10 @@ class MissionNode(Node):
     def start_callback(self, msg):
         if not self.is_stop_mode:
             self.move(0.2, 0.3)
-            #self.rotate(6.28, angular_speed=3.0)
         self.mission_active = True
         self.is_stop_mode = False
         self.get_logger().info("Starting the mission mission")
-        self.timer = self.create_timer(0.3, self.timer_callback)
+        self.timer = self.create_timer(5.0, self.timer_callback)
         self.explore_map()
 
     def stop_callback(self, msg):
@@ -418,50 +417,51 @@ class MissionNode(Node):
         robot_x = self.current_pose.pose.position.x
         robot_y = self.current_pose.pose.position.y
 
-        # if self.robot_id == 'limo1':
-        #     candidates = [
-        #         (robot_x, robot_y + 1),   
-        #         (robot_x + 1, robot_y + 1),
-        #         (robot_x + 1, robot_y),
-        #         (robot_x + 1, robot_y - 1),
-        #         (robot_x, robot_y - 1),
-        #         (robot_x - 1, robot_y - 1), 
-        #         (robot_x - 1, robot_y),
-        #         (robot_x - 1, robot_y + 1)
-        #     ]
-        # else :
-        #     candidates = [
-        #         (robot_x, robot_y - 1),
-        #         (robot_x + 1, robot_y - 1),
-        #         (robot_x + 1, robot_y),
-        #         (robot_x + 1, robot_y + 1),
-        #         (robot_x, robot_y + 1), 
-        #         (robot_x - 1, robot_y + 1),
-        #         (robot_x - 1, robot_y),
-        #         (robot_x - 1, robot_y - 1), 
-        #     ]
+        if self.robot_id == 'limo1':
+            candidates = [
+                (robot_x, robot_y + 1),   
+                (robot_x + 1, robot_y + 1),
+                (robot_x + 1, robot_y),
+                (robot_x + 1, robot_y - 1),
+                (robot_x, robot_y - 1),
+                (robot_x - 1, robot_y - 1), 
+                (robot_x - 1, robot_y),
+                (robot_x - 1, robot_y + 1)
+            ]
+        else :
+            candidates = [
+                (robot_x, robot_y - 1),
+                (robot_x + 1, robot_y - 1),
+                (robot_x + 1, robot_y),
+                (robot_x + 1, robot_y + 1),
+                (robot_x, robot_y + 1), 
+                (robot_x - 1, robot_y + 1),
+                (robot_x - 1, robot_y),
+                (robot_x - 1, robot_y - 1), 
+            ]
 
-        # def is_free(x, y):
-        #     mx = int((x - origin_x) / resolution)
-        #     my = int((y - origin_y) / resolution)
-        #     if 0 <= mx < width and 0 <= my < height:
-        #         index = my * width + mx
-        #         return self.map_data.data[index] <= 20  # avant 0, mais maintenant <= 20
-        #     return False
-        # free_candidates = [c for c in candidates if is_free(*c)]
-        # if not free_candidates:
-        #     self.get_logger().warn("No free candidate points found, remove obstacles!")
-        #     return
-        # goal_x, goal_y = free_candidates[0]
-
-
-        exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
-
-        if len(pathGlobal) == 0:
-            self.get_logger().warn("The mission is completed, the robot stops")
-            self.mission_active = False
+        def is_free(x, y):
+            mx = int((x - origin_x) / resolution)
+            my = int((y - origin_y) / resolution)
+            if 0 <= mx < width and 0 <= my < height:
+                index = my * width + mx
+                return self.map_data.data[index] <= 80  # avant 0, mais maintenant <= 20
+            return False
+        free_candidates = [c for c in candidates if is_free(*c)]
+        if not free_candidates:
+            self.get_logger().warn("No free candidate points found, remove obstacles!")
             return
-        goal_x, goal_y = pathGlobal[-1]
+        goal_x, goal_y = free_candidates[0]
+
+
+        # exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
+
+        # if len(pathGlobal) == 0:
+        #     self.get_logger().warn("The mission is completed, the robot stops")
+        #     self.mission_active = False
+        #     return
+        # goal_x, goal_y = pathGlobal[-1]
+
         self.get_logger().info(f"Selected goal: x={goal_x:.2f}, y={goal_y:.2f}")
         
         goal_msg = NavigateToPose.Goal()

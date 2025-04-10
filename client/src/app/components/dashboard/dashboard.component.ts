@@ -88,6 +88,11 @@ export class DashboardComponent {
                 this.checkBatteryAndAutoReturn(data.robotId, data.battery_level);
             }
         });
+        this.websocketService.onRobotState().subscribe((data: { robotId: string, state: string }) => {
+            if (this.robotStates[data.robotId]) {
+                this.robotStates[data.robotId].isMissionActive = data.state === 'en mission';
+            }
+        });
     }
 
     get isController(): boolean {

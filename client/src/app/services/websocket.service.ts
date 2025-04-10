@@ -105,6 +105,30 @@ export class WebSocketService {
     });
   }
 
+  public onRobotStatus(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('ROBOT_STATUS', (data: any) => {
+        observer.next(data.payload);
+      });
+
+      return () => {
+        this.socket.off('ROBOT_STATUS');
+      };
+    });
+  }
+
+  public onRobotState(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('ROBOT_STATE', (data: any) => {
+        observer.next(data.payload);
+      });
+
+      return () => {
+        this.socket.off('ROBOT_STATE');
+      };
+    });
+  }
+
   public emit(event: string, data: any): void {
     this.socket.emit(event, {
       type: event,

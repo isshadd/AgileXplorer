@@ -1,6 +1,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GdkPixbuf, GLib
+gi.require_version('Gdk', '3.0')
+from gi.repository import Gtk, GdkPixbuf, GLib, Gdk
 import math
 import os
 
@@ -25,26 +26,40 @@ class DisplayWindow(Gtk.Window):
         self.set_default_icon()
         self.box.pack_start(self.image, True, True, 0)
         
+        # Connecter le gestionnaire de touches
+        self.connect('key-press-event', self.on_key_press)
+
+        # Activer la capture des touches
+        self.set_events(self.get_events() | Gdk.EventMask.KEY_PRESS_MASK)
+        
         self.show_all()
+
+    def on_key_press(self, widget, event):
+        """Gestionnaire d'événements de touches"""
+        if event.keyval == Gdk.KEY_Escape:
+            self.destroy()  # Ferme la fenêtre
+            Gtk.main_quit()  # Quitte la boucle principale GTK
+            return True
+        return False
     
     def set_default_icon(self):
-        """Affiche l'icône par défaut"""
-        self.status_label.set_markup('<span font="40">En attente</span>')
+        """Affiche l'icône par défaut (mode normal)"""
+        self.status_label.set_markup('<span font="40">Mode Normal</span>')
         self._set_icon_by_name("dialog-information-symbolic", 256)
     
     def set_far_icon(self):
-        """Affiche l'icône 'loin'"""
-        self.status_label.set_markup('<span font="40" color="red">Le plus éloigné</span>')
+        """Affiche l'icône pour le robot le plus éloigné"""
+        self.status_label.set_markup('<span font="40" color="red">Mode P2P\nLe Plus Éloigné</span>')
         self._set_icon_by_name("dialog-warning-symbolic", 256)
     
     def set_near_icon(self):
-        """Affiche l'icône 'proche'"""
-        self.status_label.set_markup('<span font="40" color="green">Le plus proche</span>')
+        """Affiche l'icône pour le robot le plus proche"""
+        self.status_label.set_markup('<span font="40" color="green">Mode P2P\nLe Plus Proche</span>')
         self._set_icon_by_name("emblem-ok-symbolic", 256)
     
     def set_single_robot_icon(self):
-        """Affiche l'icône pour un robot seul"""
-        self.status_label.set_markup('<span font="40" color="blue">Robot unique</span>')
+        """Affiche l'icône quand un seul robot est en P2P"""
+        self.status_label.set_markup('<span font="40" color="blue">Mode P2P\nEn Attente de l\'Autre Robot</span>')
         self._set_icon_by_name("dialog-warning-symbolic", 256)
     
     def _set_icon_by_name(self, icon_name, size):

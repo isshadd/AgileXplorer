@@ -160,9 +160,8 @@ class CommunicationController(Node):
             if data['p2p_active']:
                 if not self.p2p_active:  # Seulement si on n'est pas déjà en mode P2P
                     self.is_relay = True
+                    self.initial_position = None  # Réinitialisation du point de référence
                     self.get_logger().info("Devenu relais pour l'autre robot")
-                    self.indicator.set_icon(Icon.NEAR)
-                    self.display.set_near_icon()  # Mise à jour de l'affichage
             else:  # Si l'autre robot désactive P2P
                 if self.is_relay:  # Si on était en mode relais
                     self.is_relay = False
@@ -170,10 +169,11 @@ class CommunicationController(Node):
                     self.get_logger().info("Mode relais désactivé")
                     self.indicator.set_icon(Icon.INITIAL)
                     self.indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
-                    self.display.set_default_icon()  # Mise à jour de l'affichage
+                    self.display.set_default_icon()
                     self.initial_position = None
                     self.current_distance = None
                     self.other_distance = None
+                    self.other_robot_odom = None
             
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement du statut P2P: {str(e)}")
@@ -233,36 +233,33 @@ class CommunicationController(Node):
             position_msg.data = json.dumps(odom_data)
 
             # Logique de publication selon le mode
-            if self.p2p_active:
-                # En mode P2P, envoyer uniquement à l'autre robot
-                self.get_logger().debug(f"Mode P2P: envoi des données à l'autre robot")
-                self.p2p_odom_pub.publish(position_msg)
-                # Mise à jour de l'affichage pour robot seul
-                if self.other_distance is None:
-                    self.display.set_single_robot_icon()
+            if self.p2p_active or self.is_relay:
+                # En mode P2P ou relais
+                if self.p2p_active:
+                    # Envoyer uniquement à l'autre robot
+                    self.get_logger().debug(f"Mode P2P: envoi des données à l'autre robot")
+                    self.p2p_odom_pub.publish(position_msg)
                 else:
-                    # Mise à jour de l'affichage selon la distance
-                    if self.current_distance > self.other_distance:
-                        self.display.set_far_icon()
-                    else:
-                        self.display.set_near_icon()
-            elif self.is_relay:
-                # En mode relais :
-                self.get_logger().debug(f"Mode relais: envoi des données au serveur")
-                # 1. Envoyer ses propres données
-                self.position_publisher.publish(position_msg)
-                # 2. Relayer les données de l'autre robot si disponibles
+                    # Mode relais : envoyer au serveur
+                    self.get_logger().debug(f"Mode relais: envoi des données au serveur")
+                    self.position_publisher.publish(position_msg)
+                    # Relayer les données de l'autre robot
+                    if self.other_robot_odom is not None:
+                        self.get_logger().debug(f"Mode relais: relai des données de l'autre robot")
+                        other_msg = String()
+                        other_msg.data = json.dumps(self.other_robot_odom)
+                        self.position_publisher.publish(other_msg)
+
+                # Gestion de l'affichage en mode P2P/relais
                 if self.other_robot_odom is not None:
-                    self.get_logger().debug(f"Mode relais: relai des données de l'autre robot")
-                    other_msg = String()
-                    other_msg.data = json.dumps(self.other_robot_odom)
-                    self.position_publisher.publish(other_msg)
-                    # Mise à jour de l'affichage selon la distance
                     other_distance = self.other_robot_odom.get('distance', 0)
                     if self.current_distance > other_distance:
                         self.display.set_far_icon()
                     else:
                         self.display.set_near_icon()
+                else:
+                    # Si en P2P mais pas encore de données de l'autre robot
+                    self.display.set_single_robot_icon()
             else:
                 # Mode normal : envoyer directement au serveur
                 self.get_logger().debug(f"Mode normal: envoi des données au serveur")
@@ -274,8 +271,12 @@ class CommunicationController(Node):
 async def spin_ros_node(node: CommunicationController, sleep_interval: float = 0.1):
     """Fait tourner le noeud ROS de manière asynchrone"""
     while rclpy.ok():
-        rclpy.spin_once(node, timeout_sec=0)
-        await asyncio.sleep(sleep_interval)
+        try:
+            rclpy.spin_once(node, timeout_sec=0)
+            await asyncio.sleep(sleep_interval)
+        except Exception as e:
+            node.get_logger().error(f"Erreur dans la boucle principale: {str(e)}")
+            break
 
 async def main_async():
     """Fonction principale asynchrone"""
@@ -298,9 +299,13 @@ async def main_async():
     except KeyboardInterrupt:
         node.get_logger().info("Arrêt du noeud...")
     finally:
-        main_loop.quit()
-        node.destroy_node()
-        rclpy.shutdown()
+        try:
+            main_loop.quit()
+            node.display.destroy()  # Fermer la fenêtre GTK
+            node.destroy_node()
+            rclpy.shutdown()
+        except Exception as e:
+            print(f"Erreur lors de l'arrêt: {str(e)}")
 
 def main():
     """Point d'entrée principal"""

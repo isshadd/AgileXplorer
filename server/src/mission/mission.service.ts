@@ -30,6 +30,7 @@ export class MissionService {
   }
   initialize(server: Server) {
     this.server = server;
+    this.logsService.initialize(this.server);
   }
   resetLogs() {
     this.currentLogs = [];

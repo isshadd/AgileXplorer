@@ -40,8 +40,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
   },
 })
 export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer()
-  server: Server;
+  @WebSocketServer() server: Server;
   private readonly logger = new Logger(RobotGateway.name);
   private activeConnections = new Set<Socket>();
   private sensorDataInterval: NodeJS.Timeout;
@@ -68,6 +67,8 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly logsService: LogsService,
   ) {
     this.initROS2();
+    this.logsService.initialize(this.server);
+    this.missionService.initialize(this.server);
     if (this.SIMULATE_BATTERY) {
       this.logger.log('Starting battery simulation mode');
       this.startBatterySimulation();
@@ -334,16 +335,26 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       // Get sensor data for each robot and log it
       const robotIds = ['limo1', 'limo2'];
+      const robotStates = await this.missionService.getRobotStates();
+      
       for (const robotId of robotIds) {
-        await this.logsService.addLog(this.currentMissionId, {
-          type: 'SENSOR',
-          robotId: robotId,
-          data: {
-            position: { x: 0, y: 0, z: 0 },
-            distance: 0,
-            timestamp: new Date().toISOString(),
-          },
-        });
+        const robotState = robotStates[robotId];
+        if (robotState) {
+          const logEntry = {
+            type: 'SENSOR' as const,
+            robotId: robotId,
+            data: {
+              ...robotState,
+              timestamp: new Date().toISOString(),
+            },
+          };
+          await this.logsService.addLog(this.currentMissionId, logEntry);
+          this.logger.verbose(`État du robot ${logEntry.robotId}: ${JSON.stringify(logEntry.data)}`);
+          
+          // Emit updated logs to all clients
+          const missionLog = await this.logsService.findMissionLog(this.currentMissionId);
+          this.server.emit('missionLogs', missionLog.logs);
+        }
       }
     } catch (error) {
       this.logger.error('Error logging sensor data:', error);
@@ -353,6 +364,9 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: Socket) {
     this.connectedClients.add(client);
     this.reconnectionAttempts.set(client.id, 0);
+
+    this.missionService.initialize(this.server);
+
 
     // Envoyer l'état initial des robots et leurs positions au nouveau client
     this.sendRobotStates(client);

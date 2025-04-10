@@ -19,7 +19,7 @@ import { MissionLog } from '../../interfaces/mission-log.interface';
           <div *ngFor="let log of currentLogs" class="log-entry">
             <span class="timestamp">{{ formatTime(log.data.timestamp) }}</span>
             <span class="robot-id">{{ log.robotId }}</span>
-            <span class="message">
+            <span class="message" style="color:White;">
               {{ getLogMessage(log) }}
             </span>
           </div>
@@ -98,6 +98,8 @@ export class MissionLogsComponent implements OnInit, OnDestroy {
         default:
           return log.data.command;
       }
+    } else if (log.type === 'SENSOR' && log.data.message) {
+      return log.data.message;
     }
     return '';
   }

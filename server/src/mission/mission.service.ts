@@ -4,9 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { Mission } from '../interfaces/mission.interface';
 import { LogsService } from '../logs/logs.service';
 import * as rclnodejs from 'rclnodejs';
+import { Server } from 'socket.io';
+import { stringify } from 'querystring';
 
 @Injectable()
 export class MissionService {
+  private server: Server;
   private readonly logger = new Logger(MissionService.name);
   private missions: Map<string, Mission> = new Map();
   private currentMission: Mission | null = null;
@@ -22,7 +25,12 @@ export class MissionService {
 
   constructor(private readonly logsService: LogsService) {
     this.initPromise = this.initializeROS();
+    this.logsService.initialize(this.server);
   }
+  initialize(server: Server) {
+    this.server = server;
+  }
+
 
   async waitForInitialization(): Promise<void> {
     return this.initPromise;
@@ -89,6 +97,15 @@ export class MissionService {
   private logRobotStates() {
     for (const [robotId, state] of this.robotStates.entries()) {
       this.logger.verbose(`État du robot ${robotId}: ${state}`);
+      const log = {
+        type: 'SENSOR',
+        robotId,
+        data: {
+          message : state,
+          timestamp: new Date().toISOString(),
+        },
+      };
+      this.server.emit('missionLogs', [log]);
     }
   }
 

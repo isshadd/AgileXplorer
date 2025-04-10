@@ -13,27 +13,27 @@
 # limitations under the License.
 
 from ament_index_python.packages import get_package_share_directory
-
-from launch import LaunchDescription
-from launch_ros.actions import LifecycleNode
-from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
-from launch.actions import LogInfo
-
-import lifecycle_msgs.msg
 import os
+from launch import LaunchDescription
+from launch_ros.actions import LifecycleNode, Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration, TextSubstitution
 
 
 def generate_launch_description():
     share_dir = get_package_share_directory('limo_bringup')
     parameter_file = LaunchConfiguration('params_file')
-    node_name = 'ydlidar_ros2_driver_node'
+
+    id_arg = DeclareLaunchArgument(
+        'id',
+        default_value='limo1',
+        description='Namespace ID for the robot'
+    )
 
     params_declare = DeclareLaunchArgument(
         'params_file',
         default_value=os.path.join(share_dir, 'param', 'ydlidar.yaml'),
-        description='FPath to the ROS2 parameters file to use.')
+        description='Path to the ROS2 parameters file to use.')
 
     driver_node = LifecycleNode(
         package='ydlidar_ros2_driver',
@@ -43,17 +43,21 @@ def generate_launch_description():
         output='screen',
         emulate_tty=True,
         parameters=[parameter_file],
+        remappings=[
+            ('scan', [LaunchConfiguration('id'), '/scan']),
+            #('ydlidar_ros2_driver_node/transition_event', [LaunchConfiguration('id'), '/ydlidar_ros2_driver_node/transition_event']),
+        ]
     )
+
     tf2_node = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_tf_pub_laser',
-        arguments=[
-            '0', '0', '0.02', '0', '0', '0', '1', 'base_link', 'laser_frame'
-        ],
+        arguments=['0', '0', '0.02', '0', '0', '0', '1', 'base_link', 'laser_frame'],
     )
 
     return LaunchDescription([
+        id_arg,
         params_declare,
         driver_node,
         tf2_node,

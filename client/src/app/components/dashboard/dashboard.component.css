@@ -11,12 +11,21 @@
     justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
-    
 }
 
-.header-controls button {
-    width: 50%;
-    min-width: 150px;
+.buttons-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.buttons-container button {
+    min-width: 120px;
+}
+
+/* Style spécifique pour le bouton d'aide uniquement */
+.buttons-container button.mat-accent[matTooltip*="Ouvrir l'aide"] {
+    background-color: #9c27b0;
 }
 
 .main-content {
@@ -251,6 +260,17 @@ mat-card-title {
         margin-bottom: 0.5rem;
         position: relative;
         z-index: 2;
+    }
+    
+    .buttons-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+    }
+    
+    .buttons-container button {
+        width: 100%;
     }
 
     .main-content {

@@ -21,18 +21,25 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 
 def generate_launch_description():
+
+    id_arg = DeclareLaunchArgument(
+        'id',
+        default_value='limo1',
+        description='Namespace ID for the robot'
+    )
+
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     map_dir = LaunchConfiguration(
         'map',
         default=os.path.join(
             get_package_share_directory('limo_bringup'),
             'maps'))
-
-    param_file_name = 'navigation2.yaml'
+    
+    param_file_name = 'nav2_limo1.yaml' # TODO : à changer
     param_dir = LaunchConfiguration(
         'params_file',
         default=os.path.join(
@@ -43,11 +50,12 @@ def generate_launch_description():
     nav2_launch_file_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
 
     rviz_config_dir = os.path.join(
-        get_package_share_directory('nav2_bringup'),
-        'rviz',
-        'nav2_default_view.rviz')
+        get_package_share_directory('limo_bringup'),
+        'config_files',
+        'limo1.rviz') #nav2_default_view # nav2_namespaced_view
 
     return LaunchDescription([
+        id_arg,
         DeclareLaunchArgument(
             'map',
             default_value=map_dir,
@@ -64,11 +72,14 @@ def generate_launch_description():
             description='Use simulation (Gazebo) clock if true'),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/bringup_launch.py']),
+            PythonLaunchDescriptionSource([get_package_share_directory('limo_bringup'), '/launch/bringup_launch.py']),
             launch_arguments={
                 'map': map_dir,
                 'use_sim_time': use_sim_time,
-                'params_file': param_dir}.items(),
+                'params_file': param_dir,
+                'namespace': LaunchConfiguration('id'),
+                'use_namespace': 'true',
+            }.items(),
         ),
 
         Node(

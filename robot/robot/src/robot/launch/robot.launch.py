@@ -40,7 +40,6 @@ def generate_launch_description():
         parameters=[{'robot_id': LaunchConfiguration('id')}],
         remappings=[('/identify', [ '/', LaunchConfiguration('id'), '/identify'])]
     )
-
     mission_node = Node(
         package='mission',
         executable='mission_node',

@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@nestjs/platform-socket.io": "^11.0.12",
-    "@nestjs/schedule": "^5.0.1"
-  }
-}

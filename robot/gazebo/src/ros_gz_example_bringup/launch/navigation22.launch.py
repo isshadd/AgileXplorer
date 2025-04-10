@@ -29,15 +29,15 @@
 # }" --once
 
 # envoyer manuellement à nav2 = 
-# ros2 topic pub /goal_pose geometry_msgs/msg/PoseStamped "{
-#   header: {
-#     frame_id: 'map'
-#   },
-#   pose: {
-#     position: {x: 0, y: -1.3, z: 0.0},
-#     orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
-#   }
-# }" --once
+#  ros2 topic pub limo1/goal_pose geometry_msgs/msg/PoseStamped "{
+#    header: {
+#      frame_id: 'map'
+#    },
+#    pose: {
+#      position: {x: 0.5, y: 0.0, z: 0.0},
+#      orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}
+#    }
+#  }" --once
 
 import os
 
@@ -75,8 +75,7 @@ def generate_launch_description():
                        'waypoint_follower',
                        'velocity_smoother']
 
-    # Remap global topics to namespace
-    remappings = [] # [('tf', '/tf'), ('tf_static', '/tf_static')] # TODO : quoi faire avec lui
+    remappings = []
 
     param_substitutions = {
         'use_sim_time': 'true',

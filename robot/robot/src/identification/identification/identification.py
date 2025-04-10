@@ -3,6 +3,7 @@ from rclpy.node import Node
 from std_msgs.msg import Empty
 import subprocess
 import os
+import random
 
 class IdentifyNode(Node):
     def __init__(self):
@@ -15,7 +16,9 @@ class IdentifyNode(Node):
 
     def identify_callback(self, msg):
         self.get_logger().info(f"Identification demandée pour {self.robot_id} : lancement du son.")
-        sound_file = '/home/equipe102/Desktop/INF3995-102/robot/common/son_identification.wav'
+        sound_dir = '/home/equipe102/Desktop/INF3995-102/robot/common'
+        sound_id = random.randint(1, 4)
+        sound_file = f'{sound_dir}/id{sound_id}.mp3'
         if os.path.exists(sound_file):
             subprocess.Popen(['aplay', sound_file])
         else:

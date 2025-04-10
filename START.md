@@ -109,7 +109,7 @@ INF3995-102/
 ## 🔢 INFORMATIONS TECHNIQUES
 
 - **ROS_DOMAIN_ID** utilisé : `102`
-- ROS 2 version : `Ros2 Humble pour Ubuntu 22.04 oubligatoire`
+- ROS 2 version : `Ros2 Humble pour Ubuntu 22.04 obligatoire`
 - MongoDB démarre sur le port `27017`
 - Le client Angular est accessible sur le port `4200`
 - Le serveur NestJS tourne sur le port `3000`

@@ -446,6 +446,7 @@ class MissionNode(Node):
             
             if 0 <= mx < width and 0 <= my < height:
                 index = my * width + mx
+                self.get_logger().info(f"searching index if available ={index}")
                 return self.map_data.data[index] <= 80  # avant 0, mais maintenant <= 20
             return False
         free_candidates = [c for c in candidates if is_free(*c)]

@@ -22,6 +22,7 @@ export class MissionService {
     ['limo1', 'en arrêt'],
     ['limo2', 'en arrêt'],
   ]);
+  private currentLogs = [];
 
   constructor(private readonly logsService: LogsService) {
     this.initPromise = this.initializeROS();
@@ -29,6 +30,12 @@ export class MissionService {
   }
   initialize(server: Server) {
     this.server = server;
+  }
+  resetLogs() {
+    this.currentLogs = [];
+  }
+  updateLogs(newLogs: any[]) {
+    this.currentLogs = [...this.currentLogs, ...newLogs];
   }
 
 
@@ -93,8 +100,11 @@ export class MissionService {
     }
   }
 
+  
+
   @Cron(CronExpression.EVERY_SECOND)
   private logRobotStates() {
+    const newLogs = [];
     for (const [robotId, state] of this.robotStates.entries()) {
       this.logger.verbose(`État du robot ${robotId}: ${state}`);
       const log = {
@@ -105,8 +115,12 @@ export class MissionService {
           timestamp: new Date().toISOString(),
         },
       };
-      this.server.emit('missionLogs', [log]);
+      newLogs.push(log);
     }
+    
+    // Merge new logs with existing logs
+    this.updateLogs(newLogs);
+    this.server.emit('missionLogs', this.currentLogs);
   }
 
   private updateRobotState(robotId: string, state: 'en mission' | 'en arrêt') {
@@ -172,6 +186,7 @@ export class MissionService {
     }
 
     this.activeMissionId = null;
+    this.currentLogs = []; // Clear the logs when stopping a mission
 
     try {
       // Mettre à jour l'état du robot
@@ -369,6 +384,7 @@ export class MissionService {
 
       await this.logsService.finalizeMissionLog(this.activeMissionId);
       this.activeMissionId = null;
+      this.currentLogs = []; // Clear the logs when stopping all missions
     }
 
     return { message: responses.join(' | ') };

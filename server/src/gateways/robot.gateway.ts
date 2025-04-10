@@ -353,6 +353,8 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
           
           // Emit updated logs to all clients
           const missionLog = await this.logsService.findMissionLog(this.currentMissionId);
+          this.missionService.resetLogs();
+          this.missionService.updateLogs(missionLog.logs);
           this.server.emit('missionLogs', missionLog.logs);
         }
       }

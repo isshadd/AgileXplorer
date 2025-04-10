@@ -1,0 +1,57 @@
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, GdkPixbuf, GLib
+import math
+import os
+
+class DisplayWindow(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self, title="Robot Status")
+        
+        # Configurer la fenêtre en plein écran
+        self.fullscreen()
+        
+        # Créer une boîte verticale pour organiser les widgets
+        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(self.box)
+        
+        # Créer un label pour l'état
+        self.status_label = Gtk.Label()
+        self.status_label.set_markup('<span font="40">En attente</span>')
+        self.box.pack_start(self.status_label, True, True, 0)
+        
+        # Image pour l'icône
+        self.image = Gtk.Image()
+        self.set_default_icon()
+        self.box.pack_start(self.image, True, True, 0)
+        
+        self.show_all()
+    
+    def set_default_icon(self):
+        """Affiche l'icône par défaut"""
+        self.status_label.set_markup('<span font="40">En attente</span>')
+        self._set_icon_by_name("dialog-information-symbolic", 256)
+    
+    def set_far_icon(self):
+        """Affiche l'icône 'loin'"""
+        self.status_label.set_markup('<span font="40" color="red">Le plus éloigné</span>')
+        self._set_icon_by_name("dialog-warning-symbolic", 256)
+    
+    def set_near_icon(self):
+        """Affiche l'icône 'proche'"""
+        self.status_label.set_markup('<span font="40" color="green">Le plus proche</span>')
+        self._set_icon_by_name("emblem-ok-symbolic", 256)
+    
+    def set_single_robot_icon(self):
+        """Affiche l'icône pour un robot seul"""
+        self.status_label.set_markup('<span font="40" color="blue">Robot unique</span>')
+        self._set_icon_by_name("dialog-warning-symbolic", 256)
+    
+    def _set_icon_by_name(self, icon_name, size):
+        """Définit l'icône à partir de son nom"""
+        theme = Gtk.IconTheme.get_default()
+        try:
+            pixbuf = theme.load_icon(icon_name, size, 0)
+            self.image.set_from_pixbuf(pixbuf)
+        except Exception as e:
+            print(f"Erreur lors du chargement de l'icône: {str(e)}")

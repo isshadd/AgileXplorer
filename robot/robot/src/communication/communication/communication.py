@@ -10,6 +10,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 import json
 from std_msgs.msg import Empty
 from os import environ
+from .display_controller import DisplayWindow
 
 # Configuration pour l'affichage
 if "DISPLAY" not in environ:
@@ -41,6 +42,12 @@ class CommunicationController(Node):
         self.p2p_active = False
         self.is_relay = False
         self.other_robot_odom = None
+        self.initial_position = None
+        self.current_distance = None
+        self.other_distance = None
+        
+        # Interface d'affichage
+        self.display = DisplayWindow()
 
         # Topics pour la communication des commandes
         messages_topic = f'/{self.robot_id}/messages'
@@ -155,6 +162,7 @@ class CommunicationController(Node):
                     self.is_relay = True
                     self.get_logger().info("Devenu relais pour l'autre robot")
                     self.indicator.set_icon(Icon.NEAR)
+                    self.display.set_near_icon()  # Mise à jour de l'affichage
             else:  # Si l'autre robot désactive P2P
                 if self.is_relay:  # Si on était en mode relais
                     self.is_relay = False
@@ -162,6 +170,10 @@ class CommunicationController(Node):
                     self.get_logger().info("Mode relais désactivé")
                     self.indicator.set_icon(Icon.INITIAL)
                     self.indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
+                    self.display.set_default_icon()  # Mise à jour de l'affichage
+                    self.initial_position = None
+                    self.current_distance = None
+                    self.other_distance = None
             
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement du statut P2P: {str(e)}")
@@ -194,15 +206,27 @@ class CommunicationController(Node):
 
     def odom_callback(self, msg):
         try:
+            current_pose = msg.pose.pose
+            
+            # Calcul de la distance
+            if self.initial_position is None:
+                self.initial_position = current_pose
+                self.current_distance = 0
+            else:
+                dx = current_pose.position.x - self.initial_position.position.x
+                dy = current_pose.position.y - self.initial_position.position.y
+                self.current_distance = math.sqrt(dx**2 + dy**2)
+
             # Préparation des données d'odométrie
             odom_data = {
                 "robot_id": self.robot_id,
                 "odom": {
                     "position": {
-                        "x": msg.pose.pose.position.x,
-                        "y": msg.pose.pose.position.y
+                        "x": current_pose.position.x,
+                        "y": current_pose.position.y
                     }
-                }
+                },
+                "distance": self.current_distance
             }
             
             position_msg = String()
@@ -213,6 +237,15 @@ class CommunicationController(Node):
                 # En mode P2P, envoyer uniquement à l'autre robot
                 self.get_logger().debug(f"Mode P2P: envoi des données à l'autre robot")
                 self.p2p_odom_pub.publish(position_msg)
+                # Mise à jour de l'affichage pour robot seul
+                if self.other_distance is None:
+                    self.display.set_single_robot_icon()
+                else:
+                    # Mise à jour de l'affichage selon la distance
+                    if self.current_distance > self.other_distance:
+                        self.display.set_far_icon()
+                    else:
+                        self.display.set_near_icon()
             elif self.is_relay:
                 # En mode relais :
                 self.get_logger().debug(f"Mode relais: envoi des données au serveur")
@@ -224,11 +257,17 @@ class CommunicationController(Node):
                     other_msg = String()
                     other_msg.data = json.dumps(self.other_robot_odom)
                     self.position_publisher.publish(other_msg)
+                    # Mise à jour de l'affichage selon la distance
+                    other_distance = self.other_robot_odom.get('distance', 0)
+                    if self.current_distance > other_distance:
+                        self.display.set_far_icon()
+                    else:
+                        self.display.set_near_icon()
             else:
                 # Mode normal : envoyer directement au serveur
                 self.get_logger().debug(f"Mode normal: envoi des données au serveur")
                 self.position_publisher.publish(position_msg)
-                
+                self.display.set_default_icon()
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
 

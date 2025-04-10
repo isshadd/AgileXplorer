@@ -98,8 +98,12 @@ export class MissionLogsComponent implements OnInit, OnDestroy {
         default:
           return log.data.command;
       }
-    } else if (log.type === 'SENSOR' && log.data.message) {
-      return log.data.message;
+    } else if (log.type === 'SENSOR') {
+      let logMessage = '';
+      logMessage += log.data.message ? `${log.data.message}` : '';
+      logMessage += log.data.distance ? `Distance: ${log.data.distance}` : '';
+      logMessage += log.data.position ? ` Position: x:${log.data.position.x}, y:${log.data.position.y}, z:${log.data.position.z}` : '';
+      return logMessage;
     }
     return '';
   }

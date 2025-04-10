@@ -100,7 +100,7 @@ def main():
     <!-- Robot limo1 -->
     <model name="limo1">
       <self_collide>true</self_collide>
-      <pose>-1.3 -1.3 0.35 0 0 1.5</pose>
+      <pose>-1.4 -1.1 0.35 0 0 1.4</pose>
       <include merge="true">
         <uri>package://ros_gz_example_description/models/limo_diff_drive1</uri>
       </include>
@@ -113,7 +113,7 @@ def main():
     <!-- Robot limo2 -->
     <model name="limo2">
       <self_collide>true</self_collide>
-      <pose>1.3 -1.3 0.35 0 0 1.5</pose>
+      <pose>-1.1 -1.3 0.35 0 0 0.0</pose>
       <include merge="true">
         <uri>package://ros_gz_example_description/models/limo_diff_drive2</uri>
       </include>

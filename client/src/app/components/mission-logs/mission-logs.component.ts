@@ -102,8 +102,7 @@ export class MissionLogsComponent implements OnInit, OnDestroy {
       let logMessage = '';
       logMessage += log.data.message ? `${log.data.message}` : '';
       logMessage += log.data.distance ? `Distance: ${log.data.distance}` : '';
-      logMessage += log.data.position ?
-        ` Position: x:${log.data.position.x.toFixed(2)}, y:${log.data.position.y.toFixed(2)}, z:${log.data.position.z.toFixed(2)}` : '';
+      logMessage += log.data.position ? ` Position: x:${log.data.position.x}, y:${log.data.position.y}, z:${log.data.position.z}` : '';
       return logMessage;
     }
     return '';

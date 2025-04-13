@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { WebSocketService } from '../../services/websocket.service';
-import { MissionService } from '../../services/mission.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -76,10 +75,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private mapCanvas: HTMLCanvasElement | null = null;
   private mapCtx: CanvasRenderingContext2D | null = null;
 
-  constructor(
-    private websocketService: WebSocketService,
-    private missionService: MissionService
-  ) {}
+  constructor(private websocketService: WebSocketService) {}
 
   get isController(): boolean {
     return this.websocketService.isControllerClient();
@@ -489,11 +485,5 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ctx.fillStyle = '#000000';
     this.ctx.font = '12px Arial';
     this.ctx.fillText(trail.robotId, x + 10, y - 10);
-  }
-
-  public captureMapState(): string {
-    const canvas = this.canvasRef.nativeElement;
-    // Convert the canvas to base64 image data
-    return canvas.toDataURL('image/png');
   }
 }

@@ -18,13 +18,9 @@ export class MissionService {
   private initPromise: Promise<void>;
   private activeMissionId: string | null = null;
   private initialized = false;
-  private robotStates: Map<string, {
-    state: string;
-    lastPosition?: { x: number; y: number; z: number };
-    totalDistance: number;
-  }> = new Map([
-    ['limo1', { state: 'en arrêt', totalDistance: 0 }],
-    ['limo2', { state: 'en arrêt', totalDistance: 0 }],
+  private robotStates: Map<string, string> = new Map([
+    ['limo1', 'en arrêt'],
+    ['limo2', 'en arrêt'],
   ]);
   private currentLogs = [];
 
@@ -110,16 +106,14 @@ export class MissionService {
   @Cron(CronExpression.EVERY_SECOND)
   private logRobotStates() {
     const newLogs = [];
-    for (const [robotId, robotState] of this.robotStates.entries()) {
-      this.logger.verbose(`État du robot ${robotId}: ${robotState.state}, distance: ${robotState.totalDistance.toFixed(2)}m`);
-      const formattedDistance = Number(robotState.totalDistance.toFixed(2));
+    for (const [robotId, state] of this.robotStates.entries()) {
+      this.logger.verbose(`État du robot ${robotId}: ${state}`);
       const log = {
         type: 'SENSOR',
         robotId,
         data: {
-          message: robotState.state,
+          message : state,
           timestamp: new Date().toISOString(),
-          totalDistance: formattedDistance
         },
       };
       newLogs.push(log);
@@ -130,27 +124,8 @@ export class MissionService {
     this.server.emit('missionLogs', this.currentLogs);
   }
 
-  private resetRobotDistance(robotId: string): void {
-    const robotState = this.robotStates.get(robotId);
-    if (robotState) {
-      robotState.totalDistance = 0;
-      robotState.lastPosition = undefined;
-      this.robotStates.set(robotId, robotState);
-    }
-  }
-
-  private calculateDistance(pos1: { x: number; y: number; z: number }, pos2: { x: number; y: number; z: number }): number {
-    return Math.sqrt(
-      Math.pow(pos2.x - pos1.x, 2) +
-      Math.pow(pos2.y - pos1.y, 2) +
-      Math.pow(pos2.z - pos1.z, 2)
-    );
-  }
-
   private updateRobotState(robotId: string, state: 'en mission' | 'en arrêt') {
-    const robotState = this.robotStates.get(robotId) || { state: 'en arrêt', totalDistance: 0 };
-    robotState.state = state;
-    this.robotStates.set(robotId, robotState);
+    this.robotStates.set(robotId, state);
     this.logger.verbose(`Mise à jour de l'état du robot ${robotId}: ${state}`);
   }
 
@@ -165,7 +140,6 @@ export class MissionService {
       // Mettre à jour l'état du robot
       this.updateRobotState(robotId, 'en mission');
       await this.logsService.initializeMissionLog(this.activeMissionId);
-      this.resetRobotDistance(robotId);
 
       await this.logsService.addLog(this.activeMissionId, {
         type: 'COMMAND',
@@ -173,7 +147,6 @@ export class MissionService {
         data: {
           command: 'START_MISSION',
           timestamp: new Date().toISOString(),
-          totalDistance: 0
         },
       });
 
@@ -200,7 +173,7 @@ export class MissionService {
     }
   }
 
-  async stopMission(robotId: string, mapImage?: string) {
+  async stopMission(robotId: string) {
     const stoppedMissionId = this.activeMissionId;
     this.logger.log(
       `Stopping mission for robot ${robotId} with ID: ${stoppedMissionId}`,
@@ -220,23 +193,12 @@ export class MissionService {
       // Mettre à jour l'état du robot
       this.updateRobotState(robotId, 'en arrêt');
 
-      // Save map image if provided
-      // Calculate total mission distance
-      const totalMissionDistance = Number(Array.from(this.robotStates.values())
-        .reduce((sum, state) => sum + state.totalDistance, 0)
-        .toFixed(2));
-
-      if (mapImage) {
-        await this.logsService.saveMapImage(stoppedMissionId, mapImage);
-      }
-
       await this.logsService.addLog(stoppedMissionId, {
         type: 'COMMAND',
         robotId,
         data: {
           command: 'STOP_MISSION',
           timestamp: new Date().toISOString(),
-          totalDistance: totalMissionDistance
         },
       });
 
@@ -299,26 +261,15 @@ export class MissionService {
     if (!robotId || !this.activeMissionId) return;
 
     try {
-      const robotState = this.robotStates.get(robotId);
-      if (robotState) {
-        if (robotState.lastPosition) {
-          const distanceMoved = Number(this.calculateDistance(robotState.lastPosition, position).toFixed(2));
-          robotState.totalDistance = Number((robotState.totalDistance + distanceMoved).toFixed(2));
-        }
-        robotState.lastPosition = position;
-        this.robotStates.set(robotId, robotState);
-
-        await this.logsService.addLog(this.activeMissionId, {
-          type: 'SENSOR',
-          robotId,
-          data: {
-            position,
-            distance,
-            timestamp: new Date().toISOString(),
-            totalDistance: robotState.totalDistance
-          },
-        });
-      }
+      await this.logsService.addLog(this.activeMissionId, {
+        type: 'SENSOR',
+        robotId,
+        data: {
+          position,
+          distance,
+          timestamp: new Date().toISOString(),
+        },
+      });
     } catch (error) {
       this.logger.error('Error logging robot data:', error);
     }
@@ -353,8 +304,7 @@ export class MissionService {
       if (key.endsWith('_mission')) {
         const robotId = key.split('_mission')[0];
 
-        // Reset distance and update robot state
-        this.resetRobotDistance(robotId);
+        // Update robot state and add log entry
         this.updateRobotState(robotId, 'en mission');
         await this.logsService.addLog(this.activeMissionId, {
           type: 'COMMAND',
@@ -362,7 +312,6 @@ export class MissionService {
           data: {
             command: 'START_MISSION',
             timestamp: new Date().toISOString(),
-            totalDistance: 0
           },
         });
 
@@ -383,29 +332,20 @@ export class MissionService {
   async getMissions(): Promise<any[]> {
     try {
       const missionLogs = await this.logsService.findAllMissionLogs();
-      return missionLogs.map((log) => {
-        const stopMissionLog = log.logs.find(
-          entry =>
-            entry.type === 'COMMAND' &&
-            entry.data.command === 'STOP_MISSION'
-        );
-        
-        return {
-          id: log.missionId,
-          startTime: log.startTime,
-          endTime: log.endTime,
-          status: log.endTime ? 'completed' : 'ongoing',
-          robots: log.logs
-            .filter(
-              (entry) =>
-                entry.type === 'COMMAND' &&
-                entry.data.command === 'START_MISSION',
-            )
-            .map((entry) => entry.robotIds),
-          totalDistance: stopMissionLog?.data?.totalDistance || 0,
-          logs: log.logs,
-        };
-      });
+      return missionLogs.map((log) => ({
+        id: log.missionId,
+        startTime: log.startTime,
+        endTime: log.endTime,
+        status: log.endTime ? 'completed' : 'ongoing',
+        robots: log.logs
+          .filter(
+            (entry) =>
+              entry.type === 'COMMAND' &&
+              entry.data.command === 'START_MISSION',
+          )
+          .map((entry) => entry.robotIds),
+        logs: log.logs,
+      }));
     } catch (error) {
       this.logger.error(
         `Error getting missions: ${error.message}`,
@@ -421,10 +361,6 @@ export class MissionService {
     const responses: string[] = [];
 
     if (this.activeMissionId) {
-      // Calculate total mission distance
-      const totalMissionDistance = Array.from(this.robotStates.values())
-        .reduce((sum, state) => sum + state.totalDistance, 0);
-
       for (const [key, publisher] of this.publishers.entries()) {
         if (key.endsWith('_mission')) {
           const robotId = key.split('_mission')[0];
@@ -435,7 +371,6 @@ export class MissionService {
             data: {
               command: 'STOP_MISSION',
               timestamp: new Date().toISOString(),
-              totalDistance: totalMissionDistance
             },
           });
 
@@ -525,15 +460,5 @@ export class MissionService {
           battery: 100,
         };
       });
-  }
-  async saveMap(missionId: string, mapData: { data: string }): Promise<void> {
-    this.logger.log(`Saving map for mission ID: ${missionId}`);
-    try {
-      await this.logsService.saveMapImage(missionId, mapData.data);
-      this.logger.debug('Map image saved successfully');
-    } catch (error) {
-      this.logger.error(`Error saving map image: ${error.message}`, error.stack);
-      throw error;
-    }
   }
 }

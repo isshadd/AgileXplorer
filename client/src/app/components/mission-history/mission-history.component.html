@@ -8,42 +8,26 @@
             </button>
         </mat-card-header>
         <mat-card-content>
-            <table mat-table [dataSource]="dataSource" matSort class="mission-table">
+            <table mat-table [dataSource]="missions" matSort class="mission-table">
                 <!-- ID Colonne -->
                 <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID Mission</th>
+                    <th mat-header-cell *matHeaderCellDef>ID Mission</th>
                     <td mat-cell *matCellDef="let mission">{{mission.id}}</td>
                 </ng-container>
 
-                <!-- Début Colonne -->
+                <!-- Date Début Colonne -->
                 <ng-container matColumnDef="startTime">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date et Heure Début</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Début</th>
                     <td mat-cell *matCellDef="let mission">
                         {{mission.startTime | date:'dd/MM/yyyy HH:mm:ss'}}
                     </td>
                 </ng-container>
 
-                <!-- Fin Colonne -->
+                <!-- Date Fin Colonne -->
                 <ng-container matColumnDef="endTime">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date et Heure Fin</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Fin</th>
                     <td mat-cell *matCellDef="let mission">
                         {{mission.endTime | date:'dd/MM/yyyy HH:mm:ss'}}
-                    </td>
-                </ng-container>
-
-                <!-- Robots Colonne -->
-                <ng-container matColumnDef="robots">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Robots</th>
-                    <td mat-cell *matCellDef="let mission">
-                        {{mission.robots.join(', ')}}
-                    </td>
-                </ng-container>
-
-                <!-- Distance Totale Colonne -->
-                <ng-container matColumnDef="totalDistance">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Distance Totale (m)</th>
-                    <td mat-cell *matCellDef="let mission">
-                        {{mission.totalDistance | number:'1.2-2'}}
                     </td>
                 </ng-container>
 

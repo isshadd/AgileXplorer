@@ -97,4 +97,11 @@ export class NotificationService {
       duration: 3000
     });
   }
+
+  warning(message: string): void {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 5000,
+      panelClass: ['warning-snackbar']
+    });
+  }
 }

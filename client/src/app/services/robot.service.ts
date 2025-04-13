@@ -36,4 +36,9 @@ export class RobotService {
   stopAllMissions(): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/mission/stop_all`, {});
   }
+
+  // Méthode pour activer/désactiver le mode P2P
+  toggleP2P(robotId: string, enable: boolean): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/${robotId}/p2p`, { enable });
+  }
 }

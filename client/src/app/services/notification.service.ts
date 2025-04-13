@@ -91,4 +91,10 @@ export class NotificationService {
     
     this.snackBar.open(`${title} - ${message}`, 'Fermer', config);
   }
+
+  p2pStateChanged(message: string): void {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 3000
+    });
+  }
 }

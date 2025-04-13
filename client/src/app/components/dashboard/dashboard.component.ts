@@ -49,8 +49,8 @@ export class DashboardComponent {
     private subscription: Subscription = new Subscription();
     showHistory = false;
     robotStates: { [key: string]: RobotState } = {
-        'limo1': { isMissionActive: false, isIdentified: false },
-        'limo2': { isMissionActive: false, isIdentified: false }
+        'limo1': { isMissionActive: false, isIdentified: false, isP2PActive: false },
+        'limo2': { isMissionActive: false, isIdentified: false, isP2PActive: false }
     };
 
     anyRobotInMission(): boolean {
@@ -141,6 +141,50 @@ export class DashboardComponent {
             if (result) {
                 this.robotService.returnToBase(robotId).subscribe(() => {
                     this.notificationService.returnToBase();
+                });
+            }
+        });
+    }
+
+    isAnyOtherRobotP2PActive(currentRobotId: string): boolean {
+        return Object.entries(this.robotStates)
+            .filter(([id, _]) => id !== currentRobotId)
+            .some(([_, state]) => state.isP2PActive);
+    }
+
+    getP2PButtonTooltip(robotId: string): string {
+        if (!this.isController) {
+            return 'Mode spectateur actif';
+        }
+        if (this.isAnyOtherRobotP2PActive(robotId)) {
+            return 'Un autre robot est déjà en mode P2P';
+        }
+        return '';
+    }
+
+    toggleP2P(robotId: string): void {
+        const newP2PState = !this.robotStates[robotId].isP2PActive;
+
+        // Vérifier si un autre robot est en P2P
+        if (newP2PState && this.isAnyOtherRobotP2PActive(robotId)) {
+            this.notificationService.p2pStateChanged(
+                `Impossible d'activer le mode P2P : un autre robot est déjà en mode P2P`
+            );
+            return;
+        }
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            width: '400px',
+            data: { message: `Voulez-vous ${newP2PState ? 'activer' : 'désactiver'} le mode P2P pour le robot ${robotId} ?` }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.robotService.toggleP2P(robotId, newP2PState).subscribe(() => {
+                    this.robotStates[robotId].isP2PActive = newP2PState;
+                    this.notificationService.p2pStateChanged(
+                        `Mode P2P ${newP2PState ? 'activé' : 'désactivé'} pour le robot ${robotId}`
+                    );
                 });
             }
         });

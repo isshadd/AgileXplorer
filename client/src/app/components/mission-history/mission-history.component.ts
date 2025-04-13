@@ -58,6 +58,24 @@ export class MissionHistoryComponent implements OnInit, OnDestroy {
     }
 
     showMissionLogs(mission: Mission) {
+<<<<<<< HEAD
+        this.missionService.downloadLogs(mission.id).pipe(
+            mergeMap(logs => 
+                this.missionService.getMissionMap(mission.id).pipe(
+                    map(mapData => ({ logs, mapData }))
+                )
+            ),
+            takeUntil(this.destroy$)
+        ).subscribe(({ logs, mapData }) => {
+            this.dialog.open(MissionLogsDialogComponent, {
+                data: {
+                    missionId: mission.id,
+                    logs: logs,
+                    mapImage: mapData.data
+                },
+                width: '1450px',
+                maxHeight: '90vh'
+=======
         this.missionService.downloadLogs(mission.id)
             .pipe(takeUntil(this.destroy$))
             .subscribe(logs => {
@@ -69,6 +87,7 @@ export class MissionHistoryComponent implements OnInit, OnDestroy {
                     width: '600px',
                     maxHeight: '80vh'
                 });
+>>>>>>> parent of 60914e3 (map saved to database, distance calculation)
             });
     }
 }

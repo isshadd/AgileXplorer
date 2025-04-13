@@ -290,7 +290,7 @@ def exploration(data,width,height,resolution,column,row,originX,originY):
         global pathGlobal
         data = costmap(data,width,height,resolution)
         data[row][column] = 0
-        data[data >= 50] = 1
+        data[data >= 30] = 1
         data[(data >= 0) & (data < 30)] = 0
         data = frontierB(data)
         data,groups = assign_groups(data)
@@ -427,7 +427,8 @@ class MissionNode(Node):
                 (robot_x, robot_y - 1),
                 (robot_x - 1, robot_y - 1), 
                 (robot_x - 1, robot_y),
-                (robot_x - 1, robot_y + 1)
+                (robot_x - 1, robot_y + 1),
+                (robot_x, robot_y + 0.5), 
             ]
         else :
             candidates = [
@@ -448,7 +449,7 @@ class MissionNode(Node):
             if 0 <= mx < width and 0 <= my < height:
                 index = my * width + mx
                 self.get_logger().info(f"searching index if available ={self.map_data.data[index]}")
-                return self.map_data.data[index] <= 80 and self.map_data.data[index] != -1 # avant 0, mais maintenant <= 20
+                return self.map_data.data[index] <= 30 and self.map_data.data[index] != -1 # avant 0, mais maintenant <= 20
             return False
         free_candidates = [c for c in candidates if is_free(*c)]
         if not free_candidates:

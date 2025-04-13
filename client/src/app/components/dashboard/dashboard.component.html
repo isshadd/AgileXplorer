@@ -103,6 +103,14 @@
                                    'Ordonne au robot de revenir à sa position de départ'">
                 Retour à la base
               </button>
+              <button mat-raised-button
+                       class="mission-control"
+                       [color]="robotStates[robotId].isP2PActive ? 'warn' : 'primary'"
+                       (click)="toggleP2P(robotId)"
+                       [disabled]="!isController || isAnyOtherRobotP2PActive(robotId)"
+                       [matTooltip]="getP2PButtonTooltip(robotId)">
+                 {{ robotStates[robotId].isP2PActive ? 'Désactiver P2P' : 'Activer P2P' }}
+               </button>
             </div>
           </mat-card-content>
         </mat-card>

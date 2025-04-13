@@ -1,11 +1,15 @@
-import { Controller, Post, Get, Param, Logger } from '@nestjs/common';
+import { Controller, Post, Get, Param, Logger, Body } from '@nestjs/common';
 import { MissionService } from '../mission/mission.service';
+import { RosService } from '../robot/ros.service';
 
 @Controller('robot')
 export class RobotController {
   private readonly logger = new Logger(RobotController.name);
 
-  constructor(private readonly missionService: MissionService) {}
+  constructor(
+    private readonly missionService: MissionService,
+    private readonly rosService: RosService,
+  ) {}
 
   @Post(':robot_id/mission/start')
   async startMission(@Param('robot_id') robotId: string) {
@@ -46,5 +50,17 @@ export class RobotController {
   getActiveMission() {
     const missionId = this.missionService.getActiveMissionId();
     return { missionId };
+  }
+
+  @Post(':robot_id/p2p')
+  async toggleP2P(
+    @Param('robot_id') robotId: string,
+    @Body() body: { enable: boolean },
+  ) {
+    this.logger.log(`Configuration P2P pour ${robotId}: ${body.enable}`);
+    this.rosService.publishP2PCommand(robotId, body.enable);
+    return {
+      message: `Mode P2P ${body.enable ? 'activé' : 'désactivé'} pour ${robotId}`,
+    };
   }
 }

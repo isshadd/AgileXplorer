@@ -76,7 +76,7 @@ export class MissionHistoryComponent implements OnInit, OnDestroy {
                     logs: logs,
                     mapImage: mapData.data
                 },
-                width: '1600px',
+                width: '1450px',
                 maxHeight: '90vh'
             });
         });

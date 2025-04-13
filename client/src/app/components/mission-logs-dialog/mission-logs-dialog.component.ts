@@ -55,7 +55,7 @@ import { MatButtonModule } from '@angular/material/button';
   styles: [`
     mat-card {
       max-height: 90vh;
-      width: 1400px;
+      width: 100%;
       min-width: 1400px;
     }
     mat-card-header {

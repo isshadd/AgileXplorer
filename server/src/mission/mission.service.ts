@@ -447,8 +447,7 @@ export class MissionService {
     this.logger.log(`Message set_wheel_mode publié sur /${robotId}/messages`);
     return { message: `Mode de roues changé pour ${robotId}: ${mode}` };
   }
-
-  async getRobotStates(): Promise<any[]> {
+async getRobotStates(): Promise<any[]> {
     return Array.from(this.nodes.keys())
       .filter((key) => key.endsWith('_mission'))
       .map((key) => {
@@ -460,5 +459,9 @@ export class MissionService {
           battery: 100,
         };
       });
+  }
+
+  public getRobotStateMap(): Map<string, string> {
+    return this.robotStates;
   }
 }

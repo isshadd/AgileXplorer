@@ -67,6 +67,23 @@ export class LogsService {
     }
   }
 
+  async saveMapImage(missionId: string, mapImage: string): Promise<void> {
+    this.logger.debug(`Saving map image for mission: ${missionId}`);
+    
+    try {
+      await this.missionLogModel.findOneAndUpdate(
+        { missionId },
+        { $set: { mapImage } },
+        { new: true }
+      );
+      
+      this.logger.debug(`✅ Map image saved for mission ${missionId}`);
+    } catch (error) {
+      this.logger.error(`❌ Error saving map image: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
   async finalizeMissionLog(missionId: string) {
     this.logger.debug(`Finalizing log for mission: ${missionId}`);
     

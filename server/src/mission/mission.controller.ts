@@ -40,9 +40,9 @@ export class MissionController {
   }
 
   @Get(':id/map')
-  async getMissionMap(@Param('id') id: string): Promise<any> {
-    // Pour l'instant, retourne une carte vide
-    return {};
+  async getMissionMap(@Param('id') id: string): Promise<{ data: string | null }> {
+    const mission = await this.missionService.getMissionLogs(id);
+    return { data: mission.mapImage || null };
   }
 
   @Post()
@@ -59,19 +59,17 @@ export class MissionController {
   }
 
   @Post('current/end')
-  async endCurrentMission(): Promise<void> {
+  async endCurrentMission(@Body() data?: { mapImage?: string }): Promise<void> {
     const missions = await this.missionService.getMissions();
     const currentMission = missions.find((m) => m.status === 'ongoing');
     if (currentMission) {
-      // Par défaut, arrêter la mission pour limo1
-      await this.missionService.stopMission('limo1');
+      await this.missionService.stopMission('limo1', data?.mapImage);
     }
   }
 
   @Post(':id/map')
-  async saveMap(@Param('id') id: string, @Body() mapData: any): Promise<void> {
-    // Pour l'instant, ne fait rien
-    return;
+  async saveMap(@Param('id') id: string, @Body() mapData: { data: string }): Promise<void> {
+    await this.missionService.saveMap(id, mapData);
   }
 
   @Get('status')

@@ -1,9 +1,35 @@
 .mission-history-container {
     padding: 16px;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .mission-table {
     width: 100%;
+    margin-bottom: 16px;
+}
+
+.mission-table th.mat-header-cell {
+    font-weight: bold;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+    padding: 16px;
+    background-color: #f5f5f5;
+}
+
+.mission-table td.mat-cell {
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.mission-table td.mat-cell:first-child,
+.mission-table th.mat-header-cell:first-child {
+    padding-left: 24px;
+}
+
+.mission-table td.mat-cell:last-child,
+.mission-table th.mat-header-cell:last-child {
+    padding-right: 24px;
 }
 
 .clickable-row {
@@ -33,4 +59,17 @@ mat-card-content {
 .mat-mdc-row .mat-mdc-cell {
     border-bottom: 1px solid transparent;
     border-top: 1px solid transparent;
+}
+
+.mat-column-robots {
+    min-width: 150px;
+}
+
+.mat-column-totalDistance {
+    min-width: 120px;
+    text-align: right;
+}
+
+.mat-column-endTime {
+    min-width: 150px;
 }

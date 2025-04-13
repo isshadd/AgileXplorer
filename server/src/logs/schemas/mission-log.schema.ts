@@ -26,6 +26,9 @@ export class MissionLog {
   @Prop()
   endTime?: Date;
 
+  @Prop()
+  mapImage?: string;
+
   @Prop({ type: [Object], default: [] })
   logs: LogEntry[];
 }

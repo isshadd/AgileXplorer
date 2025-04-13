@@ -74,8 +74,8 @@ export class MissionService {
         );
     }
 
-    public loadMap(missionId: string): Observable<MapData> {
-        return this.http.get<MapData>(
+    public getMissionMap(missionId: string): Observable<{ data: string }> {
+        return this.http.get<{ data: string }>(
             `${this.apiUrl}/${missionId}/map`
         );
     }

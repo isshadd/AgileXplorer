@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RobotService } from '../../services/robot.service';
+import { MissionService } from '../../services/mission.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
@@ -45,6 +46,7 @@ interface RobotPosition {
     styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
+    @ViewChild(MapComponent) mapComponent!: MapComponent;
     robots: string[] = [];
     private subscription: Subscription = new Subscription();
     showHistory = false;
@@ -67,6 +69,7 @@ export class DashboardComponent {
 
     constructor(
         private robotService: RobotService,
+        private missionService: MissionService,
         private notificationService: NotificationService,
         private dialog: MatDialog,
         private websocketService: WebSocketService,
@@ -107,7 +110,21 @@ export class DashboardComponent {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                // Capture the map image before stopping the mission
+                const mapImage = this.mapComponent.captureMapState();
+                
                 this.robotService.stopMission(robotId).subscribe(({ stoppedMissionId }) => {
+                    // Save the map image
+                    if (stoppedMissionId) {
+                        const mapData = {
+                            timestamp: new Date().toISOString(),
+                            data: mapImage
+                        };
+                        this.missionService.saveMap(stoppedMissionId, mapData).subscribe(() => {
+                            console.log('Mission map saved successfully');
+                        });
+                    }
+                    
                     this.robotStates[robotId].isMissionActive = false;
                     this.robotStates[robotId].isIdentified = false;
                     this.notificationService.missionEnded();

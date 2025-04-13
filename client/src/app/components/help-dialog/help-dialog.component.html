@@ -1,0 +1,184 @@
+<h2 mat-dialog-title>Aide et Documentation</h2>
+<mat-dialog-content class="help-dialog-content">
+  <mat-tab-group>
+    <!-- Onglet Guide d'utilisation -->
+    <mat-tab label="Guide d'utilisation">
+      <div class="tab-content">
+        <h2>Fonctionnalités principales</h2>
+        <p>
+          Bienvenue dans l'interface de contrôle des robots d'exploration. Cette interface vous permet de superviser et contrôler les robots
+          lors de leurs missions d'exploration. Voici comment utiliser les fonctionnalités principales:
+        </p>
+
+        <div class="tip">
+          <strong>Statut du système:</strong> Toutes les actions sont accompagnées de notifications qui vous informent sur
+          l'état du système. Surveillez les messages qui apparaissent en bas de l'écran pour rester informé.
+        </div>
+        
+        <h3>Commandes des robots</h3>
+        <p>Chaque robot dispose de quatre actions principales que vous pouvez effectuer:</p>
+        
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Démarrer Mission</mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>Démarre une nouvelle mission d'exploration pour le robot sélectionné.</p>
+            <p><strong>Note:</strong> Le robot doit d'abord être identifié avant de pouvoir démarrer une mission.</p>
+          </mat-expansion-panel>
+          
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Arrêter Mission</mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>Arrête la mission en cours pour le robot sélectionné et interrompt son exploration.</p>
+            <p><strong>Note:</strong> Une confirmation vous sera demandée avant d'arrêter la mission.</p>
+          </mat-expansion-panel>
+          
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Identifier</mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>Envoie un signal sonore au robot pour vous aider à l'identifier physiquement.</p>
+            <p><strong>Astuce:</strong> Utilisez cette fonction quand vous avez plusieurs robots et que vous avez besoin de savoir lequel est lequel.</p>
+          </mat-expansion-panel>
+          
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Retour à la base</mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>Ordonne au robot de revenir à sa position de départ.</p>
+            <p><strong>Note:</strong> Cette action n'est disponible que si une mission est active.</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <h3>Visualisation de la carte</h3>
+        <p>
+          La carte affiche la position en temps réel des robots dans leur environnement. 
+          Elle se met à jour automatiquement pendant les missions d'exploration.
+        </p>
+        <p>
+          <strong>Légende de la carte:</strong>
+        </p>
+        <ul>
+          <li>Points bleus: Position actuelle des robots</li>
+          <li>Zones colorées: Zones explorées</li>
+          <li>Lignes: Trajectoire suivie par les robots</li>
+        </ul>
+
+        <h3>Historique des missions</h3>
+        <p>
+          Pour consulter l'historique des missions précédentes, cliquez sur le bouton "Historique des missions" 
+          en haut de l'interface. Vous pourrez voir toutes les missions passées avec leurs détails.
+        </p>
+        <p>
+          Pour revenir au tableau de bord principal, cliquez sur "Retour au tableau de bord".
+        </p>
+        
+        <h3>Statut des robots</h3>
+        <p>
+          Chaque robot affiche son statut actuel:
+        </p>
+        <ul>
+          <li><strong>Mission active:</strong> Le robot est actuellement en mission d'exploration</li>
+          <li><strong>Identifié:</strong> Le robot a été identifié et est prêt pour une mission</li>
+          <li><strong>Niveau de batterie:</strong> L'état actuel de la batterie du robot</li>
+        </ul>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet Dépannage -->
+    <mat-tab label="Dépannage">
+      <div class="tab-content">
+        <h2>Résolution des problèmes courants</h2>
+        <p>
+          Voici des solutions pour les problèmes les plus fréquemment rencontrés:
+        </p>
+
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Robot non connecté</mat-panel-title>
+            </mat-expansion-panel-header>
+            <p><strong>Symptôme:</strong> Un robot n'apparaît pas dans la liste ou affiche "Non connecté".</p>
+            <p><strong>Solutions:</strong></p>
+            <ol>
+              <li>Vérifiez que le robot est allumé et que son voyant d'alimentation est actif</li>
+              <li>Assurez-vous que le robot est connecté au même réseau que votre ordinateur</li>
+              <li>Essayez de redémarrer le robot physiquement</li>
+              <li>Rafraîchissez la page de l'application</li>
+            </ol>
+          </mat-expansion-panel>
+          
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Impossible de démarrer une mission</mat-panel-title>
+            </mat-expansion-panel-header>
+            <p><strong>Symptôme:</strong> Le bouton "Démarrer Mission" reste désactivé ou la mission ne démarre pas.</p>
+            <p><strong>Solutions:</strong></p>
+            <ol>
+              <li>Vérifiez que vous avez d'abord identifié le robot (bouton "Identifier")</li>
+              <li>Assurez-vous d'être en mode contrôleur et non en mode spectateur</li>
+              <li>Vérifiez que le robot a un niveau de batterie suffisant (au moins 20%)</li>
+              <li>Essayez de redémarrer l'application</li>
+            </ol>
+          </mat-expansion-panel>
+          
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Carte ne s'affiche pas correctement</mat-panel-title>
+            </mat-expansion-panel-header>
+            <p><strong>Symptôme:</strong> La carte est vide, ne se met pas à jour ou s'affiche partiellement.</p>
+            <p><strong>Solutions:</strong></p>
+            <ol>
+              <li>Vérifiez votre connexion internet</li>
+              <li>Essayez de rafraîchir la page</li>
+              <li>Videz le cache de votre navigateur</li>
+              <li>Essayez un autre navigateur (Chrome ou Firefox recommandés)</li>
+            </ol>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </mat-tab>
+
+    <!-- Onglet À propos -->
+    <mat-tab label="À propos">
+      <div class="tab-content">
+        <h2>À propos de l'application</h2>
+        <p>
+          Cette application a été conçue pour le contrôle et la supervision des robots d'exploration.
+          Elle permet de gérer des missions d'exploration automatisées, de suivre la position des robots
+          en temps réel et de consulter l'historique des missions précédentes.
+        </p>
+        
+        <h3>Principes d'interface utilisateur</h3>
+        <p>
+          L'interface de cette application a été conçue en suivant les 10 heuristiques d'interface utilisateur
+          de Jakob Nielsen pour offrir une expérience intuitive et efficace:
+        </p>
+        <ol>
+          <li><strong>Visibilité de l'état du système:</strong> Des notifications et indicateurs vous informent constamment de l'état actuel</li>
+          <li><strong>Correspondance entre le système et le monde réel:</strong> Utilisation d'un langage familier et de concepts intuitifs</li>
+          <li><strong>Contrôle et liberté de l'utilisateur:</strong> Options pour annuler ou confirmer des actions importantes</li>
+          <li><strong>Cohérence et standards:</strong> Interface cohérente et conforme aux conventions habituelles</li>
+          <li><strong>Prévention des erreurs:</strong> Conception qui empêche les erreurs avant qu'elles ne se produisent</li>
+          <li><strong>Reconnaissance plutôt que rappel:</strong> Options visibles et informations contextuelles disponibles</li>
+          <li><strong>Flexibilité et efficacité:</strong> Interface adaptée tant aux débutants qu'aux utilisateurs avancés</li>
+          <li><strong>Esthétique et design minimaliste:</strong> Interface épurée centrée sur l'essentiel</li>
+          <li><strong>Aide à reconnaître et se remettre des erreurs:</strong> Messages d'erreur clairs avec solutions</li>
+          <li><strong>Aide et documentation:</strong> Documentation complète et contextuelle accessible à tout moment</li>
+        </ol>
+        
+        <h3>Version et contact</h3>
+        <p>Version: 1.0.0</p>
+        <p>Pour toute assistance supplémentaire, contactez l'équipe de support.</p>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">
+      <mat-icon>close</mat-icon> Fermer
+    </button>
+</mat-dialog-actions>

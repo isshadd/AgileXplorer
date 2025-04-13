@@ -2,9 +2,12 @@ import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MissionLog, MissionLogDocument } from './schemas/mission-log.schema';
+import { Server } from 'socket.io';
+
 
 @Injectable()
 export class LogsService {
+  server: Server;
   private readonly logger = new Logger(LogsService.name);
   private activeLogCache: Map<string, MissionLogDocument> = new Map();
 
@@ -12,6 +15,9 @@ export class LogsService {
     @InjectModel(MissionLog.name) private readonly missionLogModel: Model<MissionLogDocument>
   ) {
     this.logger.log('LogsService initialized');
+  }
+  initialize(server: Server) {
+    this.server = server;
   }
 
   async initializeMissionLog(missionId: string): Promise<MissionLogDocument> {
@@ -53,6 +59,8 @@ export class LogsService {
 
       this.activeLogCache.set(missionId, updatedLog);
       this.logger.debug(`✅ Log entry added to mission ${missionId}`);
+      const missionLog = await this.findMissionLog(missionId);
+      this.server.emit('missionLogs', missionLog.logs);
     } catch (error) {
       this.logger.error(`❌ Error adding log entry: ${error.message}`, error.stack);
       throw error;

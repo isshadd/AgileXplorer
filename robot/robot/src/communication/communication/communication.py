@@ -121,8 +121,17 @@ class CommunicationController(Node):
     def messages_callback(self, msg):
         try:
             data = json.loads(msg.data)
-            # Transmission directe des commandes au contrôleur
-            self.movement_publisher.publish(msg)
+            command = data.get('action', '')
+
+            if command in ['start_mission', 'return_to_base', 'end_mission']:
+                topic_name = f'/{self.robot_id}/{command}'
+                publisher = self.create_publisher(Empty, topic_name, 10)
+                empty_msg = Empty()
+                publisher.publish(empty_msg)
+                self.get_logger().info(f"Sent {command} to topic {topic_name}")
+            else:
+                self.get_logger().info("Command not recognized")
+
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement du message: {str(e)}")
 

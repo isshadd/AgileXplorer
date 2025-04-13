@@ -27,26 +27,15 @@ def generate_launch_description():
                                            description='Odometry topic name')
     odom_tf_arg = DeclareLaunchArgument('pub_odom_tf', default_value='True',
                                            description='Odometry topic name')
-
-    # is_scout_mini_arg = DeclareLaunchArgument('is_scout_mini', default_value='false',
-    #                                       description='Scout mini model')
-    # is_omni_wheel_arg = DeclareLaunchArgument('is_omni_wheel', default_value='false',
-    #                                       description='Scout mini omni-wheel model')
-
-    # simulated_robot_arg = DeclareLaunchArgument('simulated_robot', default_value='false',
-    #                                                description='Whether running with simulator')
     sim_control_rate_arg = DeclareLaunchArgument('control_rate', default_value='50',
                                                  description='Simulation control loop update rate')
-                                                 
-    initial_yaw_offset_arg = DeclareLaunchArgument('initial_yaw_offset', default_value='0.0',
-                                                    description='Initial yaw offset in degrees (handled by client)')
     
     limo_base_node = launch_ros.actions.Node(
         package='limo_base',
         executable='limo_base',
         output='screen',
         emulate_tty=True,
-        namespace="limo1",
+        namespace=LaunchConfiguration('id'),
         remappings=[
             ('/cmd_vel', 'cmd_vel'),
             ('/imu', 'imu'),
@@ -58,18 +47,21 @@ def generate_launch_description():
             ('/tf_static', 'tf_static'),
         ],
         parameters=[{
-                # 'use_sim_time': launch.substitutions.LaunchConfiguration('use_sim_time'),
                 'port_name': launch.substitutions.LaunchConfiguration('port_name'),                
                 'odom_frame': launch.substitutions.LaunchConfiguration('odom_frame'),
                 'base_frame': launch.substitutions.LaunchConfiguration('base_frame'),
                 'odom_topic_name': launch.substitutions.LaunchConfiguration('odom_topic_name'),
-                # 'is_scout_mini': launch.substitutions.LaunchConfiguration('is_scout_mini'),
-                # 'is_omni_wheel': launch.substitutions.LaunchConfiguration('is_omni_wheel'),
-                # 'simulated_robot': launch.substitutions.LaunchConfiguration('simulated_robot'),
                 'pub_odom_tf': launch.substitutions.LaunchConfiguration('pub_odom_tf'),
                 'control_rate': launch.substitutions.LaunchConfiguration('control_rate'),
-                'initial_yaw_offset': launch.substitutions.LaunchConfiguration('initial_yaw_offset'),
         }])
+    
+    static_tf_pub = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=['0', '0', '0', '0', '0', '0', 
+                [LaunchConfiguration('id'), '/map'], 
+                ['/base_link']]
+    )
 
     return LaunchDescription([
         id_arg,
@@ -78,10 +70,7 @@ def generate_launch_description():
         base_link_frame_arg,
         odom_topic_arg,
         odom_tf_arg,
-        # is_scout_mini_arg,
-        # is_omni_wheel_arg,
-        # simulated_robot_arg,
         sim_control_rate_arg,
-        initial_yaw_offset_arg,
-        limo_base_node
+        limo_base_node,
+        static_tf_pub,
     ])

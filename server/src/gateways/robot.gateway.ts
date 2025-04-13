@@ -363,6 +363,22 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  @Cron(CronExpression.EVERY_SECOND)
+  private emitRobotStates() {
+    const robotStates = this.missionService.getRobotStateMap();
+    if (robotStates) {
+      for (const [robotId, state] of robotStates.entries()) {
+        this.server.emit('ROBOT_STATE', {
+          type: 'ROBOT_STATE',
+          payload: {
+            robotId,
+            state
+          }
+        });
+      }
+    }
+  }
+
   handleConnection(client: Socket) {
     this.connectedClients.add(client);
     this.reconnectionAttempts.set(client.id, 0);

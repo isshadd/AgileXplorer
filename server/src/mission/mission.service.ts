@@ -512,8 +512,7 @@ export class MissionService {
     this.logger.log(`Message set_wheel_mode publié sur /${robotId}/messages`);
     return { message: `Mode de roues changé pour ${robotId}: ${mode}` };
   }
-
-  async getRobotStates(): Promise<any[]> {
+async getRobotStates(): Promise<any[]> {
     return Array.from(this.nodes.keys())
       .filter((key) => key.endsWith('_mission'))
       .map((key) => {
@@ -525,6 +524,10 @@ export class MissionService {
           battery: 100,
         };
       });
+  }
+
+  public getRobotStateMap(): Map<string, { state: string; lastPosition?: { x: number; y: number; z: number }; totalDistance: number }> {
+    return this.robotStates;
   }
   async saveMap(missionId: string, mapData: { data: string }): Promise<void> {
     this.logger.log(`Saving map for mission ID: ${missionId}`);

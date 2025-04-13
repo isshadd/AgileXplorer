@@ -51,9 +51,10 @@ export class DashboardComponent {
     private subscription: Subscription = new Subscription();
     showHistory = false;
     robotStates: { [key: string]: RobotState } = {
-        'limo1': { isMissionActive: false, isIdentified: false },
-        'limo2': { isMissionActive: false, isIdentified: false }
+        'limo1': { isMissionActive: false, isIdentified: false, isP2PActive: false },
+        'limo2': { isMissionActive: false, isIdentified: false, isP2PActive: false }
     };
+    private autoReturnTriggered = new Set<string>();
 
     anyRobotInMission(): boolean {
         return Object.values(this.robotStates).some(state => state.isMissionActive);
@@ -67,6 +68,27 @@ export class DashboardComponent {
         this.showHistory = !this.showHistory;
     }
 
+    private checkBatteryAndAutoReturn(robotId: string, batteryLevel: number): void {
+        const robotState = this.robotStates[robotId];
+        
+        if (!robotState || batteryLevel === undefined) return;
+
+        if (batteryLevel > 30) {
+            this.autoReturnTriggered.delete(robotId);
+            return;
+        }
+
+        if (robotState.isMissionActive &&
+            batteryLevel >= 1 &&
+            batteryLevel <= 30 &&
+            !this.autoReturnTriggered.has(robotId)) {
+            
+            this.notificationService.warning(`Robot ${robotId}: Niveau de batterie bas (${batteryLevel}%). Retour automatique à la base.`);
+            this.returnToBase(robotId, true);
+            this.autoReturnTriggered.add(robotId);
+        }
+    }
+
     constructor(
         private robotService: RobotService,
         private missionService: MissionService,
@@ -76,9 +98,15 @@ export class DashboardComponent {
     ) {
         this.websocketService.onBatteryData().subscribe((data: { robotId: string, battery_level: number }) => {
             if (this.robotStates[data.robotId]) {
-              this.robotStates[data.robotId].battery_level = data.battery_level;
+                this.robotStates[data.robotId].battery_level = data.battery_level;
+                this.checkBatteryAndAutoReturn(data.robotId, data.battery_level);
             }
-          });
+        });
+        this.websocketService.onRobotState().subscribe((data: { robotId: string, state: string }) => {
+            if (this.robotStates[data.robotId]) {
+                this.robotStates[data.robotId].isMissionActive = data.state === 'en mission';
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -148,16 +176,68 @@ export class DashboardComponent {
         });
     }
 
-    returnToBase(robotId: string): void {
+    returnToBase(robotId: string, skipConfirmation: boolean = false): void {
+        const executeReturn = () => {
+            this.robotService.returnToBase(robotId).subscribe(() => {
+                this.notificationService.returnToBase();
+            });
+        };
+
+        if (skipConfirmation) {
+            executeReturn();
+        } else {
+            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+                width: '400px',
+                data: { message: `Êtes-vous sûr de vouloir faire retourner le robot ${robotId} à sa base ?` }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    executeReturn();
+                }
+            });
+        }
+    }
+
+    isAnyOtherRobotP2PActive(currentRobotId: string): boolean {
+        return Object.entries(this.robotStates)
+            .filter(([id, _]) => id !== currentRobotId)
+            .some(([_, state]) => state.isP2PActive);
+    }
+
+    getP2PButtonTooltip(robotId: string): string {
+        if (!this.isController) {
+            return 'Mode spectateur actif';
+        }
+        if (this.isAnyOtherRobotP2PActive(robotId)) {
+            return 'Un autre robot est déjà en mode P2P';
+        }
+        return '';
+    }
+
+    toggleP2P(robotId: string): void {
+        const newP2PState = !this.robotStates[robotId].isP2PActive;
+
+        // Vérifier si un autre robot est en P2P
+        if (newP2PState && this.isAnyOtherRobotP2PActive(robotId)) {
+            this.notificationService.p2pStateChanged(
+                `Impossible d'activer le mode P2P : un autre robot est déjà en mode P2P`
+            );
+            return;
+        }
+
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             width: '400px',
-            data: { message: `Êtes-vous sûr de vouloir faire retourner le robot ${robotId} à sa base ?` }
+            data: { message: `Voulez-vous ${newP2PState ? 'activer' : 'désactiver'} le mode P2P pour le robot ${robotId} ?` }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.robotService.returnToBase(robotId).subscribe(() => {
-                    this.notificationService.returnToBase();
+                this.robotService.toggleP2P(robotId, newP2PState).subscribe(() => {
+                    this.robotStates[robotId].isP2PActive = newP2PState;
+                    this.notificationService.p2pStateChanged(
+                        `Mode P2P ${newP2PState ? 'activé' : 'désactivé'} pour le robot ${robotId}`
+                    );
                 });
             }
         });

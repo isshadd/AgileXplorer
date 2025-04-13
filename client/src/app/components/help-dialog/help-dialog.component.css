@@ -1,0 +1,187 @@
+/* Suppression de tout contour ou fond blanc par défaut */
+::ng-deep .mat-mdc-dialog-container {
+  --mdc-dialog-container-color: #0f172a;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0 !important;
+  margin: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+::ng-deep .mdc-dialog__surface {
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+/* Styles pour l'en-tête du dialogue */
+h2[mat-dialog-title] {
+  margin: 0;
+  padding: 1rem 1.5rem;
+  font-size: 1.5rem;
+  background-color: #1e293b;
+  color: white;
+  font-weight: 500;
+  border-bottom: 1px solid #334155;
+}
+
+/* Styles pour le contenu du dialogue */
+mat-dialog-content {
+  max-height: 60vh;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: white;
+  display: block !important;
+}
+
+/* Styles pour le système d'onglets */
+::ng-deep .mat-mdc-tab-header {
+  background-color: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: white;
+  font-weight: 500;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #38bdf8;
+}
+
+::ng-deep .mat-mdc-tab-body-wrapper {
+  background-color: #0f172a;
+  color: white;
+}
+
+/* Styles pour le contenu des onglets */
+.tab-content {
+  padding: 1rem 1.5rem;
+  background-color: #0f172a;
+  color: white;
+}
+
+/* Styles des titres et textes */
+.tab-content h2 {
+  color: #38bdf8;
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 0.5rem;
+}
+
+.tab-content h3 {
+  color: #f59e0b;
+  font-size: 1.125rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.tab-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.tab-content ul, 
+.tab-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.tab-content li {
+  margin-bottom: 0.25rem;
+}
+
+/* Style pour les panels d'expansion */
+::ng-deep .mat-expansion-panel {
+  background-color: #1e293b !important;
+  color: white !important;
+  margin-bottom: 0.5rem !important;
+  border: 1px solid #334155 !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .mat-expansion-panel-header {
+  height: auto !important;
+  padding: 0.75rem 1rem !important;
+}
+
+::ng-deep .mat-expansion-panel-header-title {
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .mat-expansion-indicator::after {
+  color: #38bdf8 !important;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0.75rem 1rem !important;
+  background-color: #0f172a !important;
+  color: rgba(255, 255, 255, 0.87) !important;
+}
+
+/* Style pour la boîte d'astuce */
+.tip {
+  background-color: rgba(56, 189, 248, 0.1);
+  border-left: 4px solid #38bdf8;
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+  border-radius: 0 4px 4px 0;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+/* Styles pour les actions du dialogue */
+mat-dialog-actions {
+  padding: 1rem 1.5rem;
+  margin: 0;
+  border-top: 1px solid #334155;
+  background-color: #1e293b;
+}
+
+button[mat-button] {
+  background-color: #38bdf8;
+  color: #0f172a;
+  padding: 0.25rem 1rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+button[mat-button]:hover {
+  background-color: #0ea5e9;
+}
+
+button[mat-button] mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  margin-right: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  mat-dialog-content {
+    max-height: 70vh;
+  }
+  
+  .tab-content {
+    padding: 0.75rem;
+  }
+  
+  .tab-content h2 {
+    font-size: 1.125rem;
+  }
+  
+  .tab-content h3 {
+    font-size: 1rem;
+  }
+  
+  .tab-content p,
+  .tab-content li {
+    font-size: 0.875rem;
+  }
+}

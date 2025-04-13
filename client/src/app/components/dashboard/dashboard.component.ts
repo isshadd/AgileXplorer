@@ -9,12 +9,21 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
 import { MissionHistoryComponent } from '../mission-history/mission-history.component';
 import { MapComponent } from '../map/map.component';
 import { ConnectedClientsComponent } from '../connected-clients/connected-clients.component';
 import { MissionLogsComponent } from '../mission-logs/mission-logs.component';
 import { WebSocketService } from '../../services/websocket.service';
+import { Subscription } from 'rxjs';
+
+interface RobotPosition {
+    x: number;
+    y: number;
+    timestamp?: number;
+}
+  
 
 @Component({
     selector: 'app-dashboard',
@@ -36,6 +45,8 @@ import { WebSocketService } from '../../services/websocket.service';
     styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
+    robots: string[] = [];
+    private subscription: Subscription = new Subscription();
     showHistory = false;
     robotStates: { [key: string]: RobotState } = {
         'limo1': { isMissionActive: false, isIdentified: false },
@@ -95,6 +106,16 @@ export class DashboardComponent {
         });
     }
 
+    ngOnInit(): void {
+        this.subscription.add(
+            this.websocketService.onRobotPosition().subscribe((data: { robotId: string; position: RobotPosition }) => {
+              if (data.robotId && data.position && typeof data.position.x === 'number' && typeof data.position.y === 'number') {
+                if (!this.robots.includes(data.robotId)) this.robots.push(data.robotId);
+              }
+            })
+          );
+    }
+
     get isController(): boolean {
         return this.websocketService.isControllerClient();
     }
@@ -129,6 +150,14 @@ export class DashboardComponent {
             this.notificationService.identifySignal();
         });
     }
+    
+    openHelpDialog(): void {
+        this.dialog.open(HelpDialogComponent, {
+            width: '800px',
+            maxWidth: '90vw',
+            maxHeight: '80vh'
+        });
+    }
 
     returnToBase(robotId: string, skipConfirmation: boolean = false): void {
         const executeReturn = () => {
@@ -151,5 +180,9 @@ export class DashboardComponent {
                 }
             });
         }
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 }

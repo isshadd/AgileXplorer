@@ -4,9 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { Mission } from '../interfaces/mission.interface';
 import { LogsService } from '../logs/logs.service';
 import * as rclnodejs from 'rclnodejs';
+import { Server } from 'socket.io';
+import { stringify } from 'querystring';
 
 @Injectable()
 export class MissionService {
+  private server: Server;
   private readonly logger = new Logger(MissionService.name);
   private missions: Map<string, Mission> = new Map();
   private currentMission: Mission | null = null;
@@ -19,10 +22,23 @@ export class MissionService {
     ['limo1', 'en arrêt'],
     ['limo2', 'en arrêt'],
   ]);
+  private currentLogs = [];
 
   constructor(private readonly logsService: LogsService) {
     this.initPromise = this.initializeROS();
+    this.logsService.initialize(this.server);
   }
+  initialize(server: Server) {
+    this.server = server;
+    this.logsService.initialize(this.server);
+  }
+  resetLogs() {
+    this.currentLogs = [];
+  }
+  updateLogs(newLogs: any[]) {
+    this.currentLogs = [...this.currentLogs, ...newLogs];
+  }
+
 
   async waitForInitialization(): Promise<void> {
     return this.initPromise;
@@ -85,11 +101,27 @@ export class MissionService {
     }
   }
 
+  
+
   @Cron(CronExpression.EVERY_SECOND)
   private logRobotStates() {
+    const newLogs = [];
     for (const [robotId, state] of this.robotStates.entries()) {
       this.logger.verbose(`État du robot ${robotId}: ${state}`);
+      const log = {
+        type: 'SENSOR',
+        robotId,
+        data: {
+          message : state,
+          timestamp: new Date().toISOString(),
+        },
+      };
+      newLogs.push(log);
     }
+    
+    // Merge new logs with existing logs
+    this.updateLogs(newLogs);
+    this.server.emit('missionLogs', this.currentLogs);
   }
 
   private updateRobotState(robotId: string, state: 'en mission' | 'en arrêt') {
@@ -155,6 +187,7 @@ export class MissionService {
     }
 
     this.activeMissionId = null;
+    this.currentLogs = []; // Clear the logs when stopping a mission
 
     try {
       // Mettre à jour l'état du robot
@@ -352,6 +385,7 @@ export class MissionService {
 
       await this.logsService.finalizeMissionLog(this.activeMissionId);
       this.activeMissionId = null;
+      this.currentLogs = []; // Clear the logs when stopping all missions
     }
 
     return { message: responses.join(' | ') };

@@ -135,24 +135,71 @@ body {
 }
 
 /* Styles des toast/snackbar */
-.mat-mdc-snack-bar-container {
-    &.success-snackbar {
-        --mdc-snackbar-container-color: #43a047;
-        --mat-mdc-snack-bar-button-color: #fff;
-        --mdc-snackbar-supporting-text-color: #fff;
-    }
+.mat-mdc-snack-bar-container.success-snackbar {
+    --mdc-snackbar-container-color: #43a047;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+}
 
-    &.error-snackbar {
-        --mdc-snackbar-container-color: #d32f2f;
-        --mat-mdc-snack-bar-button-color: #fff;
-        --mdc-snackbar-supporting-text-color: #fff;
-    }
+.mat-mdc-snack-bar-container.warning-snackbar {
+    --mdc-snackbar-container-color: #ff9800;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+}
 
-    &.info-snackbar {
-        --mdc-snackbar-container-color: #1976d2;
-        --mat-mdc-snack-bar-button-color: #fff;
-        --mdc-snackbar-supporting-text-color: #fff;
-    }
+.mat-mdc-snack-bar-container.error-snackbar {
+    --mdc-snackbar-container-color: #d32f2f;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.mat-mdc-snack-bar-container.info-snackbar {
+    --mdc-snackbar-container-color: #1976d2;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+}
+
+/* Style pour les messages d'aide dans la dialogues */
+.help-dialog-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.help-dialog-content h2 {
+    color: #38bdf8;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+}
+
+.help-dialog-content h3 {
+    color: #f59e0b;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.help-dialog-content p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.help-dialog-content ul, .help-dialog-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.help-dialog-content li {
+    margin-bottom: 0.5rem;
+}
+
+.help-dialog-content .tip {
+    background-color: rgba(56, 189, 248, 0.1);
+    border-left: 4px solid #38bdf8;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
 }
 
 /* Styles pour les overlay Material (modals, etc.) */

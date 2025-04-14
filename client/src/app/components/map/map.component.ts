@@ -70,10 +70,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly MAX_SCALE = 200;
   private backgroundImage: HTMLImageElement | null = null;
   
-  // Propriétés pour les données du lidar
-  private mapData: MapData | null = null;
-  private mapCanvas: HTMLCanvasElement | null = null;
-  private mapCtx: CanvasRenderingContext2D | null = null;
+  // Structure pour gérer les cartes SLAM de chaque robot
+  private robotMaps: Map<string, {
+    mapData: MapData;
+    canvas: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+  }> = new Map();
 
   constructor(private websocketService: WebSocketService) {}
 
@@ -94,14 +96,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
     
-    // S'abonner aux données de la carte (lidar)
+    // S'abonner aux données des cartes (lidar)
     this.subscription.add(
-      this.websocketService.onMapData().subscribe((data: MapData) => {
-        console.log('MapComponent: Données lidar reçues:', data.width, 'x', data.height);
-        console.log('MapComponent: Exemple de données:', data.data.slice(0, 10));
-        console.log('MapComponent: Origin:', data.origin);
-        this.mapData = data;
-        this.renderMapData();
+      this.websocketService.onMapData().subscribe((data: { robotId: string; mapData: MapData }) => {
+        console.log(`MapComponent: Données lidar reçues du robot ${data.robotId}:`, data.mapData.width, 'x', data.mapData.height);
+        this.updateRobotMap(data.robotId, data.mapData);
       })
     );
   }
@@ -111,11 +110,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ctx = canvas.getContext('2d')!;
     this.resizeCanvas();
 
-    // Créer un canvas séparé pour les données de carte
-    this.mapCanvas = document.createElement('canvas');
-    this.mapCanvas.width = canvas.width;
-    this.mapCanvas.height = canvas.height;
-    this.mapCtx = this.mapCanvas.getContext('2d')!;
+    // Ne plus créer de canvas ici car ils seront créés par robot
 
     this.backgroundImage = new Image();
     this.backgroundImage.src = '/map.png';
@@ -129,29 +124,54 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Méthode pour rendre les données du lidar
-  private renderMapData(): void {
-    console.log('renderMapData: Début du rendu');
-    if (!this.mapData || !this.mapCtx || !this.mapCanvas) {
-      console.warn('renderMapData: Données manquantes:', {
-        mapData: !!this.mapData,
-        mapCtx: !!this.mapCtx,
-        mapCanvas: !!this.mapCanvas
+  // Méthode pour mettre à jour la carte d'un robot
+  private updateRobotMap(robotId: string, mapData: MapData): void {
+    console.log(`updateRobotMap: Mise à jour de la carte du robot ${robotId}`);
+    
+    // Créer une nouvelle entrée si elle n'existe pas
+    if (!this.robotMaps.has(robotId)) {
+      const canvas = document.createElement('canvas');
+      canvas.width = this.canvasRef.nativeElement.width;
+      canvas.height = this.canvasRef.nativeElement.height;
+      const ctx = canvas.getContext('2d')!;
+      
+      this.robotMaps.set(robotId, {
+        mapData: mapData,
+        canvas: canvas,
+        ctx: ctx
       });
+    }
+
+    const robotMap = this.robotMaps.get(robotId)!;
+    robotMap.mapData = mapData;
+    robotMap.ctx.clearRect(0, 0, robotMap.canvas.width, robotMap.canvas.height);
+
+    // Render this robot's map
+    this.renderMapData(robotId);
+  }
+
+  private renderMapData(robotId: string): void {
+    console.log(`renderMapData: Début du rendu pour le robot ${robotId}`);
+    const robotMap = this.robotMaps.get(robotId);
+    if (!robotMap) {
+      console.warn(`renderMapData: Pas de données pour le robot ${robotId}`);
       return;
     }
     
+    const { mapData, canvas, ctx } = robotMap;
+    
     // Effacer le canvas de la carte
-    this.mapCtx.clearRect(0, 0, this.mapCanvas.width, this.mapCanvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Calculer l'échelle et la position
-    const mapWidthWorld = this.mapData.width * this.mapData.resolution;
-    const mapHeightWorld = this.mapData.height * this.mapData.resolution;
-    console.log('renderMapData: Dimensions monde:', { mapWidthWorld, mapHeightWorld, resolution: this.mapData.resolution });
+    const mapWidthWorld = mapData.width * mapData.resolution;
+    const mapHeightWorld = mapData.height * mapData.resolution;
+    console.log(`renderMapData (${robotId}): Dimensions monde:`, { mapWidthWorld, mapHeightWorld, resolution: mapData.resolution });
     
     // Créer une image à partir des données de la grille
-    const imageData = this.mapCtx.createImageData(
-      this.mapData.width,
-      this.mapData.height
+    const imageData = ctx.createImageData(
+      mapData.width,
+      mapData.height
     );
     
     // Compter les différents types de cellules pour le débogage
@@ -160,41 +180,42 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     let occupiedCells = 0;
     
     // Parcourir les données de la grille
-    for (let i = 0; i < this.mapData.data.length; i++) {
-      const value = this.mapData.data[i];
-      const xPos: number = i % this.mapData.width;
-      const yPos: number = Math.floor(i / this.mapData.width);
-      const idx = (yPos * this.mapData.width + xPos) * 4;
+    for (let i = 0; i < mapData.data.length; i++) {
+      const value = mapData.data[i];
+      const xPos: number = i % mapData.width;
+      const yPos: number = Math.floor(i / mapData.width);
+      const idx = (yPos * mapData.width + xPos) * 4;
       
-      // Définir la couleur en fonction de la valeur
+      // Définir la couleur en fonction de la valeur et du robot
       if (value === -1) {
-        // Inconnu - semi-transparent gris
-        imageData.data[idx] = 128;     // R
-        imageData.data[idx + 1] = 128; // G
-        imageData.data[idx + 2] = 128; // B
-        imageData.data[idx + 3] = 50;  // A - semi-transparent
+        // Zone inconnue - très transparent
+        imageData.data[idx] = robotId === '1' ? 255 : 0;     // R
+        imageData.data[idx + 1] = robotId === '2' ? 255 : 0; // G
+        imageData.data[idx + 2] = 0;                         // B
+        imageData.data[idx + 3] = 0;                         // Transparent
         unknownCells++;
       } else if (value === 0) {
-        // Libre - légèrement bleu pour mieux voir
-        imageData.data[idx] = 0;       // R
-        imageData.data[idx + 1] = 0;   // G
-        imageData.data[idx + 2] = 200; // B - bleu
-        imageData.data[idx + 3] = 20;  // A - légèrement visible
+        // Zone libre - semi-transparent avec couleur du robot
+        imageData.data[idx] = robotId === '1' ? 255 : 0;     // R
+        imageData.data[idx + 1] = robotId === '2' ? 255 : 0; // G
+        imageData.data[idx + 2] = 0;                         // B
+        imageData.data[idx + 3] = 40;                        // Légèrement visible
         freeCells++;
       } else {
-        // Occupé - dégradé du gris clair au noir
+        // Zone occupée - plus opaque avec couleur du robot
         const intensity = Math.min(255, Math.floor(value * 2.55));
-        const color = 255 - intensity;
-        imageData.data[idx] = color;     // R
-        imageData.data[idx + 1] = color; // G
-        imageData.data[idx + 2] = color; // B
-        imageData.data[idx + 3] = 255;   // A - opaque
+        const alpha = 100 + Math.floor(intensity * 0.6); // Plus intense = plus opaque
+        
+        imageData.data[idx] = robotId === '1' ? 255 : 0;     // R
+        imageData.data[idx + 1] = robotId === '2' ? 255 : 0; // G
+        imageData.data[idx + 2] = 0;                         // B
+        imageData.data[idx + 3] = alpha;                     // Semi-opaque à opaque
         occupiedCells++;
       }
     }
     
-    console.log('renderMapData: Statistiques cellules:', {
-      total: this.mapData.data.length,
+    console.log(`renderMapData (${robotId}): Statistiques cellules:`, {
+      total: mapData.data.length,
       inconnu: unknownCells,
       libre: freeCells,
       occupé: occupiedCells
@@ -202,35 +223,36 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     
     // Créer une image temporaire à partir des données
     const tmpCanvas = document.createElement('canvas');
-    tmpCanvas.width = this.mapData.width;
-    tmpCanvas.height = this.mapData.height;
-    const tmpCtx = tmpCanvas.getContext('2d')!;
+    tmpCanvas.width = mapData.width;
+    tmpCanvas.height = mapData.height;
+    const tmpCtx = tmpCanvas.getContext('2d', { willReadFrequently: true })!;
     tmpCtx.putImageData(imageData, 0, 0);
     
     // Dessiner l'image transformée sur le canvas de la carte
-    this.mapCtx.save();
+    ctx.save();
     
     // Calcul pour aligner les coordonnées de la grille avec le monde
-    const originX = this.centerX + this.mapData.origin.x * this.scale;
-    const originY = this.centerY - this.mapData.origin.y * this.scale;
-    const scaledResolution = this.mapData.resolution * this.scale;
+    const originX = this.centerX + mapData.origin.x * this.scale;
+    const originY = this.centerY - mapData.origin.y * this.scale;
+    const scaledResolution = mapData.resolution * this.scale;
     
-    console.log('renderMapData: Transformations:', {
+    console.log(`renderMapData (${robotId}): Transformations:`, {
       centerX: this.centerX,
       centerY: this.centerY,
       originX,
       originY,
       scaledResolution,
-      mapWidth: this.mapData.width,
-      mapHeight: this.mapData.height,
-      scale: this.scale
+      mapWidth: mapData.width,
+      mapHeight: mapData.height,
+      scale: this.scale,
+      robotId
     });
     
-    this.mapCtx.translate(originX, originY);
-    this.mapCtx.scale(scaledResolution, -scaledResolution);
-    this.mapCtx.drawImage(tmpCanvas, 0, 0);
+    ctx.translate(originX, originY);
+    ctx.scale(scaledResolution, -scaledResolution);
+    ctx.drawImage(tmpCanvas, 0, 0);
     
-    this.mapCtx.restore();
+    ctx.restore();
     
     console.log('renderMapData: Rendu terminé');
     // Forcer la mise à jour de l'affichage
@@ -442,13 +464,56 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.drawRobotTrail(trail);
       });
       console.log('drawMap: Trajectoires des robots dessinées');
-    } else if (this.displayMode === 'mapping' && this.mapCanvas) {
-      // En mode cartographie, adapter l'échelle du canvas LIDAR
-      console.log('drawMap: Dessin du canvas lidar', this.mapCanvas.width, this.mapCanvas.height);
-      this.ctx.save();
-      this.ctx.scale(canvas.width / this.mapCanvas.width, canvas.height / this.mapCanvas.height);
-      this.ctx.drawImage(this.mapCanvas, 0, 0);
-      this.ctx.restore();
+    } else if (this.displayMode === 'mapping') {
+      // En mode cartographie, superposer les cartes SLAM
+      console.log('drawMap: Superposition des cartes SLAM');
+      
+      // Dessiner d'abord la légende des cartes SLAM
+      const legendY = 30;
+      this.ctx.font = '14px Arial';
+      this.ctx.fillStyle = 'rgba(255, 0, 0, 0.8)';
+      this.ctx.fillText('Robot 1 - Zones explorées', 10, legendY);
+      this.ctx.fillStyle = 'rgba(0, 255, 0, 0.8)';
+      this.ctx.fillText('Robot 2 - Zones explorées', 10, legendY + 20);
+
+      // Superposer les cartes SLAM avec le même système de coordonnées
+      this.robotMaps.forEach((robotMap, robotId) => {
+        this.ctx.save();
+        
+        // Utiliser des couleurs et opacités optimisées pour la lisibilité
+        if (robotId === '1') {
+          // Rouge semi-transparent pour robot 1
+          this.ctx.globalCompositeOperation = 'source-over';
+          this.ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+          this.ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+        } else {
+          // Vert semi-transparent pour robot 2
+          this.ctx.globalCompositeOperation = 'multiply';
+          this.ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+          this.ctx.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+        }
+        
+        // Assurer que l'échelle et l'origine sont identiques pour les deux robots
+        const scale = Math.min(
+          canvas.width / robotMap.mapData.width,
+          canvas.height / robotMap.mapData.height
+        );
+        
+        this.ctx.translate(this.centerX, this.centerY);
+        this.ctx.scale(scale, scale);
+        this.ctx.translate(
+          -robotMap.mapData.width / 2,
+          -robotMap.mapData.height / 2
+        );
+        
+        this.ctx.drawImage(robotMap.canvas, 0, 0);
+        this.ctx.restore();
+      });
+
+      // Ajouter une bordure pour délimiter la zone de cartographie
+      this.ctx.strokeStyle = '#333';
+      this.ctx.lineWidth = 2;
+      this.ctx.strokeRect(0, 0, canvas.width, canvas.height);
     }
   }
 

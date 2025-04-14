@@ -184,23 +184,29 @@ class PhysicalCommunicationController(BaseCommunicationController):
         """Réception du statut P2P de l'autre robot"""
         try:
             data = json.loads(msg.data)
+            self.get_logger().debug(f"Reçu statut P2P de {data['robot_id']}: {data['p2p_active']}")
+            self.get_logger().debug(f"État actuel - P2P: {self.p2p_active}, Relais: {self.is_relay}")
             
             # Si l'autre robot active P2P
             if data['p2p_active']:
                 if not self.p2p_active:  # Seulement si on n'est pas déjà en mode P2P
                     self.is_relay = True
                     self.initial_position = None  # Réinitialisation du point de référence
-                    self.get_logger().info("Devenu relais pour l'autre robot")
+                    self.get_logger().info(f"Robot {self.robot_id} devient relais pour {data['robot_id']}")
                     self.display.set_single_robot_icon()
+                    self.get_logger().debug("Configuration du relais terminée")
             else:  # Si l'autre robot désactive P2P
                 if self.is_relay:  # Si on était en mode relais
                     self.is_relay = False
                     self.other_robot_odom = None
-                    self.get_logger().info("Mode relais désactivé")
+                    self.get_logger().info(f"Mode relais désactivé pour {self.robot_id}")
                     self.display.set_default_icon()
                     self.initial_position = None
                     self.current_distance = None
                     self.other_distance = None
+                    self.get_logger().debug("Nettoyage du mode relais terminé")
+            
+            self.get_logger().debug(f"Nouvel état - P2P: {self.p2p_active}, Relais: {self.is_relay}")
         except Exception as e:
             self.get_logger().error(f"Erreur dans p2p_status_callback: {str(e)}")
 
@@ -221,10 +227,17 @@ class PhysicalCommunicationController(BaseCommunicationController):
         """Réception des données d'odométrie de l'autre robot"""
         try:
             data = json.loads(msg.data)
+            self.get_logger().debug(f"Reçu données P2P de {data['robot_id']}")
             self.other_robot_odom = data
+            
             if self.is_relay:
+                self.get_logger().debug(f"Mode relais actif: republication des données de {data['robot_id']}")
                 # Publier les données au serveur
                 self.position_publisher.publish(msg)
+            else:
+                self.get_logger().debug(f"Mode relais inactif: données P2P ignorées")
+                
+            self.get_logger().debug(f"Position reçue - X: {data['odom']['position']['x']:.2f}, Y: {data['odom']['position']['y']:.2f}")
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement de l'odom P2P: {str(e)}")
 
@@ -257,18 +270,24 @@ class PhysicalCommunicationController(BaseCommunicationController):
             position_msg.data = json.dumps(odom_data)
 
             # Logique de publication selon le mode
-            if self.p2p_active or self.is_relay:
-                if self.p2p_active:
-                    self.p2p_odom_pub.publish(position_msg)
-                else:
-                    self.position_publisher.publish(position_msg)
-                    if self.other_robot_odom is not None:
-                        other_msg = String()
-                        other_msg.data = json.dumps(self.other_robot_odom)
-                        self.position_publisher.publish(other_msg)
-                
-                # Gestion de l'affichage en mode P2P/relais
+            if self.p2p_active:
+                # En mode P2P, on publie UNIQUEMENT sur le topic P2P
+                self.get_logger().debug(f"Mode P2P actif: Publication uniquement sur le topic P2P")
+                self.p2p_odom_pub.publish(position_msg)
+                self.display.set_single_robot_icon()
+            elif self.is_relay:
+                # En mode relais, on publie nos données et celles de l'autre robot au serveur
+                self.get_logger().debug(f"Mode relais: Publication au serveur")
+                # 1. Publier nos propres données
+                self.position_publisher.publish(position_msg)
+                # 2. Republier les données de l'autre robot si disponibles
                 if self.other_robot_odom is not None:
+                    self.get_logger().debug(f"Relais: Republication des données de l'autre robot")
+                    other_msg = String()
+                    other_msg.data = json.dumps(self.other_robot_odom)
+                    self.position_publisher.publish(other_msg)
+                    
+                    # Mise à jour de l'affichage selon la distance
                     other_distance = self.other_robot_odom.get('distance', 0)
                     if self.current_distance > other_distance:
                         self.display.set_far_icon()
@@ -277,6 +296,7 @@ class PhysicalCommunicationController(BaseCommunicationController):
                 else:
                     self.display.set_single_robot_icon()
             else:
+                # Mode normal: publication directe au serveur
                 self.position_publisher.publish(position_msg)
                 self.display.set_default_icon()
         except Exception as e:

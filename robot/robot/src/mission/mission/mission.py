@@ -83,7 +83,7 @@ def astar(array, start, goal):
             neighbor = current[0] + i, current[1] + j
             tentative_g_score = gscore[current] + heuristic(current, neighbor)
             if 0 <= neighbor[0] < array.shape[0]:
-                if 0 <= neighbor[1] < array.shape[1]:                
+                if 0 <= neighbor[1] < array.shape[1]:
                     if array[neighbor[0]][neighbor[1]] == 1:
                         continue
                 else:
@@ -218,7 +218,7 @@ def dfs(matrix, i, j, group, groups):
 
 def fGroups(groups):
     sorted_groups = sorted(groups.items(), key=lambda x: len(x[1]), reverse=True)
-    top_five_groups = [g for g in sorted_groups[:5] if len(g[1]) > 2]    
+    top_five_groups = [g for g in sorted_groups[:5] if len(g[1]) > 2]
     return top_five_groups
 
 def calculate_centroid(x_coords, y_coords):
@@ -237,7 +237,7 @@ def findClosestGroup(matrix,groups, current,resolution,originX,originY):
     score = []
     max_score = -1 #max score index
     for i in range(len(groups)):
-        middle = calculate_centroid([p[0] for p in groups[i][1]],[p[1] for p in groups[i][1]]) 
+        middle = calculate_centroid([p[0] for p in groups[i][1]],[p[1] for p in groups[i][1]])
         path = astar(matrix, current, middle)
         path = [(p[1]*resolution+originX,p[0]*resolution+originY) for p in path]
         total_distance = pathLength(path)
@@ -313,7 +313,7 @@ def localControl(scan):
     for i in range(60):
         if scan[i] < robot_r:
             v = 0.2
-            w = -math.pi/4 
+            w = -math.pi/4
             break
     if v == None:
         for i in range(300,360):
@@ -331,12 +331,12 @@ class MissionNode(Node):
 
         qos_profile = QoSProfile(reliability=QoSReliabilityPolicy.BEST_EFFORT,
             history=QoSHistoryPolicy.KEEP_LAST, depth=10, durability=QoSDurabilityPolicy.VOLATILE)
-        
+
         start_topic = f'/{self.robot_id}/start_mission'
         return_topic = f'/{self.robot_id}/return_to_base'
         end_topic = f'/{self.robot_id}/end_mission'
-        self.map_frame = f'{self.robot_id}/map' 
-        odom_topic = f'/{self.robot_id}/odom'  
+        self.map_frame = f'{self.robot_id}/map'
+        odom_topic = f'/{self.robot_id}/odom'
         cmd_topic = f'/{self.robot_id}/cmd_vel'
         nav2_topic = f'/{self.robot_id}/navigate_to_pose'
 
@@ -358,7 +358,14 @@ class MissionNode(Node):
         self.current_goal_handle = None
         self.is_stop_mode = False
 
+        self.last_positions = []
+        self.last_check_time = time.time()
+        self.stuck_duration_threshold = 5.0 
+        self.stuck_distance_threshold = 0.05
+
     def timer_callback(self):
+        if self.check_if_stuck():
+            return
         if self.mission_active:
             self.explore_map()
 
@@ -368,7 +375,7 @@ class MissionNode(Node):
         self.mission_active = True
         self.is_stop_mode = False
         self.get_logger().info("Starting the mission mission")
-        self.timer = self.create_timer(5.0, self.timer_callback)
+        self.timer = self.create_timer(1.0, self.timer_callback)
         self.explore_map()
 
     def stop_callback(self, msg):
@@ -400,6 +407,10 @@ class MissionNode(Node):
         send_goal_future.add_done_callback(self.goal_response_callback)
 
     def explore_map(self):
+
+        self.last_positions.append((self.x, self.y, time.time()))
+        self.last_positions = [(x, y, t) for x, y, t in self.last_positions if time.time() - t <= 10]
+
         if self.map_data is None:
             self.get_logger().error("No map received.")
             return
@@ -420,12 +431,12 @@ class MissionNode(Node):
 
         if self.robot_id == 'limo1':
             candidates = [
-                (robot_x, robot_y + 1),   
+                (robot_x, robot_y + 1),
                 (robot_x + 1, robot_y + 1),
                 (robot_x + 1, robot_y),
                 (robot_x + 1, robot_y - 1),
                 (robot_x, robot_y - 1),
-                (robot_x - 1, robot_y - 1), 
+                (robot_x - 1, robot_y - 1),
                 (robot_x - 1, robot_y),
                 (robot_x - 1, robot_y + 1)
             ]
@@ -435,38 +446,37 @@ class MissionNode(Node):
                 (robot_x + 1, robot_y - 1),
                 (robot_x + 1, robot_y),
                 (robot_x + 1, robot_y + 1),
-                (robot_x, robot_y + 1), 
+                (robot_x, robot_y + 1),
                 (robot_x - 1, robot_y + 1),
                 (robot_x - 1, robot_y),
-                (robot_x - 1, robot_y - 1), 
+                (robot_x - 1, robot_y - 1),
             ]
 
-        def is_free(x, y):
-            mx = int((x - origin_x) / resolution)
-            my = int((y - origin_y) / resolution)
-            
-            if 0 <= mx < width and 0 <= my < height:
-                index = my * width + mx
-                self.get_logger().info(f"searching index if available ={self.map_data.data[index]}")
-                return self.map_data.data[index] <= 80 and self.map_data.data[index] != -1 # avant 0, mais maintenant <= 20
-            return False
-        free_candidates = [c for c in candidates if is_free(*c)]
-        if not free_candidates:
-            self.get_logger().warn("No free candidate points found, remove obstacles!")
-            return
-        goal_x, goal_y = free_candidates[0]
+        # def is_free(x, y):
+        #     mx = int((x - origin_x) / resolution)
+        #     my = int((y - origin_y) / resolution)
 
-
-        # exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
-
-        # if len(pathGlobal) == 0:
-        #     self.get_logger().warn("The mission is completed, the robot stops")
-        #     self.mission_active = False
+        #     if 0 <= mx < width and 0 <= my < height:
+        #         index = my * width + mx
+        #         self.get_logger().info(f"searching index if available ={self.map_data.data[index]}")
+        #         return self.map_data.data[index] <= 80 and self.map_data.data[index] != -1 # avant 0, mais maintenant <= 20
+        #     return False
+        # free_candidates = [c for c in candidates if is_free(*c)]
+        # if not free_candidates:
+        #     self.get_logger().warn("No free candidate points found, remove obstacles!")
         #     return
-        # goal_x, goal_y = pathGlobal[-1]
+        # goal_x, goal_y = free_candidates[0]
+
+        exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
+
+        if len(pathGlobal) == 0:
+            self.get_logger().warn("The mission is completed, the robot stops")
+            self.mission_active = False
+            return
+        goal_x, goal_y = pathGlobal[-1]
 
         self.get_logger().info(f"Selected goal: x={goal_x:.2f}, y={goal_y:.2f}")
-        
+
         goal_msg = NavigateToPose.Goal()
         goal_pose = PoseStamped()
         goal_pose.header.frame_id = self.map_frame
@@ -478,10 +488,10 @@ class MissionNode(Node):
         if not self.nav_client.wait_for_server(timeout_sec=5.0):
             self.get_logger().error("NavigateToPose server not available!")
             return
-        
+
         send_goal_future = self.nav_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
         send_goal_future.add_done_callback(self.goal_response_callback)
-    
+
     def goal_response_callback(self, future):
         self.current_goal_handle = future.result()
         if not self.current_goal_handle.accepted:
@@ -520,10 +530,10 @@ class MissionNode(Node):
         self.height = self.map_data.info.height
         self.data = self.map_data.data
 
-    def pose_callback(self, msg: Odometry): 
+    def pose_callback(self, msg: Odometry):
         pose_stamped = PoseStamped()
         pose_stamped.header = msg.header
-        pose_stamped.pose = msg.pose.pose 
+        pose_stamped.pose = msg.pose.pose
 
         self.x = msg.pose.pose.position.x
         self.y = msg.pose.pose.position.y
@@ -537,7 +547,7 @@ class MissionNode(Node):
 
     def move(self, distance, speed):
         twist = Twist()
-        twist.linear.x = speed 
+        twist.linear.x = speed
         duration = distance / speed
         start_time = time.time()
         while time.time() - start_time < duration:
@@ -568,6 +578,44 @@ class MissionNode(Node):
             subprocess.Popen(['aplay', sound_file])
         else:
             self.get_logger().error(f"Fichier son introuvable: {sound_file}")
+
+    def check_if_stuck(self):
+        if len(self.last_positions) < 2:
+            return False
+
+        current_time = time.time()
+        for x, y, t in self.last_positions:
+            if current_time - t >= self.stuck_duration_threshold:
+                dist = math.hypot(self.x - x, self.y - y)
+                if dist < self.stuck_distance_threshold:
+                    self.get_logger().warn("Robot appears to be stuck. Initiating recovery behavior.")
+                    self.recovery_behavior()
+                    return True
+        return False
+
+    def recovery_behavior(self):
+        twist = Twist()
+        iterations = 1
+
+        for i in range(iterations):
+            twist.linear.x = 0.3
+            twist.angular.z = 8.0
+            duration = 1.0
+            start_time = time.time()
+            while time.time() - start_time < duration:
+                self.cmd_publisher.publish(twist)
+                time.sleep(0.05)
+
+            twist.linear.x = -0.3
+            twist.angular.z = 0.8
+            start_time = time.time()
+            while time.time() - start_time < duration:
+                self.cmd_publisher.publish(twist)
+                time.sleep(0.05)
+
+        twist.linear.x = 0.0
+        twist.angular.z = 0.0
+        self.cmd_publisher.publish(twist)
 
 def main(args=None):
     rclpy.init(args=args)

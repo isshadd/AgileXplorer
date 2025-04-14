@@ -504,7 +504,7 @@
             <left_steering_joint>left_steering_hinge_wheel</left_steering_joint>
             <right_steering_joint>right_steering_hinge_wheel</right_steering_joint>
             <kingpin_width>0.138</kingpin_width>
-            <steering_limit>0.5</steering_limit>
+            <steering_limit>0.8</steering_limit>
             <wheel_base>0.3</wheel_base>
             <wheel_separation>0.172</wheel_separation>
             <wheel_radius>0.045</wheel_radius>
@@ -540,6 +540,7 @@
         
         <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
             <odom_frame>limo2/odom</odom_frame>
+            <robot_base_frame>limo2</robot_base_frame>
             <robot_base_frame>limo2/base_footprint</robot_base_frame>
             <odom_topic>limo2/odom</odom_topic>
         </plugin>

@@ -543,5 +543,6 @@
             <robot_base_frame>limo1/base_footprint</robot_base_frame>
             <odom_topic>limo1/odom</odom_topic>
         </plugin>
+
     </model>
 </sdf>

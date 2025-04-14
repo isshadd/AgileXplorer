@@ -153,28 +153,97 @@ class PhysicalCommunicationController(BaseCommunicationController):
         )
         self.indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
         self.indicator.set_menu(Gtk.Menu())
-
-    # Implémentation des callbacks P2P et autres méthodes pour les robots physiques
-    # [Le reste du code de la version physique reste identique]
-    
-def main(args=None):
-    rclpy.init(args=args)
-    
-    # Utiliser la variable d'environnement SIMULATION pour déterminer le mode
-    is_simulation = os.environ.get('SIMULATION', 'false').lower() == 'true'
-    
-    if is_simulation:
-        node = GazeboCommunicationController()
+    def odom_callback(self, msg):
         try:
-            rclpy.spin(node)
-        except KeyboardInterrupt:
-            pass
-        finally:
-            node.destroy_node()
-            rclpy.shutdown()
-    else:
-        node = PhysicalCommunicationController()
-        asyncio.run(main_async(node))
+            current_pose = msg.pose.pose
+            
+            # Calcul de la distance
+            if self.initial_position is None:
+                self.initial_position = current_pose
+                self.current_distance = 0
+            else:
+                dx = current_pose.position.x - self.initial_position.position.x
+                dy = current_pose.position.y - self.initial_position.position.y
+                self.current_distance = math.sqrt(dx**2 + dy**2)
+
+            # Préparation des données d'odométrie
+            odom_data = {
+                "robot_id": self.robot_id,
+                "odom": {
+                    "position": {
+                        "x": current_pose.position.x,
+                        "y": current_pose.position.y
+                    }
+                },
+                "distance": self.current_distance
+            }
+            
+            position_msg = String()
+            position_msg.data = json.dumps(odom_data)
+
+            # Logique de publication selon le mode
+            if self.p2p_active or self.is_relay:
+                if self.p2p_active:
+                    self.p2p_odom_pub.publish(position_msg)
+                else:
+                    self.position_publisher.publish(position_msg)
+                    if self.other_robot_odom is not None:
+                        other_msg = String()
+                        other_msg.data = json.dumps(self.other_robot_odom)
+                        self.position_publisher.publish(other_msg)
+                
+                # Gestion de l'affichage en mode P2P/relais
+                if self.other_robot_odom is not None:
+                    other_distance = self.other_robot_odom.get('distance', 0)
+                    if self.current_distance > other_distance:
+                        self.display.set_far_icon()
+                    else:
+                        self.display.set_near_icon()
+                else:
+                    self.display.set_single_robot_icon()
+            else:
+                self.position_publisher.publish(position_msg)
+                self.display.set_default_icon()
+        except Exception as e:
+            self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
+
+def main(args=None):
+    try:
+        rclpy.init(args=args)
+        
+        # Utiliser la variable d'environnement SIMULATION pour déterminer le mode
+        is_simulation = os.environ.get('SIMULATION', 'false').lower() == 'true'
+        print(f"[DEBUG] Variable SIMULATION = {os.environ.get('SIMULATION')}")
+        print(f"[DEBUG] Mode simulation activé: {is_simulation}")
+        
+        if is_simulation:
+            print("[INFO] Démarrage du contrôleur en mode simulation (Gazebo)")
+            try:
+                node = GazeboCommunicationController()
+                print("[INFO] Contrôleur Gazebo créé avec succès")
+                rclpy.spin(node)
+            except Exception as e:
+                print(f"[ERROR] Erreur lors de l'initialisation du contrôleur Gazebo: {str(e)}")
+                raise
+        else:
+            print("[INFO] Démarrage du contrôleur en mode robot physique")
+            try:
+                node = PhysicalCommunicationController()
+                print("[INFO] Contrôleur physique créé avec succès")
+                asyncio.run(main_async(node))
+            except Exception as e:
+                print(f"[ERROR] Erreur lors de l'initialisation du contrôleur physique: {str(e)}")
+                raise
+    except Exception as e:
+        print(f"[ERROR] Erreur fatale: {str(e)}")
+        raise
+    finally:
+        if 'node' in locals():
+            try:
+                node.destroy_node()
+            except Exception as e:
+                print(f"[ERROR] Erreur lors de la destruction du nœud: {str(e)}")
+        rclpy.shutdown()
 
 async def main_async(node):
     from gi.repository import GLib

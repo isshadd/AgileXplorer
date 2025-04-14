@@ -108,9 +108,12 @@ ros2 launch ros_gz_example_bringup navigation22.launch.py use_sim_time:=true   a
 cd ../robot
 colcon build
 source install/setup.bash
+# Définir la variable SIMULATION pour Gazebo
+export SIMULATION=true
 
 ros2 launch robot robot.launch.py id:=limo1 & sleep 5
 ros2 launch robot robot.launch.py id:=limo2 & sleep 5
+
 
 echo "Everything is up and running"
 tail -f /dev/null

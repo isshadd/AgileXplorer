@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RobotStatusComponent } from './robot-status.component';
 
 describe('RobotStatusComponent', () => {
@@ -8,16 +7,15 @@ describe('RobotStatusComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RobotStatusComponent]
-    })
-    .compileComponents();
+      // Ce composant est très simple, pas besoin d'imports ou de providers
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RobotStatusComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('devrait créer le composant', () => {
     expect(component).toBeTruthy();
   });
 });

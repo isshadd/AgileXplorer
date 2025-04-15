@@ -291,7 +291,7 @@ def exploration(data,width,height,resolution,column,row,originX,originY):
         data = costmap(data,width,height,resolution)
         data[row][column] = 0
         data[data >= 50] = 1
-        data[(data >= 0) & (data < 30)] = 0
+        data[(data >= 0) & (data < 50)] = 0
         data = frontierB(data)
         data,groups = assign_groups(data)
         groups = fGroups(groups)
@@ -396,7 +396,7 @@ class MissionNode(Node):
 
     def end_callback(self, msg):
 
-        # self.play_sound("return")
+        self.play_sound("return")
 
         self.mission_active = False
         self.returning_to_base = True
@@ -434,51 +434,50 @@ class MissionNode(Node):
         robot_x = self.current_pose.pose.position.x
         robot_y = self.current_pose.pose.position.y
 
-        # if self.robot_id == 'limo1':
-        #     candidates = [
-        #         (robot_x, robot_y + 1),
-        #         (robot_x + 1, robot_y + 1),
-        #         (robot_x + 1, robot_y),
-        #         (robot_x + 1, robot_y - 1),
-        #         (robot_x, robot_y - 1),
-        #         (robot_x - 1, robot_y - 1),
-        #         (robot_x - 1, robot_y),
-        #         (robot_x - 1, robot_y + 1)
-        #     ]
-        # else :
-        #     candidates = [
-        #         (robot_x, robot_y - 1),
-        #         (robot_x + 1, robot_y - 1),
-        #         (robot_x + 1, robot_y),
-        #         (robot_x + 1, robot_y + 1),
-        #         (robot_x, robot_y + 1),
-        #         (robot_x - 1, robot_y + 1),
-        #         (robot_x - 1, robot_y),
-        #         (robot_x - 1, robot_y - 1),
-        #     ]
+        if self.robot_id == 'limo1':
+            candidates = [
+                (robot_x, robot_y + 1),
+                (robot_x + 1, robot_y + 1),
+                (robot_x + 1, robot_y),
+                (robot_x + 1, robot_y - 1),
+                (robot_x, robot_y - 1),
+                (robot_x - 1, robot_y - 1),
+                (robot_x - 1, robot_y),
+                (robot_x - 1, robot_y + 1)
+            ]
+        else :
+            candidates = [
+                (robot_x, robot_y - 1),
+                (robot_x + 1, robot_y - 1),
+                (robot_x + 1, robot_y),
+                (robot_x + 1, robot_y + 1),
+                (robot_x, robot_y + 1),
+                (robot_x - 1, robot_y + 1),
+                (robot_x - 1, robot_y),
+                (robot_x - 1, robot_y - 1),
+            ]
 
-        # def is_free(x, y):
-        #     mx = int((x - origin_x) / resolution)
-        #     my = int((y - origin_y) / resolution)
+        def is_free(x, y):
+            mx = int((x - origin_x) / resolution)
+            my = int((y - origin_y) / resolution)
 
-        #     if 0 <= mx < width and 0 <= my < height:
-        #         index = my * width + mx
-        #         self.get_logger().info(f"searching index if available ={self.map_data.data[index]}")
-        #         return self.map_data.data[index] <= 80 and self.map_data.data[index] != -1 # avant 0, mais maintenant <= 20
-        #     return False
-        # free_candidates = [c for c in candidates if is_free(*c)]
-        # if not free_candidates:
-        #     self.get_logger().warn("No free candidate points found, remove obstacles!")
-        #     return
-        # goal_x, goal_y = free_candidates[0]
-
-        exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
-
-        if len(pathGlobal) == 0:
-            self.get_logger().warn("The mission is completed, the robot stops")
-            self.mission_active = False
+            if 0 <= mx < width and 0 <= my < height:
+                index = my * width + mx
+                self.get_logger().info(f"searching index if available ={self.map_data.data[index]}")
+                return self.map_data.data[index] <= 80 and self.map_data.data[index] != -1 # avant 0, mais maintenant <= 20
+            return False
+        free_candidates = [c for c in candidates if is_free(*c)]
+        if not free_candidates:
+            self.get_logger().warn("No free candidate points found, remove obstacles!")
             return
-        goal_x, goal_y = pathGlobal[-1]
+        goal_x, goal_y = free_candidates[0]
+
+        #exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
+        # if len(pathGlobal) == 0:
+        #     self.get_logger().warn("The mission is completed, the robot stops")
+        #     self.mission_active = False
+        #     return
+        # goal_x, goal_y = pathGlobal[-1]
 
         self.get_logger().info(f"Selected goal: x={goal_x:.2f}, y={goal_y:.2f}")
 

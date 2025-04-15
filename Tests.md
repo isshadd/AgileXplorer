@@ -1,25 +1,23 @@
 # Procédures de Tests - Système d'exploration multi-robot
 
-Ce document détaille les procédures de test pour chaque fonctionnalité du système d'exploration multi-robot, conformément au requis R.Q.2. Il est divisé en trois sections principales : (1) exécution des tests automatisés, (2) une présentation des tests unitaires et leur couverture, et (3) les procédures de test manuelles pour les fonctionnalités difficiles à tester automatiquement.
+Ce document détaille les procédures de test pour chaque fonctionnalité du système d'exploration multi-robot, conformément au requis R.Q.2. Il est divisé en trois sections principales : (1) exécution des tests automatisés, (2) une présentation des tests unitaires, et (3) les procédures de test manuelles pour les fonctionnalités difficiles à tester automatiquement.
 
 ## 1. Exécution des Tests Automatisés
 
 ### Tests côté Client (Angular)
 
-Pour exécuter les tests côté client avec la couverture de code :
+Pour exécuter les tests côté client :
 
 ```bash
 cd client
-ng test --no-watch --code-coverage
+./run-tests.sh --no-watch
 ```
-
-Cette commande exécute tous les tests unitaires et génère un rapport de couverture dans le dossier `coverage/` accessible via un navigateur web en ouvrant le fichier `coverage/index.html`.
 
 Pour exécuter un test spécifique :
 
 ```bash
 cd client
-ng test --include="src/app/services/mission.service.spec.ts"
+./run-tests.sh --include="src/app/services/mission.service.spec.ts"
 ```
 
 ### Tests côté Serveur (NestJS)
@@ -31,13 +29,6 @@ cd server
 npx jest
 ```
 
-Pour exécuter les tests avec la couverture de code :
-
-```bash
-cd server
-npx jest --coverage
-```
-
 Pour exécuter un test spécifique :
 
 ```bash
@@ -45,26 +36,8 @@ cd server
 npx jest src/mission/mission.service.spec.ts
 ```
 
-### Tests de bout en bout (E2E)
 
-Les tests E2E sont disponibles via :
-
-```bash
-cd server
-npm run test:e2e
-```
-
-### Tests des scripts
-
-Les scripts de test pour tester les fonctionnalités spécifiques comme les logs et les missions :
-
-```bash
-cd server/test-scripts
-node test-logging.js
-node test-mission.js
-```
-
-## 2. Tests Unitaires et Couverture
+## 2. Tests Unitaires
 
 ### Composants Client Testés
 
@@ -80,8 +53,6 @@ node test-mission.js
 - **Robot Service** : Tests des commandes envoyées aux robots
 - **WebSocket Service** : Tests de communication en temps réel
 
-### Composants Client Nécessitant des Tests Additionnels
-
 ### Composants Client Récemment Testés
 
 Les composants suivants ont été testés et disposent maintenant de tests unitaires :
@@ -94,10 +65,6 @@ Les composants suivants ont été testés et disposent maintenant de tests unita
 - **Mission History Component** : Tests d'affichage et d'interaction avec l'historique des missions
 - **Mission Logs Component** : Tests d'affichage et de formatage des logs de mission
 - **Navbar Component** : Tests du composant de navigation
-
-### Composants Client Nécessitant des Tests Additionnels
-
-Certains composants requièrent encore une amélioration de leurs tests unitaires :
 
 ### Composants Serveur Testés
 
@@ -284,74 +251,8 @@ Cette section décrit les procédures de test pour chaque requis fonctionnel, pa
 - Le contrôle est possible depuis l'appareil désigné
 - Le nombre de clients connectés est visible dans l'interface
 
-### R.F.11 - Carte 3D et en Couleur (si implémenté)
 
-**Prérequis :**
-- Le système est démarré
-- Une mission d'exploration est en cours ou terminée
-
-**Procédure :**
-1. Observer la carte générée dans l'interface
-2. Vérifier les fonctionnalités de visualisation 3D (rotation, zoom, etc.)
-3. Observer les informations de couleur sur la carte
-
-**Résultat attendu :**
-- La carte est affichée en 3D avec une représentation fidèle des objets
-- Les différentes hauteurs et profondeurs sont visibles
-- Les couleurs correspondent aux éléments réels de l'environnement
-
-### R.F.12 - Position et Orientation Initiale (si implémenté)
-
-**Prérequis :**
-- Le système est démarré
-- Aucune mission n'est en cours
-
-**Procédure :**
-1. Accéder à la section de configuration avant mission
-2. Spécifier une position et orientation initiale pour chaque robot
-3. Lancer la mission
-4. Observer le positionnement initial des robots
-
-**Résultat attendu :**
-- L'interface permet de spécifier la position et l'orientation
-- Les robots démarrent leur mission depuis les positions spécifiées
-
-### R.F.13 - Détection d'Élévation Négative (si implémenté)
-
-**Prérequis :**
-- Le système est démarré avec robots physiques
-- Une table ou surface surélevée est disponible
-
-**Procédure :**
-1. Placer un robot sur une table avec un bord visible
-2. Lancer une mission ou commander un déplacement vers le bord
-3. Observer le comportement du robot à l'approche du bord
-
-**Résultat attendu :**
-- Le robot détecte le bord de la table (élévation négative)
-- Le robot s'arrête ou change de direction avant de tomber
-- Un message d'alerte peut être affiché dans l'interface
-
-### R.F.14 - Mise à Jour du Logiciel des Robots (si implémenté)
-
-**Prérequis :**
-- Le système est démarré
-- Aucune mission n'est en cours
-- Un code de contrôleur alternatif est disponible
-
-**Procédure :**
-1. Accéder à la section de mise à jour dans l'interface
-2. Sélectionner le nouveau code à déployer
-3. Initier la mise à jour
-4. Attendre la fin du processus
-5. Tester le nouveau comportement
-
-**Résultat attendu :**
-- L'interface permet de sélectionner et déployer le nouveau code
-- La mise à jour est bloquée si une mission est en cours
-- Une fois la mise à jour terminée, le robot adopte le nouveau comportement
-
-### R.F.15 - Modes de Contrôle des Roues (si implémenté)
+### R.F.15 - Modes de Contrôle des Roues 
 
 **Prérequis :**
 - Le système est démarré
@@ -370,24 +271,8 @@ Cette section décrit les procédures de test pour chaque requis fonctionnel, pa
 - Le comportement des robots varie clairement selon le mode sélectionné
 - Les transitions entre modes sont fluides et sans erreur
 
-### R.F.16 - Éditeur de Code dans l'Interface (si implémenté)
 
-**Prérequis :**
-- Le système est démarré
-- Aucune mission n'est en cours
-
-**Procédure :**
-1. Accéder à l'éditeur de code dans l'interface
-2. Modifier une partie du code des contrôleurs
-3. Sauvegarder et déployer les modifications
-4. Lancer une mission pour tester les changements
-
-**Résultat attendu :**
-- L'éditeur affiche correctement le code existant
-- Les modifications peuvent être sauvegardées et déployées
-- Le comportement des robots reflète les modifications apportées
-
-### R.F.17 - Base de Données des Missions (si implémenté)
+### R.F.17 - Base de Données des Missions
 
 **Prérequis :**
 - Le système est démarré
@@ -403,7 +288,7 @@ Cette section décrit les procédures de test pour chaque requis fonctionnel, pa
 - Les attributs requis sont présents (date, heure, durée, robots, etc.)
 - Les détails complets d'une mission sont consultables
 
-### R.F.18 - Sauvegarde et Consultation des Cartes (si implémenté)
+### R.F.18 - Sauvegarde et Consultation des Cartes 
 
 **Prérequis :**
 - Le système est démarré
@@ -420,7 +305,7 @@ Cette section décrit les procédures de test pour chaque requis fonctionnel, pa
 - L'interface permet d'accéder aux cartes des missions précédentes
 - Les cartes chargées correspondent bien à l'environnement exploré lors de la mission
 
-### R.F.19 - Communication P2P entre Robots (si implémenté)
+### R.F.19 - Communication P2P entre Robots 
 
 **Prérequis :**
 - Le système est démarré avec robots physiques
@@ -435,20 +320,3 @@ Cette section décrit les procédures de test pour chaque requis fonctionnel, pa
 - Les robots communiquent directement entre eux sans passer par la station
 - Le robot le plus éloigné affiche une icône spécifique sur son écran
 - La communication continue même si un robot s'éloigne temporairement de la station
-
-### R.F.20 - Zone de Sécurité (Geofence) (si implémenté)
-
-**Prérequis :**
-- Le système est démarré
-- Une mission est prête à être lancée
-
-**Procédure :**
-1. Définir une zone de sécurité rectangulaire dans l'interface
-2. Lancer une mission d'exploration
-3. Observer le comportement des robots aux limites de la zone
-4. Si possible, placer manuellement un robot hors de la zone
-
-**Résultat attendu :**
-- Les robots restent à l'intérieur de la zone définie
-- Si un robot atteint la limite, il change de direction pour rester dans la zone
-- Si un robot est placé manuellement hors de la zone, il se dirige rapidement vers l'intérieur

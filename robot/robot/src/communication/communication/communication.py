@@ -333,9 +333,20 @@ class PhysicalCommunicationController(BaseCommunicationController):
                 else:
                     self.display.set_single_robot_icon()
                 return  # On sort après avoir géré le mode relais
-            
             # Mode normal: publication directe au serveur
             self.position_publisher.publish(position_msg)
+            
+            # Mise à jour de l'affichage selon la distance même en mode normal
+            if self.other_robot_odom is not None:
+                other_distance = self.other_robot_odom.get('distance', 0)
+                if self.current_distance > other_distance:
+                    self.display.set_far_icon()
+                    self.get_logger().info("Je suis plus loin du point de départ")
+                else:
+                    self.display.set_near_icon()
+                    self.get_logger().info("Je suis plus proche du point de départ")
+            else:
+                self.display.set_default_icon()
             self.display.set_default_icon()
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")

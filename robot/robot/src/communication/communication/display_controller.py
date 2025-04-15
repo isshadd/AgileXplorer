@@ -43,18 +43,18 @@ class DisplayWindow(Gtk.Window):
         return False
     
     def set_default_icon(self):
-        """Affiche l'icône par défaut (mode normal)"""
-        self.status_label.set_markup('<span font="40">Mode Normal</span>')
+        """Affiche l'icône par défaut en attendant la comparaison des positions"""
+        self.status_label.set_markup('<span font="40">En attente de position...</span>')
         self._set_icon_by_name("dialog-information-symbolic", 256)
     
     def set_far_icon(self):
         """Affiche l'icône pour le robot le plus éloigné"""
-        self.status_label.set_markup('<span font="40" color="red">Mode P2P\nLe Plus Éloigné</span>')
+        self.status_label.set_markup('<span font="40" color="red">Plus Éloigné</span>')
         self._set_icon_by_name("dialog-warning-symbolic", 256)
     
     def set_near_icon(self):
         """Affiche l'icône pour le robot le plus proche"""
-        self.status_label.set_markup('<span font="40" color="green">Mode P2P\nLe Plus Proche</span>')
+        self.status_label.set_markup('<span font="40" color="green">Plus Proche</span>')
         self._set_icon_by_name("emblem-ok-symbolic", 256)
     
     def set_single_robot_icon(self):

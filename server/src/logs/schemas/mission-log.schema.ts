@@ -28,6 +28,9 @@ export class MissionLog {
 
   @Prop({ type: [Object], default: [] })
   logs: LogEntry[];
+
+  @Prop({ type: Number })
+  totalDistance?: number;
 }
 
 export const MissionLogSchema = SchemaFactory.createForClass(MissionLog);

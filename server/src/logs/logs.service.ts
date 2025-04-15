@@ -67,14 +67,22 @@ export class LogsService {
     }
   }
 
-  async finalizeMissionLog(missionId: string) {
+  async finalizeMissionLog(missionId: string, totalDistance?: number) {
     this.logger.debug(`Finalizing log for mission: ${missionId}`);
     
     try {
+      const updateData: any = {
+        endTime: new Date()
+      };
+
+      if (totalDistance !== undefined) {
+        updateData.totalDistance = totalDistance;
+      }
+
       const updatedLog = await this.missionLogModel.findOneAndUpdate(
         { missionId },
         {
-          $set: { endTime: new Date() }
+          $set: updateData
         },
         { new: true }
       );

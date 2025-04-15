@@ -286,6 +286,16 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('stopMission')
   async handleStopMission(client: Socket, robotId: string) {
     try {
+      // Calculate total distance from all robots
+      let totalDistance = 0;
+      if (this.currentMissionId) {
+        const robotIds = ['limo1', 'limo2'];
+        robotIds.forEach(id => {
+          const distance = this.totalDistances.get(id) || 0;
+          totalDistance += distance;
+        });
+      }
+
       // Stop sensor logging first to prevent new logs during shutdown
       this.stopSensorDataLogging();
 
@@ -294,8 +304,8 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.lastPositions.clear();
       this.totalDistances.clear();
 
-      // Stop the mission and finalize logs
-      const result = await this.missionService.stopMission(robotId);
+      // Stop the mission and finalize logs with total distance
+      const result = await this.missionService.stopMission(robotId, totalDistance);
 
       // Notify all clients
       this.server.emit('missionStopped', result);

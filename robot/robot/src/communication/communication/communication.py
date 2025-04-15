@@ -243,6 +243,16 @@ class PhysicalCommunicationController(BaseCommunicationController):
             self.get_logger().debug(f"Reçu données P2P de {data['robot_id']}")
             self.other_robot_odom = data
             
+            # Mise à jour des icônes si on est en mode P2P ou relais
+            if self.p2p_active or self.is_relay:
+                other_distance = data.get('distance', 0)
+                if self.current_distance > other_distance:
+                    self.display.set_far_icon()
+                    self.get_logger().info("Je suis plus loin du point de départ")
+                else:
+                    self.display.set_near_icon()
+                    self.get_logger().info("Je suis plus proche du point de départ")
+            
             if self.is_relay:
                 self.get_logger().debug(f"Mode relais actif: republication des données de {data['robot_id']}")
                 # Publier les données au serveur
@@ -287,7 +297,17 @@ class PhysicalCommunicationController(BaseCommunicationController):
                 # En mode P2P, on publie UNIQUEMENT sur le topic P2P, jamais au serveur
                 self.get_logger().info(f"Mode P2P actif: Publication uniquement sur le topic P2P")
                 self.p2p_odom_pub.publish(position_msg)
-                self.display.set_single_robot_icon()
+                # L'icône sera mise à jour quand on recevra les données de l'autre robot
+                if self.other_robot_odom is not None:
+                    other_distance = self.other_robot_odom.get('distance', 0)
+                    if self.current_distance > other_distance:
+                        self.display.set_far_icon()
+                        self.get_logger().info("Je suis plus loin du point de départ")
+                    else:
+                        self.display.set_near_icon()
+                        self.get_logger().info("Je suis plus proche du point de départ")
+                else:
+                    self.display.set_single_robot_icon()
                 return  # On sort immédiatement pour éviter toute autre publication
             
             if self.is_relay:
@@ -306,8 +326,10 @@ class PhysicalCommunicationController(BaseCommunicationController):
                     other_distance = self.other_robot_odom.get('distance', 0)
                     if self.current_distance > other_distance:
                         self.display.set_far_icon()
+                        self.get_logger().info("Je suis plus loin du point de départ")
                     else:
                         self.display.set_near_icon()
+                        self.get_logger().info("Je suis plus proche du point de départ")
                 else:
                     self.display.set_single_robot_icon()
                 return  # On sort après avoir géré le mode relais

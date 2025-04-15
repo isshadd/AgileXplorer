@@ -358,6 +358,7 @@ class MissionNode(Node):
         self.current_goal_handle = None
         self.is_stop_mode = False
         self.returning_to_base = False
+        self.stuck_check_timer = None
 
         self.last_positions = []
         self.last_check_time = time.time()
@@ -379,8 +380,7 @@ class MissionNode(Node):
 
         self.prev_x = None
         self.prev_y = None
-        #self.stuck_check_timer = None
-        #self.stuck_check_timer = self.create_timer(2.0, self.stuck_check_callback)
+        #self.stuck_check_timer = self.create_timer(2.0, self.stuck_check_callback) # TODO 
 
     def stop_callback(self, msg):
         self.mission_active = False
@@ -391,8 +391,8 @@ class MissionNode(Node):
             cancel_future = self.current_goal_handle.cancel_goal_async()
             cancel_future.add_done_callback(self.cancel_done_callback)
 
-        # if self.stuck_check_timer is not None:
-        #     self.stuck_check_timer.cancel()
+        if self.stuck_check_timer is not None: # TODO
+            self.stuck_check_timer.cancel()
 
     def end_callback(self, msg):
 
@@ -464,7 +464,7 @@ class MissionNode(Node):
             if 0 <= mx < width and 0 <= my < height:
                 index = my * width + mx
                 self.get_logger().info(f"searching index if available ={self.map_data.data[index]}")
-                return self.map_data.data[index] <= 30 and self.map_data.data[index] != -1 # avant 0, mais maintenant <= 20
+                return self.map_data.data[index] <= 30 and self.map_data.data[index] != -1
             return False
         free_candidates = [c for c in candidates if is_free(*c)]
         if not free_candidates:
@@ -472,7 +472,7 @@ class MissionNode(Node):
             return
         goal_x, goal_y = free_candidates[0]
 
-        #exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY)
+        # exploration(self.data, self.width, self.height, self.resolution, column, row, self.originX, self.originY) # TODO
         # if len(pathGlobal) == 0:
         #     self.get_logger().warn("The mission is completed, the robot stops")
         #     self.mission_active = False
@@ -595,9 +595,9 @@ class MissionNode(Node):
             )
             if distance_to_initial < 0.2:
                 self.get_logger().info("Robot has reached base. Stopping stuck-check timer.")
-                # if self.stuck_check_timer is not None:
-                #     self.stuck_check_timer.cancel()
-                #     self.stuck_check_timer = None
+                if self.stuck_check_timer is not None: # TODO
+                    self.stuck_check_timer.cancel()
+                    self.stuck_check_timer = None
                 self.returning_to_base = False
                 return
 

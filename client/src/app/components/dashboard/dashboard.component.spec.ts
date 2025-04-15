@@ -47,7 +47,11 @@ describe('DashboardComponent', () => {
       'onBatteryData',
       'onRobotState',
       'onRobotPosition',
-      'isControllerClient'
+      'isControllerClient',
+      'onClientCountUpdate',
+      'emit',
+      'onMapData',
+      'onMissionLogs'
     ]);
     
     // Configurer les retours des méthodes mockées
@@ -59,11 +63,40 @@ describe('DashboardComponent', () => {
     
     websocketServiceMock.onBatteryData.and.returnValue(of({ robotId: 'limo1', battery_level: 80 }));
     websocketServiceMock.onRobotState.and.returnValue(of({ robotId: 'limo1', state: 'en attente' }));
-    websocketServiceMock.onRobotPosition.and.returnValue(of({ 
-      robotId: 'limo1', 
-      position: { x: 1.2, y: 3.4 } 
+    websocketServiceMock.onRobotPosition.and.returnValue(of({
+      robotId: 'limo1',
+      position: { x: 1.2, y: 3.4 }
     }));
     websocketServiceMock.isControllerClient.and.returnValue(true);
+    websocketServiceMock.onClientCountUpdate.and.returnValue(of({ count: 3, isController: true })); // Mock avec le format correct
+    websocketServiceMock.onMapData.and.returnValue(of({
+      resolution: 0.05,
+      width: 100,
+      height: 100,
+      origin: {
+        x: 0,
+        y: 0,
+        z: 0,
+        orientation: {
+          x: 0,
+          y: 0,
+          z: 0,
+          w: 1
+        }
+      },
+      data: new Array(100 * 100).fill(0)
+    }));
+    websocketServiceMock.emit.and.returnValue(); // Mock pour la méthode emit
+    websocketServiceMock.onMissionLogs.and.returnValue(of([
+      {
+        type: 'COMMAND',
+        robotId: 'limo1',
+        data: {
+          command: 'START_MISSION',
+          timestamp: new Date().toISOString()
+        }
+      }
+    ]));
     
     await TestBed.configureTestingModule({
       imports: [NoopAnimationsModule],
@@ -81,5 +114,34 @@ describe('DashboardComponent', () => {
     fixture.detectChanges();
   });
 
-  // Tests supprimés car ils échouent à cause de l'erreur liée à onClientCountUpdate
+  it('devrait être créé', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('devrait initialiser les états des robots', () => {
+    expect(component.robotStates['limo1']).toBeDefined();
+    expect(component.robotStates['limo2']).toBeDefined();
+    expect(component.robotStates['limo1'].isMissionActive).toBeFalse();
+    expect(component.robotStates['limo1'].isIdentified).toBeFalse();
+  });
+
+  it('devrait retourner correctement si des robots sont en mission', () => {
+    expect(component.anyRobotInMission()).toBeFalse();
+    component.robotStates['limo1'].isMissionActive = true;
+    expect(component.anyRobotInMission()).toBeTrue();
+  });
+
+  it('devrait retourner correctement si tous les robots sont identifiés', () => {
+    expect(component.allRobotsIdentified()).toBeFalse();
+    component.robotStates['limo1'].isIdentified = true;
+    component.robotStates['limo2'].isIdentified = true;
+    expect(component.allRobotsIdentified()).toBeTrue();
+  });
+
+  it('devrait recevoir correctement les données de batterie', () => {
+    expect(component.robotStates['limo1'].battery_level).toBe(80);
+    websocketServiceMock.onBatteryData().subscribe(data => {
+      expect(data.battery_level).toBe(80);
+    });
+  });
 });

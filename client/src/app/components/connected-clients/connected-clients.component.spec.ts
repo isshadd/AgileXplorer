@@ -34,5 +34,16 @@ describe('ConnectedClientsComponent', () => {
     fixture.detectChanges(); // Déclenche ngOnInit
   });
 
-  // Tests supprimés car ils utilisent la méthode onClientCountUpdate qui cause des erreurs
+  it('devrait être créé', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('devrait appeler emit avec GET_CLIENT_COUNT lors de l\'initialisation', () => {
+    expect(websocketServiceMock.emit).toHaveBeenCalledWith('GET_CLIENT_COUNT', {});
+  });
+
+  it('devrait mettre à jour clientCount et isController avec les valeurs du service', () => {
+    expect(component.clientCount).toBe(3);
+    expect(component.isController).toBe(false);
+  });
 });

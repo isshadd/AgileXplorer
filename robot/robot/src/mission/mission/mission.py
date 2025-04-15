@@ -379,7 +379,7 @@ class MissionNode(Node):
 
         self.prev_x = None
         self.prev_y = None
-        self.stuck_check_timer = None
+        #self.stuck_check_timer = None
         #self.stuck_check_timer = self.create_timer(2.0, self.stuck_check_callback)
 
     def stop_callback(self, msg):
@@ -391,12 +391,12 @@ class MissionNode(Node):
             cancel_future = self.current_goal_handle.cancel_goal_async()
             cancel_future.add_done_callback(self.cancel_done_callback)
 
-        if self.stuck_check_timer is not None:
-            self.stuck_check_timer.cancel()
+        # if self.stuck_check_timer is not None:
+        #     self.stuck_check_timer.cancel()
 
     def end_callback(self, msg):
 
-        self.play_sound("return")
+        # self.play_sound("return")
 
         self.mission_active = False
         self.returning_to_base = True
@@ -596,9 +596,9 @@ class MissionNode(Node):
             )
             if distance_to_initial < 0.2:
                 self.get_logger().info("Robot has reached base. Stopping stuck-check timer.")
-                if self.stuck_check_timer is not None:
-                    self.stuck_check_timer.cancel()
-                    self.stuck_check_timer = None
+                # if self.stuck_check_timer is not None:
+                #     self.stuck_check_timer.cancel()
+                #     self.stuck_check_timer = None
                 self.returning_to_base = False
                 return
 

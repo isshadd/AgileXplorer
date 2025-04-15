@@ -116,8 +116,9 @@ class PhysicalCommunicationController(BaseCommunicationController):
         self.is_relay = False
         self.other_robot_odom = None
         self.initial_position = None
-        self.current_distance = None
-        self.other_distance = None
+        self.current_distance = 0
+        self.other_distance = 0
+        self.last_update_time = None
         
         # Interface d'affichage
         self.display = DisplayWindow()
@@ -180,7 +181,7 @@ class PhysicalCommunicationController(BaseCommunicationController):
             if self.p2p_active:
                 self.get_logger().info("Mode P2P activé")
                 self.indicator.set_status(self.AppIndicator3.IndicatorStatus.ACTIVE)
-                self.display.set_single_robot_icon()
+                self._update_display()
                 # Publier le statut P2P
                 self.publish_p2p_status()
             else:
@@ -188,7 +189,7 @@ class PhysicalCommunicationController(BaseCommunicationController):
                 self.indicator.set_status(self.AppIndicator3.IndicatorStatus.PASSIVE)
                 self.is_relay = False
                 self.other_robot_odom = None
-                self.display.set_default_icon()
+                self._update_display()
                 self.publish_p2p_status()
         except Exception as e:
             self.get_logger().error(f"Erreur dans p2p_command_callback: {str(e)}")
@@ -206,17 +207,17 @@ class PhysicalCommunicationController(BaseCommunicationController):
                     self.is_relay = True
                     self.initial_position = None  # Réinitialisation du point de référence
                     self.get_logger().info(f"Robot {self.robot_id} devient relais pour {data['robot_id']}")
-                    self.display.set_single_robot_icon()
+                    self._update_display()
                     self.get_logger().debug("Configuration du relais terminée")
             else:  # Si l'autre robot désactive P2P
                 if self.is_relay:  # Si on était en mode relais
                     self.is_relay = False
                     self.other_robot_odom = None
                     self.get_logger().info(f"Mode relais désactivé pour {self.robot_id}")
-                    self.display.set_default_icon()
+                    self._update_display()
                     self.initial_position = None
-                    self.current_distance = None
-                    self.other_distance = None
+                    self.current_distance = 0
+                    self.other_distance = 0
                     self.get_logger().debug("Nettoyage du mode relais terminé")
             
             self.get_logger().debug(f"Nouvel état - P2P: {self.p2p_active}, Relais: {self.is_relay}")
@@ -243,16 +244,6 @@ class PhysicalCommunicationController(BaseCommunicationController):
             self.get_logger().debug(f"Reçu données P2P de {data['robot_id']}")
             self.other_robot_odom = data
             
-            # Mise à jour des icônes si on est en mode P2P ou relais
-            if self.p2p_active or self.is_relay:
-                other_distance = data.get('distance', 0)
-                if self.current_distance > other_distance:
-                    self.display.set_far_icon()
-                    self.get_logger().info("Je suis plus loin du point de départ")
-                else:
-                    self.display.set_near_icon()
-                    self.get_logger().info("Je suis plus proche du point de départ")
-            
             if self.is_relay:
                 self.get_logger().debug(f"Mode relais actif: republication des données de {data['robot_id']}")
                 # Publier les données au serveur
@@ -261,6 +252,7 @@ class PhysicalCommunicationController(BaseCommunicationController):
                 self.get_logger().debug(f"Mode relais inactif: données P2P ignorées")
                 
             self.get_logger().debug(f"Position reçue - X: {data['odom']['position']['x']:.2f}, Y: {data['odom']['position']['y']:.2f}")
+            self._update_display()
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement de l'odom P2P: {str(e)}")
 
@@ -292,64 +284,43 @@ class PhysicalCommunicationController(BaseCommunicationController):
             position_msg = String()
             position_msg.data = json.dumps(odom_data)
 
-            # Logique de publication selon le mode
-            if self.p2p_active:
-                # En mode P2P, on publie UNIQUEMENT sur le topic P2P, jamais au serveur
-                self.get_logger().info(f"Mode P2P actif: Publication uniquement sur le topic P2P")
-                self.p2p_odom_pub.publish(position_msg)
-                # L'icône sera mise à jour quand on recevra les données de l'autre robot
-                if self.other_robot_odom is not None:
-                    other_distance = self.other_robot_odom.get('distance', 0)
-                    if self.current_distance > other_distance:
-                        self.display.set_far_icon()
-                        self.get_logger().info("Je suis plus loin du point de départ")
-                    else:
-                        self.display.set_near_icon()
-                        self.get_logger().info("Je suis plus proche du point de départ")
-                else:
-                    self.display.set_single_robot_icon()
-                return  # On sort immédiatement pour éviter toute autre publication
+            # Toujours publier sur le topic P2P pour maintenir la communication
+            self.p2p_odom_pub.publish(position_msg)
             
-            if self.is_relay:
-                # En mode relais, on publie nos données et celles de l'autre robot au serveur
-                self.get_logger().info(f"Mode relais: Publication au serveur")
-                # 1. Publier nos propres données
+            # Publication selon le mode
+            if not self.p2p_active and not self.is_relay:
+                # En mode normal, publication directe au serveur
                 self.position_publisher.publish(position_msg)
-                # 2. Republier les données de l'autre robot si disponibles
-                if self.other_robot_odom is not None:
-                    self.get_logger().info(f"Relais: Republication des données de l'autre robot")
-                    other_msg = String()
-                    other_msg.data = json.dumps(self.other_robot_odom)
-                    self.position_publisher.publish(other_msg)
-                    
-                    # Mise à jour de l'affichage selon la distance
-                    other_distance = self.other_robot_odom.get('distance', 0)
-                    if self.current_distance > other_distance:
-                        self.display.set_far_icon()
-                        self.get_logger().info("Je suis plus loin du point de départ")
-                    else:
-                        self.display.set_near_icon()
-                        self.get_logger().info("Je suis plus proche du point de départ")
-                else:
-                    self.display.set_single_robot_icon()
-                return  # On sort après avoir géré le mode relais
-            # Mode normal: publication directe au serveur
-            self.position_publisher.publish(position_msg)
+                
+            # Mise à jour de l'affichage
+            self._update_display()
             
-            # Mise à jour de l'affichage selon la distance même en mode normal
-            if self.other_robot_odom is not None:
-                other_distance = self.other_robot_odom.get('distance', 0)
-                if self.current_distance > other_distance:
-                    self.display.set_far_icon()
-                    self.get_logger().info("Je suis plus loin du point de départ")
-                else:
-                    self.display.set_near_icon()
-                    self.get_logger().info("Je suis plus proche du point de départ")
-            else:
-                self.display.set_default_icon()
-            self.display.set_default_icon()
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
+
+    def _update_display(self):
+        """Met à jour l'affichage en fonction des distances actuelles"""
+        try:
+            if not hasattr(self, 'display'):
+                return
+                
+            if self.other_robot_odom is None:
+                self.get_logger().debug("Pas d'information de l'autre robot, affichage par défaut")
+                self.display.set_default_icon()
+                return
+                
+            other_distance = self.other_robot_odom.get('distance', 0)
+            
+            self.get_logger().debug(f"Distance actuelle: {self.current_distance}, autre robot: {other_distance}")
+            
+            if self.current_distance > other_distance:
+                self.display.set_far_icon()
+                self.get_logger().debug("Je suis plus loin du point de départ")
+            else:
+                self.display.set_near_icon()
+                self.get_logger().debug("Je suis plus proche du point de départ")
+        except Exception as e:
+            self.get_logger().error(f"Erreur lors de la mise à jour de l'affichage: {str(e)}")
 
 def main(args=None):
     try:

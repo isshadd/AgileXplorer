@@ -10,6 +10,11 @@ def merge_maps(map1, map2):
     merged_map = OccupancyGrid()
     merged_map.header = map1.header
     merged_map.header.frame_id = 'merge_map'
+
+
+    if map2 is None:
+        return map1
+    
     min_x = min(map1.info.origin.position.x, map2.info.origin.position.x)
     min_y = min(map1.info.origin.position.y, map2.info.origin.position.y)
     max_x = max(map1.info.origin.position.x + (map1.info.width * map1.info.resolution),
@@ -35,37 +40,26 @@ def merge_maps(map1, map2):
             merged_x = int(np.floor((map2.info.origin.position.x + x * map2.info.resolution - min_x) / merged_map.info.resolution))
             merged_y = int(np.floor((map2.info.origin.position.y + y * map2.info.resolution - min_y) / merged_map.info.resolution))
             merged_i = merged_x + merged_y * merged_map.info.width
-            # if merged_map.data[merged_i] == -1:
-            #     merged_map.data[merged_i] = map2.data[i]
-
-            v1 = merged_map.data[merged_i]
-            v2 = map2.data[i]
-            
-            if v1 == -1 and v2 != -1:
-                merged_map.data[merged_i] = v2
-            elif v1 != -1 and v2 != -1:
-                if abs(v1 - v2) < 30:
-                    # consider them the same, take average or max
-                    merged_map.data[merged_i] = int((v1 + v2) / 2)
-                else:
-                    # conflicting info: optionally prefer more conservative (higher value = more likely occupied)
-                    merged_map.data[merged_i] = max(v1, v2)
+            if merged_map.data[merged_i] == -1:
+                merged_map.data[merged_i] = map2.data[i]
     return merged_map
 
-class MergeMapNode(Node):
+class MergeMapNode (Node):
     def __init__(self):
         super().__init__('merge_map_node')
         self.publisher = self.create_publisher(OccupancyGrid, '/merge_map', 10)
-        self.subscription = self.create_subscription(OccupancyGrid, '/map1', self.map1_callback, 10)
-        self.subscription = self.create_subscription(OccupancyGrid, '/map2', self.map2_callback, 10)
+        self.subscription1 = self.create_subscription(OccupancyGrid, '/map1', self.map1_callback, 10)
+        self.subscription2 = self.create_subscription(OccupancyGrid, '/map2', self.map2_callback, 10)
         self.map1 = None
         self.map2 = None
 
     def map1_callback(self, msg):
         self.map1 = msg
-        if self.map2 is not None:
-            msg = merge_maps(self.map1, self.map2)
-            self.publisher.publish(msg)
+        # if self.map2 is not None:
+        #     msg = merge_maps(self.map1, self.map2)
+        #     self.publisher.publish(msg)
+        merged_msg = merge_maps(self.map1, self.map2)
+        self.publisher.publish(merged_msg)
     
     def map2_callback(self, msg):
         self.map2 = msg

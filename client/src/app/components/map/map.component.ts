@@ -55,10 +55,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private isDragging = false;
   private draggedRobotId: string | null = null;
   private dragStartPos = { x: 0, y: 0 };
-  // Variables pour le glissement de la carte
-  private isMapDragging = false;
-  private dragStartX = 0;
-  private dragStartY = 0;
   public displayMode: 'background' | 'mapping' = 'background';
 
   public toggleDisplayMode(): void {
@@ -172,21 +168,26 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       
       // Définir la couleur en fonction de la valeur
       if (value === -1) {
-        // Inconnu - vert foncé
-        imageData.data[idx] = 0;       // R
-        imageData.data[idx + 1] = 100; // G
-        imageData.data[idx + 2] = 0;   // B
-        imageData.data[idx + 3] = 255; // A - opaque
-        unknownCells++;
-      } else if (value === 0) {
-        // Libre - gris
+        // Inconnu - semi-transparent gris
         imageData.data[idx] = 128;     // R
         imageData.data[idx + 1] = 128; // G
         imageData.data[idx + 2] = 128; // B
+        imageData.data[idx + 3] = 50;  // A - semi-transparent
+        unknownCells++;
+      } else if (value === 0) {
+        //Libre - légèrement bleu pour mieux voir
+        // imageData.data[idx] = 0;       // R
+        // imageData.data[idx + 1] = 0;   // G
+        // imageData.data[idx + 2] = 200; // B - bleu
+        // imageData.data[idx + 3] = 20;  // A - légèrement visible
+        imageData.data[idx] = 51;   // R
+        imageData.data[idx + 1] = 181; // G
+        imageData.data[idx + 2] = 255; // B
         imageData.data[idx + 3] = 255; // A - opaque
+        unknownCells++;
         freeCells++;
       } else {
-        // Occupé - dégradé du gris clair au noir (inchangé)
+        // Occupé - dégradé du gris clair au noir
         const intensity = Math.min(255, Math.floor(value * 2.55));
         const color = 255 - intensity;
         imageData.data[idx] = color;     // R
@@ -230,11 +231,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       scale: this.scale
     });
     
-    this.mapCtx.translate(originX, originY);
-    
-    // Ajout d'une rotation de 90 degrés dans le sens antihoraire pour aligner avec la simulation
+    this.mapCtx.translate(originX + 200.0, originY);
     this.mapCtx.rotate(-Math.PI/2);
-    
+
     this.mapCtx.scale(scaledResolution, -scaledResolution);
     this.mapCtx.drawImage(tmpCanvas, 0, 0);
     
@@ -251,9 +250,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    let robotFound = false;
-    
-    // Vérifier si on a cliqué sur un robot
     for (const [robotId, trail] of this.robotTrails) {
       if (trail.positions.length > 0) {
         const lastPos = trail.positions[trail.positions.length - 1];
@@ -265,53 +261,30 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isDragging = true;
           this.draggedRobotId = robotId;
           this.dragStartPos = { x, y };
-          robotFound = true;
           break;
         }
       }
     }
-    
-    // Si on n'a pas cliqué sur un robot, on commence à déplacer la carte
-    if (!robotFound) {
-      this.isMapDragging = true;
-      this.dragStartX = x;
-      this.dragStartY = y;
-    }
   }
 
   private handleMouseMove(event: MouseEvent): void {
+    if (!this.isDragging || !this.draggedRobotId) return;
+
     const canvas = this.canvasRef.nativeElement;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    // Gestion du déplacement des robots
-    if (this.isDragging && this.draggedRobotId) {
-      const worldX = (x - this.centerX) / this.scale;
-      const worldY = -(y - this.centerY) / this.scale;
-  
-      const trail = this.robotTrails.get(this.draggedRobotId);
-      if (trail) {
-        trail.positions = [{
-          x: worldX,
-          y: worldY,
-          timestamp: Date.now()
-        }];
-      }
-    }
-    
-    // Gestion du déplacement de la carte
-    if (this.isMapDragging && !this.isDragging) {
-      const deltaX = x - this.dragStartX;
-      const deltaY = y - this.dragStartY;
-      
-      this.centerX += deltaX;
-      this.centerY += deltaY;
-      
-      this.dragStartX = x;
-      this.dragStartY = y;
-      
-      this.drawMap();
+    const worldX = (x - this.centerX) / this.scale;
+    const worldY = -(y - this.centerY) / this.scale;
+
+    const trail = this.robotTrails.get(this.draggedRobotId);
+    if (trail) {
+      trail.positions = [{
+        x: worldX,
+        y: worldY,
+        timestamp: Date.now()
+      }];
     }
   }
 
@@ -331,10 +304,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
 
-    // Réinitialiser tous les états de glissement
     this.isDragging = false;
     this.draggedRobotId = null;
-    this.isMapDragging = false;
   }
 
   public zoomIn(): void {

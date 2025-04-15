@@ -8,4 +8,4 @@ source /opt/ros/humble/setup.bash
 source install/setup.bash
 colcon build
 source install/setup.bash
-ros2 launch ros_gz_example_bringup ackerman.launch.py robot_count:=2
+ros2 launch ros_gz_example_bringup diff_drive.launch.py robot_count:=2

@@ -357,6 +357,7 @@ class MissionNode(Node):
         self.timer = None
         self.current_goal_handle = None
         self.is_stop_mode = False
+        self.returning_to_base = False
 
         self.last_positions = []
         self.last_check_time = time.time()
@@ -364,19 +365,21 @@ class MissionNode(Node):
         self.stuck_distance_threshold = 0.05
 
     def timer_callback(self):
-        if self.check_if_stuck():
-            return
         if self.mission_active:
             self.explore_map()
 
     def start_callback(self, msg):
         if not self.is_stop_mode:
-            self.move(0.2, 0.3)
+            self.move(0.3, 0.3)
         self.mission_active = True
         self.is_stop_mode = False
         self.get_logger().info("Starting the mission mission")
-        self.timer = self.create_timer(1.0, self.timer_callback)
+        self.timer = self.create_timer(5.0, self.timer_callback)
         self.explore_map()
+
+        self.prev_x = None
+        self.prev_y = None
+        self.stuck_check_timer = self.create_timer(2.0, self.stuck_check_callback)
 
     def stop_callback(self, msg):
         self.mission_active = False
@@ -392,6 +395,7 @@ class MissionNode(Node):
         self.play_sound("return")
 
         self.mission_active = False
+        self.returning_to_base = True
         self.get_logger().info(f"Ending mission, returning to: x={self.initial_pose.pose.position.x:.2f}, y={self.initial_pose.pose.position.y :.2f}")
 
         goal_msg = NavigateToPose.Goal()
@@ -407,9 +411,6 @@ class MissionNode(Node):
         send_goal_future.add_done_callback(self.goal_response_callback)
 
     def explore_map(self):
-
-        self.last_positions.append((self.x, self.y, time.time()))
-        self.last_positions = [(x, y, t) for x, y, t in self.last_positions if time.time() - t <= 10]
 
         if self.map_data is None:
             self.get_logger().error("No map received.")
@@ -429,28 +430,28 @@ class MissionNode(Node):
         robot_x = self.current_pose.pose.position.x
         robot_y = self.current_pose.pose.position.y
 
-        if self.robot_id == 'limo1':
-            candidates = [
-                (robot_x, robot_y + 1),
-                (robot_x + 1, robot_y + 1),
-                (robot_x + 1, robot_y),
-                (robot_x + 1, robot_y - 1),
-                (robot_x, robot_y - 1),
-                (robot_x - 1, robot_y - 1),
-                (robot_x - 1, robot_y),
-                (robot_x - 1, robot_y + 1)
-            ]
-        else :
-            candidates = [
-                (robot_x, robot_y - 1),
-                (robot_x + 1, robot_y - 1),
-                (robot_x + 1, robot_y),
-                (robot_x + 1, robot_y + 1),
-                (robot_x, robot_y + 1),
-                (robot_x - 1, robot_y + 1),
-                (robot_x - 1, robot_y),
-                (robot_x - 1, robot_y - 1),
-            ]
+        # if self.robot_id == 'limo1':
+        #     candidates = [
+        #         (robot_x, robot_y + 1),
+        #         (robot_x + 1, robot_y + 1),
+        #         (robot_x + 1, robot_y),
+        #         (robot_x + 1, robot_y - 1),
+        #         (robot_x, robot_y - 1),
+        #         (robot_x - 1, robot_y - 1),
+        #         (robot_x - 1, robot_y),
+        #         (robot_x - 1, robot_y + 1)
+        #     ]
+        # else :
+        #     candidates = [
+        #         (robot_x, robot_y - 1),
+        #         (robot_x + 1, robot_y - 1),
+        #         (robot_x + 1, robot_y),
+        #         (robot_x + 1, robot_y + 1),
+        #         (robot_x, robot_y + 1),
+        #         (robot_x - 1, robot_y + 1),
+        #         (robot_x - 1, robot_y),
+        #         (robot_x - 1, robot_y - 1),
+        #     ]
 
         # def is_free(x, y):
         #     mx = int((x - origin_x) / resolution)
@@ -579,19 +580,32 @@ class MissionNode(Node):
         else:
             self.get_logger().error(f"Fichier son introuvable: {sound_file}")
 
-    def check_if_stuck(self):
-        if len(self.last_positions) < 2:
-            return False
+    def stuck_check_callback(self):
+        if self.x is None or self.y is None:
+            return
+        
 
-        current_time = time.time()
-        for x, y, t in self.last_positions:
-            if current_time - t >= self.stuck_duration_threshold:
-                dist = math.hypot(self.x - x, self.y - y)
-                if dist < self.stuck_distance_threshold:
-                    self.get_logger().warn("Robot appears to be stuck. Initiating recovery behavior.")
-                    self.recovery_behavior()
-                    return True
-        return False
+        if self.returning_to_base:
+            distance_to_initial = math.hypot(
+                self.x - self.initial_pose.pose.position.x,
+                self.y - self.initial_pose.pose.position.y
+            )
+            if distance_to_initial < 0.2:
+                self.get_logger().info("Robot has reached base. Stopping stuck-check timer.")
+                if hasattr(self, 'stuck_check_timer') and self.stuck_check_timer is not None:
+                    self.stuck_check_timer.cancel()
+                    self.stuck_check_timer = None
+                self.returning_to_base = False
+                return
+
+        if self.prev_x is not None and self.prev_y is not None:
+            distance = math.hypot(self.x - self.prev_x, self.y - self.prev_y)
+            if distance < self.stuck_distance_threshold:
+                self.get_logger().warn("Robot hasn't moved for 1 second. Checking for stuck condition.")
+                self.recovery_behavior()
+
+        self.prev_x = self.x
+        self.prev_y = self.y
 
     def recovery_behavior(self):
         twist = Twist()
@@ -599,7 +613,7 @@ class MissionNode(Node):
 
         for i in range(iterations):
             twist.linear.x = 0.3
-            twist.angular.z = 8.0
+            twist.angular.z = -8.0
             duration = 1.0
             start_time = time.time()
             while time.time() - start_time < duration:
@@ -607,7 +621,7 @@ class MissionNode(Node):
                 time.sleep(0.05)
 
             twist.linear.x = -0.3
-            twist.angular.z = 0.8
+            twist.angular.z = -0.8
             start_time = time.time()
             while time.time() - start_time < duration:
                 self.cmd_publisher.publish(twist)

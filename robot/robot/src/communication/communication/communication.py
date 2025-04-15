@@ -91,11 +91,17 @@ class PhysicalCommunicationController(BaseCommunicationController):
         if "DISPLAY" not in environ:
             environ["DISPLAY"] = ":1"
 
+        # Configuration des dépendances GTK
         gi.require_version('AppIndicator3', '0.1')
         gi.require_version('Gtk', '3.0')
         gi.require_version('GLib', '2.0')
         from gi.repository import AppIndicator3, Gtk, GLib
         from .display_controller import DisplayWindow
+        
+        # Sauvegarde des classes GTK nécessaires
+        self.AppIndicator3 = AppIndicator3
+        self.Gtk = Gtk
+        self.GLib = GLib
 
         self.other_robot_id = 'limo2' if self.robot_id == 'limo1' else 'limo1'
         self.p2p_active = False
@@ -145,14 +151,13 @@ class PhysicalCommunicationController(BaseCommunicationController):
         )
 
     def _setup_gtk(self):
-        from gi.repository import AppIndicator3, Gtk
-        self.indicator = AppIndicator3.Indicator.new(
+        self.indicator = self.AppIndicator3.Indicator.new(
             f"robot_{self.robot_id}_indicator",
             "dialog-information-symbolic",
-            AppIndicator3.IndicatorCategory.APPLICATION_STATUS
+            self.AppIndicator3.IndicatorCategory.APPLICATION_STATUS
         )
-        self.indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
-        self.indicator.set_menu(Gtk.Menu())
+        self.indicator.set_status(self.AppIndicator3.IndicatorStatus.PASSIVE)
+        self.indicator.set_menu(self.Gtk.Menu())
 
     def p2p_command_callback(self, msg):
         """Gestion de l'activation/désactivation du mode P2P"""
@@ -166,13 +171,13 @@ class PhysicalCommunicationController(BaseCommunicationController):
             
             if self.p2p_active:
                 self.get_logger().info("Mode P2P activé")
-                self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+                self.indicator.set_status(self.AppIndicator3.IndicatorStatus.ACTIVE)
                 self.display.set_single_robot_icon()
                 # Publier le statut P2P
                 self.publish_p2p_status()
             else:
                 self.get_logger().info("Mode P2P désactivé")
-                self.indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
+                self.indicator.set_status(self.AppIndicator3.IndicatorStatus.PASSIVE)
                 self.is_relay = False
                 self.other_robot_odom = None
                 self.display.set_default_icon()

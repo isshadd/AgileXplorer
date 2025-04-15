@@ -168,21 +168,21 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       
       // Définir la couleur en fonction de la valeur
       if (value === -1) {
-        // Inconnu - semi-transparent gris
+        // Inconnu - vert foncé
+        imageData.data[idx] = 0;       // R
+        imageData.data[idx + 1] = 100; // G
+        imageData.data[idx + 2] = 0;   // B
+        imageData.data[idx + 3] = 255; // A - opaque
+        unknownCells++;
+      } else if (value === 0) {
+        // Libre - gris
         imageData.data[idx] = 128;     // R
         imageData.data[idx + 1] = 128; // G
         imageData.data[idx + 2] = 128; // B
-        imageData.data[idx + 3] = 50;  // A - semi-transparent
-        unknownCells++;
-      } else if (value === 0) {
-        // Libre - légèrement bleu pour mieux voir
-        imageData.data[idx] = 0;       // R
-        imageData.data[idx + 1] = 0;   // G
-        imageData.data[idx + 2] = 200; // B - bleu
-        imageData.data[idx + 3] = 20;  // A - légèrement visible
+        imageData.data[idx + 3] = 255; // A - opaque
         freeCells++;
       } else {
-        // Occupé - dégradé du gris clair au noir
+        // Occupé - dégradé du gris clair au noir (inchangé)
         const intensity = Math.min(255, Math.floor(value * 2.55));
         const color = 255 - intensity;
         imageData.data[idx] = color;     // R
@@ -227,6 +227,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     
     this.mapCtx.translate(originX, originY);
+    
+    // Ajout d'une rotation de 90 degrés dans le sens antihoraire pour aligner avec la simulation
+    this.mapCtx.rotate(-Math.PI/2);
+    
     this.mapCtx.scale(scaledResolution, -scaledResolution);
     this.mapCtx.drawImage(tmpCanvas, 0, 0);
     

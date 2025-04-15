@@ -35,8 +35,21 @@ def merge_maps(map1, map2):
             merged_x = int(np.floor((map2.info.origin.position.x + x * map2.info.resolution - min_x) / merged_map.info.resolution))
             merged_y = int(np.floor((map2.info.origin.position.y + y * map2.info.resolution - min_y) / merged_map.info.resolution))
             merged_i = merged_x + merged_y * merged_map.info.width
-            if merged_map.data[merged_i] == -1:
-                merged_map.data[merged_i] = map2.data[i]
+            # if merged_map.data[merged_i] == -1:
+            #     merged_map.data[merged_i] = map2.data[i]
+
+            v1 = merged_map.data[merged_i]
+            v2 = map2.data[i]
+            
+            if v1 == -1 and v2 != -1:
+                merged_map.data[merged_i] = v2
+            elif v1 != -1 and v2 != -1:
+                if abs(v1 - v2) < 30:
+                    # consider them the same, take average or max
+                    merged_map.data[merged_i] = int((v1 + v2) / 2)
+                else:
+                    # conflicting info: optionally prefer more conservative (higher value = more likely occupied)
+                    merged_map.data[merged_i] = max(v1, v2)
     return merged_map
 
 class MergeMapNode(Node):

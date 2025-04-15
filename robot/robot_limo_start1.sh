@@ -13,7 +13,7 @@ source install/setup.bash
 
 ros2 launch limo_bringup limo_start.launch.py id:=limo1 pub_odom_tf:=false & sleep 7
 ros2 launch limo_bringup cartographer.launch.py id:=limo1 & sleep 5
-#ros2 launch limo_bringup navigation2.launch.py id:=limo1 & sleep 7
+ros2 launch limo_bringup navigation2.launch.py id:=limo1 & sleep 7
 
 cd ../robot
 source install/setup.bash

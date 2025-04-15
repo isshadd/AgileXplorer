@@ -64,9 +64,13 @@ class BaseCommunicationController(Node):
 
 # Classe pour la simulation Gazebo
 class GazeboCommunicationController(BaseCommunicationController):
+    def __init__(self):
+        super().__init__()
+        self.get_logger().info("Mode simulation: P2P désactivé")
+
     def odom_callback(self, msg):
         try:
-            # Transmission des données brutes d'odométrie
+            # En mode simulation, on publie toujours directement au serveur
             odom_data = {
                 "robot_id": self.robot_id,
                 "odom": {
@@ -83,6 +87,10 @@ class GazeboCommunicationController(BaseCommunicationController):
             
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
+            
+    # Le mode P2P n'est pas disponible en simulation
+    def p2p_command_callback(self, msg):
+        self.get_logger().warn("Le mode P2P n'est pas disponible en simulation")
 
 # Classe pour les robots physiques
 class PhysicalCommunicationController(BaseCommunicationController):
@@ -276,18 +284,20 @@ class PhysicalCommunicationController(BaseCommunicationController):
 
             # Logique de publication selon le mode
             if self.p2p_active:
-                # En mode P2P, on publie UNIQUEMENT sur le topic P2P
-                self.get_logger().debug(f"Mode P2P actif: Publication uniquement sur le topic P2P")
+                # En mode P2P, on publie UNIQUEMENT sur le topic P2P, jamais au serveur
+                self.get_logger().info(f"Mode P2P actif: Publication uniquement sur le topic P2P")
                 self.p2p_odom_pub.publish(position_msg)
                 self.display.set_single_robot_icon()
-            elif self.is_relay:
+                return  # On sort immédiatement pour éviter toute autre publication
+            
+            if self.is_relay:
                 # En mode relais, on publie nos données et celles de l'autre robot au serveur
-                self.get_logger().debug(f"Mode relais: Publication au serveur")
+                self.get_logger().info(f"Mode relais: Publication au serveur")
                 # 1. Publier nos propres données
                 self.position_publisher.publish(position_msg)
                 # 2. Republier les données de l'autre robot si disponibles
                 if self.other_robot_odom is not None:
-                    self.get_logger().debug(f"Relais: Republication des données de l'autre robot")
+                    self.get_logger().info(f"Relais: Republication des données de l'autre robot")
                     other_msg = String()
                     other_msg.data = json.dumps(self.other_robot_odom)
                     self.position_publisher.publish(other_msg)
@@ -300,10 +310,11 @@ class PhysicalCommunicationController(BaseCommunicationController):
                         self.display.set_near_icon()
                 else:
                     self.display.set_single_robot_icon()
-            else:
-                # Mode normal: publication directe au serveur
-                self.position_publisher.publish(position_msg)
-                self.display.set_default_icon()
+                return  # On sort après avoir géré le mode relais
+            
+            # Mode normal: publication directe au serveur
+            self.position_publisher.publish(position_msg)
+            self.display.set_default_icon()
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
 

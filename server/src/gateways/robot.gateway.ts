@@ -50,6 +50,8 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private reconnectionAttempts: Map<string, number> = new Map();
   private readonly MAX_RECONNECTION_ATTEMPTS = 5;
   private robotPositions: Map<string, RobotPosition[]> = new Map();
+  private lastPositions: Map<string, RobotPosition> = new Map();
+  private totalDistances: Map<string, number> = new Map();
   private feedbackNode: rclnodejs.Node;
   private batteryInterval: NodeJS.Timeout;
   private robotBatteryLevels: Map<string, number> = new Map([
@@ -78,6 +80,10 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('startMission')
   async handleStartMission(@MessageBody() robotId: string) {
     try {
+      // Reset distance tracking for all robots
+      this.lastPositions.clear();
+      this.totalDistances.clear();
+
       const result = await this.missionService.startMission(robotId);
       this.currentMissionId = result.missionId;
       this.startSensorDataLogging();
@@ -213,6 +219,19 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 y: data.odom.position.y,
                 timestamp: data.odom.timestamp,
               };
+
+              // Calculate distance if we have a previous position
+              const lastPosition = this.lastPositions.get(data.robot_id);
+              if (lastPosition) {
+                const dx = position.x - lastPosition.x;
+                const dy = position.y - lastPosition.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const totalDistance = (this.totalDistances.get(data.robot_id) || 0) + distance;
+                this.totalDistances.set(data.robot_id, totalDistance);
+              }
+
+              // Update last position
+              this.lastPositions.set(data.robot_id, position);
               this.handleRobotPosition(data.robot_id, position);
             }
           } catch (error) {
@@ -267,14 +286,26 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('stopMission')
   async handleStopMission(client: Socket, robotId: string) {
     try {
+      // Calculate total distance from all robots
+      let totalDistance = 0;
+      if (this.currentMissionId) {
+        const robotIds = ['limo1', 'limo2'];
+        robotIds.forEach(id => {
+          const distance = this.totalDistances.get(id) || 0;
+          totalDistance += distance;
+        });
+      }
+
       // Stop sensor logging first to prevent new logs during shutdown
       this.stopSensorDataLogging();
 
-      // Clear mission ID to prevent any new logs
+      // Clear mission ID and distance tracking
       this.currentMissionId = null;
+      this.lastPositions.clear();
+      this.totalDistances.clear();
 
-      // Stop the mission and finalize logs
-      const result = await this.missionService.stopMission(robotId);
+      // Stop the mission and finalize logs with total distance
+      const result = await this.missionService.stopMission(robotId, totalDistance);
 
       // Notify all clients
       this.server.emit('missionStopped', result);
@@ -346,6 +377,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
             data: {
               ...robotState,
               timestamp: new Date().toISOString(),
+              distance: Number(this.totalDistances.get(robotId) || 0).toFixed(2),
             },
           };
           await this.logsService.addLog(this.currentMissionId, logEntry);

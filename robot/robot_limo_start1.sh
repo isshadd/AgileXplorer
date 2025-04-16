@@ -1,6 +1,12 @@
 # /bin/bash
 
+# Installation des dépendances GTK nécessaires
+sudo apt-get update && sudo apt-get install -y python3-gi gir1.2-appindicator3-0.1
+
+# Configuration de l'environnement
 export ROS_DOMAIN_ID=102
+export SIMULATION=false
+
 source /opt/ros/humble/setup.bash
 pacmd set-default-sink alsa_output.usb-0c76_USB_PnP_Audio_Device-00.analog-stereo
 sudo chmod 666 /dev/ttyTHS1

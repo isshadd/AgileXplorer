@@ -17,6 +17,7 @@ export interface Mission {
     status: 'ongoing' | 'completed' | 'aborted';
     robots: string[]; // array of robot IDs
     logs: MissionLog[];
+    totalDistance?: number; // Total distance traveled by all robots in meters
 }
 
 export interface MissionFilter {

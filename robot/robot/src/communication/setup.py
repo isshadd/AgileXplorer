@@ -10,6 +10,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('lib/' + package_name, ['communication/communication_wrapper.sh']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

@@ -391,8 +391,8 @@ class MissionNode(Node):
             cancel_future = self.current_goal_handle.cancel_goal_async()
             cancel_future.add_done_callback(self.cancel_done_callback)
 
-        if self.stuck_check_timer is not None: # TODO
-            self.stuck_check_timer.cancel()
+        # if self.stuck_check_timer is not None: # TODO
+        #     self.stuck_check_timer.cancel()
 
     def end_callback(self, msg):
 

@@ -64,6 +64,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.displayMode = this.displayMode === 'background' ? 'mapping' : 'background';
     this.drawMap();
   }
+  
+  public setDisplayMode(mode: 'background' | 'mapping'): void {
+    this.displayMode = mode;
+    this.drawMap();
+  }
 
   private scale = 50;
   private centerX = 0;

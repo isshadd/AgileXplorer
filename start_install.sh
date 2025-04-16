@@ -37,6 +37,8 @@ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gp
 sudo apt-get update
 sudo apt-get install -y ignition-fortress
 
+sudo apt install libayatana-appindicator3-dev gir1.2-appindicator3-0.1
+
 export NVM_DIR="$HOME/.nvm"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
 source "$NVM_DIR/nvm.sh"

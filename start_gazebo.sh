@@ -112,5 +112,7 @@ source install/setup.bash
 ros2 launch robot robot.launch.py id:=limo1 & sleep 5
 ros2 launch robot robot.launch.py id:=limo2 & sleep 5
 
+ros2 launch merge_map merge_map_launch.py use_sim_time:=true sleep 5
+
 echo "Everything is up and running"
 tail -f /dev/null

@@ -173,7 +173,7 @@ export class MissionService {
     }
   }
 
-  async stopMission(robotId: string) {
+  async stopMission(robotId: string, totalDistance?: number) {
     const stoppedMissionId = this.activeMissionId;
     this.logger.log(
       `Stopping mission for robot ${robotId} with ID: ${stoppedMissionId}`,
@@ -192,6 +192,7 @@ export class MissionService {
     try {
       // Mettre à jour l'état du robot
       this.updateRobotState(robotId, 'en arrêt');
+
 
       await this.logsService.addLog(stoppedMissionId, {
         type: 'COMMAND',
@@ -214,7 +215,7 @@ export class MissionService {
         this.logger.log(`Message end_mission publié sur /${robotId}/messages`);
       }
 
-      await this.logsService.finalizeMissionLog(stoppedMissionId);
+      await this.logsService.finalizeMissionLog(stoppedMissionId, totalDistance);
       this.logger.debug('Mission log finalized');
       return { stoppedMissionId };
     } catch (error) {
@@ -332,20 +333,28 @@ export class MissionService {
   async getMissions(): Promise<any[]> {
     try {
       const missionLogs = await this.logsService.findAllMissionLogs();
-      return missionLogs.map((log) => ({
-        id: log.missionId,
-        startTime: log.startTime,
-        endTime: log.endTime,
-        status: log.endTime ? 'completed' : 'ongoing',
-        robots: log.logs
-          .filter(
-            (entry) =>
-              entry.type === 'COMMAND' &&
-              entry.data.command === 'START_MISSION',
-          )
-          .map((entry) => entry.robotIds),
-        logs: log.logs,
-      }));
+      return missionLogs.map((log) => {
+        const duration = log.endTime && log.startTime
+          ? Math.round((new Date(log.endTime).getTime() - new Date(log.startTime).getTime()) / 1000)
+          : undefined;
+
+        return {
+          id: log.missionId,
+          startTime: log.startTime,
+          endTime: log.endTime,
+          duration,
+          status: log.endTime ? 'completed' : 'ongoing',
+          totalDistance: log.totalDistance ? Number(log.totalDistance).toFixed(2) : undefined,
+          robots: log.logs
+            .filter(
+              (entry) =>
+                entry.type === 'COMMAND' &&
+                entry.data.command === 'START_MISSION',
+            )
+            .map((entry) => entry.robotIds),
+          logs: log.logs,
+        };
+      });
     } catch (error) {
       this.logger.error(
         `Error getting missions: ${error.message}`,
@@ -355,7 +364,7 @@ export class MissionService {
     }
   }
 
-  async stopMissionsAll(): Promise<{ message: string }> {
+  async stopMissionsAll(totalDistance?: number): Promise<{ message: string }> {
     await this.initPromise;
     this.logger.log('Arrêt de la mission pour tous les robots');
     const responses: string[] = [];
@@ -383,7 +392,7 @@ export class MissionService {
         }
       }
 
-      await this.logsService.finalizeMissionLog(this.activeMissionId);
+      await this.logsService.finalizeMissionLog(this.activeMissionId, totalDistance);
       this.activeMissionId = null;
       this.currentLogs = []; // Clear the logs when stopping all missions
     }

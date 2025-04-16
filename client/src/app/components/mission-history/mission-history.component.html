@@ -8,10 +8,10 @@
             </button>
         </mat-card-header>
         <mat-card-content>
-            <table mat-table [dataSource]="missions" matSort class="mission-table">
+            <table mat-table [dataSource]="dataSource" matSort class="mission-table">
                 <!-- ID Colonne -->
                 <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>ID Mission</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID Mission</th>
                     <td mat-cell *matCellDef="let mission">{{mission.id}}</td>
                 </ng-container>
 
@@ -29,6 +29,24 @@
                     <td mat-cell *matCellDef="let mission">
                         {{mission.endTime | date:'dd/MM/yyyy HH:mm:ss'}}
                     </td>
+                </ng-container>
+
+                <!-- Status Colonne -->
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Statut</th>
+                    <td mat-cell *matCellDef="let mission">{{mission.status}}</td>
+                </ng-container>
+
+                <!-- Total Distance Colonne -->
+                <ng-container matColumnDef="totalDistance">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Distance Totale (m)</th>
+                    <td mat-cell *matCellDef="let mission">{{mission.totalDistance | number:'1.2-2'}}</td>
+                </ng-container>
+
+                <!-- Duration Colonne -->
+                <ng-container matColumnDef="duration">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Durée (s)</th>
+                    <td mat-cell *matCellDef="let mission">{{mission.duration}}</td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

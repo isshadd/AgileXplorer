@@ -118,7 +118,7 @@ class PhysicalCommunicationController(BaseCommunicationController):
         self.initial_position = None
         self.current_distance = 0
         self.other_distance = 0
-        self.last_update_time = None
+        self.has_initial_position = False  # Flag pour savoir si le point de départ est enregistré
         
         # Interface d'affichage
         self.display = DisplayWindow()
@@ -205,7 +205,7 @@ class PhysicalCommunicationController(BaseCommunicationController):
             if data['p2p_active']:
                 if not self.p2p_active:  # Seulement si on n'est pas déjà en mode P2P
                     self.is_relay = True
-                    self.initial_position = None  # Réinitialisation du point de référence
+                    # Ne pas réinitialiser le point de référence quand on devient relais
                     self.get_logger().info(f"Robot {self.robot_id} devient relais pour {data['robot_id']}")
                     self._update_display()
                     self.get_logger().debug("Configuration du relais terminée")
@@ -215,8 +215,7 @@ class PhysicalCommunicationController(BaseCommunicationController):
                     self.other_robot_odom = None
                     self.get_logger().info(f"Mode relais désactivé pour {self.robot_id}")
                     self._update_display()
-                    self.initial_position = None
-                    self.current_distance = 0
+                    # Garder le point de départ et la distance actuels
                     self.other_distance = 0
                     self.get_logger().debug("Nettoyage du mode relais terminé")
             
@@ -261,9 +260,12 @@ class PhysicalCommunicationController(BaseCommunicationController):
             current_pose = msg.pose.pose
             
             # Calcul de la distance par rapport à la position initiale
-            if self.initial_position is None:
+            # Enregistrement du point de départ (une seule fois)
+            if not self.has_initial_position:
                 self.initial_position = current_pose
+                self.has_initial_position = True
                 self.current_distance = 0
+                self.get_logger().info("Point de départ enregistré")
             else:
                 dx = current_pose.position.x - self.initial_position.position.x
                 dy = current_pose.position.y - self.initial_position.position.y
@@ -299,26 +301,35 @@ class PhysicalCommunicationController(BaseCommunicationController):
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
 
     def _update_display(self):
-        """Met à jour l'affichage en fonction des distances actuelles"""
+        """Met à jour l'affichage en fonction des distances depuis le point de départ"""
         try:
             if not hasattr(self, 'display'):
+                self.get_logger().error("Pas d'affichage disponible")
+                return
+                
+            if not self.has_initial_position:
+                self.get_logger().debug("Point de départ non encore enregistré")
+                self.display.set_default_icon()
+                self.display.show_all()
                 return
                 
             if self.other_robot_odom is None:
-                self.get_logger().debug("Pas d'information de l'autre robot, affichage par défaut")
+                self.get_logger().debug("Pas d'information de l'autre robot")
                 self.display.set_default_icon()
+                self.display.show_all()
                 return
-                
+
             other_distance = self.other_robot_odom.get('distance', 0)
-            
-            self.get_logger().debug(f"Distance actuelle: {self.current_distance}, autre robot: {other_distance}")
+            self.get_logger().info(f"Comparaison des distances - Moi: {self.current_distance:.2f}m, Autre robot: {other_distance:.2f}m")
             
             if self.current_distance > other_distance:
+                self.get_logger().info("Je suis plus loin de mon point de départ")
                 self.display.set_far_icon()
-                self.get_logger().debug("Je suis plus loin du point de départ")
             else:
+                self.get_logger().info("Je suis plus proche de mon point de départ")
                 self.display.set_near_icon()
-                self.get_logger().debug("Je suis plus proche du point de départ")
+            
+            self.display.show_all()  # Force le rafraîchissement après chaque mise à jour
         except Exception as e:
             self.get_logger().error(f"Erreur lors de la mise à jour de l'affichage: {str(e)}")
 

@@ -46,21 +46,25 @@ class DisplayWindow(Gtk.Window):
         """Affiche l'icône par défaut en attendant la comparaison des positions"""
         self.status_label.set_markup('<span font="40">En attente de position...</span>')
         self._set_icon_by_name("dialog-information-symbolic", 256)
+        self.show_all()  # Force le rafraîchissement de l'affichage
     
     def set_far_icon(self):
         """Affiche l'icône pour le robot le plus éloigné"""
         self.status_label.set_markup('<span font="40" color="red">Plus Éloigné</span>')
         self._set_icon_by_name("dialog-warning-symbolic", 256)
+        self.show_all()  # Force le rafraîchissement de l'affichage
     
     def set_near_icon(self):
         """Affiche l'icône pour le robot le plus proche"""
         self.status_label.set_markup('<span font="40" color="green">Plus Proche</span>')
         self._set_icon_by_name("emblem-ok-symbolic", 256)
+        self.show_all()  # Force le rafraîchissement de l'affichage
     
     def set_single_robot_icon(self):
         """Affiche l'icône quand un seul robot est en P2P"""
-        self.status_label.set_markup('<span font="40" color="blue">Mode P2P\nEn Attente de l\'Autre Robot</span>')
+        self.status_label.set_markup('<span font="40" color="blue">En Attente de Données</span>')
         self._set_icon_by_name("dialog-warning-symbolic", 256)
+        self.show_all()  # Force le rafraîchissement de l'affichage
     
     def _set_icon_by_name(self, icon_name, size):
         """Définit l'icône à partir de son nom"""

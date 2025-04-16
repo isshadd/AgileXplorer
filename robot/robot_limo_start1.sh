@@ -26,4 +26,6 @@ source install/setup.bash
 colcon build
 source install/setup.bash
 
-ros2 launch robot robot.launch.py id:=limo1
+ros2 launch robot robot.launch.py id:=limo1 & sleep 5
+ros2 launch merge_map merge_map_launch.py use_sim_time:=false
+

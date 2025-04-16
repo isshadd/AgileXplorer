@@ -246,7 +246,7 @@ export class RobotGateway implements OnGatewayConnection, OnGatewayDisconnect {
       // Abonnement aux données de la carte (lidar)
       this.feedbackNode.createSubscription(
         'nav_msgs/msg/OccupancyGrid',
-        '/map',
+        '/merge_map',
         (msg: any) => {
           try {
             // Conversion des données de carte pour le WebSocket

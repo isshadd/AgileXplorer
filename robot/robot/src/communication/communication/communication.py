@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String, Bool
+from std_msgs.msg import String
 from nav_msgs.msg import Odometry
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 import json
@@ -35,7 +35,7 @@ class BaseCommunicationController(Node):
         # Souscription à l'odométrie
         odom_topic = f'/{self.robot_id}/odom'
         self.odom_subscription = self.create_subscription(
-            Odometry,
+            Odometry, 
             odom_topic,
             self.odom_callback,
             odom_qos
@@ -258,27 +258,15 @@ class PhysicalCommunicationController(BaseCommunicationController):
 
     def odom_callback(self, msg):
         try:
-            current_pose = msg.pose.pose
-            
-            # Calcul de la distance
-            if self.initial_position is None:
-                self.initial_position = current_pose
-                self.current_distance = 0
-            else:
-                dx = current_pose.position.x - self.initial_position.position.x
-                dy = current_pose.position.y - self.initial_position.position.y
-                self.current_distance = math.sqrt(dx**2 + dy**2)
-
-            # Préparation des données d'odométrie
+            # Transmission des données brutes d'odométrie
             odom_data = {
                 "robot_id": self.robot_id,
                 "odom": {
                     "position": {
-                        "x": current_pose.position.x,
-                        "y": current_pose.position.y
+                        "x": msg.pose.pose.position.x,
+                        "y": msg.pose.pose.position.y
                     }
-                },
-                "distance": self.current_distance
+                }
             }
             
             position_msg = String()
@@ -369,22 +357,12 @@ async def main_async(node):
     main_loop = GLib.MainLoop()
 
     try:
-        # Obtention de la boucle asyncio
-        loop = asyncio.get_event_loop()
-        # Création de la tâche pour le noeud ROS
-        loop.create_task(spin_ros_node(node))
-        # Exécution de la boucle GTK de manière asynchrone
-        await loop.run_in_executor(None, main_loop.run)
+        rclpy.spin(node)
     except KeyboardInterrupt:
-        node.get_logger().info("Arrêt du noeud...")
+        pass
     finally:
-        try:
-            main_loop.quit()
-            node.display.destroy()  # Fermer la fenêtre GTK
-            node.destroy_node()
-            rclpy.shutdown()
-        except Exception as e:
-            print(f"Erreur lors de l'arrêt: {str(e)}")
+        node.destroy_node()
+        rclpy.shutdown()
 
 async def spin_ros_node(node, sleep_interval: float = 0.1):
     """Fait tourner le noeud ROS de manière asynchrone"""

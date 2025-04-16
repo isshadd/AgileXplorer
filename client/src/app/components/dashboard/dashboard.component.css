@@ -1,9 +1,11 @@
 .dashboard-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
+    width: 100%;
     padding: 0.5rem;
     gap: 0.5rem;
+    overflow: hidden;
 }
 
 .header-controls {
@@ -34,7 +36,8 @@
     gap: 1rem;
     flex: 1;
     min-height: 0;
-    height: 100%;
+    height: calc(100% - 50px);
+    overflow: hidden;
 }
 
 .main-content.show-history {
@@ -133,7 +136,7 @@
 }
 
 .mission-control {
-    font-size: x-small;
+    font-size: 0.9em;
 }
 
 .battery-percentage {
@@ -180,9 +183,9 @@ mat-card-title {
 /* Ajustement pour les tablettes */
 @media (min-width: 768px) and (max-width: 1024px) {
     .dashboard-container {
-        height: calc(100vh - 64px);
+        height: 100vh;
         padding: 0.5rem;
-        overflow: auto;
+        overflow: hidden;
     }
 
     .header-controls {
@@ -196,16 +199,21 @@ mat-card-title {
     .main-content {
         display: grid;
         grid-template-columns: 1fr 300px;
-        grid-template-areas: "map controls";
+        grid-template-areas:
+            "map controls"
+            "logs logs";
         gap: 0.5rem;
         position: relative;
         z-index: 1;
+        height: calc(100% - 50px);
+        overflow: hidden;
     }
 
     .mission-logs-container {
-        grid-column: 1 / -1;
-        grid-row: 2;
+        grid-area: logs;
         height: 200px;
+        max-height: 30vh;
+        overflow-y: auto;
     }
     
     .main-content.show-history {
@@ -216,10 +224,12 @@ mat-card-title {
     .map-container {
         grid-area: map;
         width: 100%;
-        height: calc(100vh - 150px);
+        height: 100%;
+        min-height: 0;
         position: relative;
         z-index: 1;
         border-radius: 4px;
+        overflow: hidden;
     }
 
     .robots-container {
@@ -247,24 +257,20 @@ mat-card-title {
     button {
         font-size: 0.85em;
         padding: 0 8px;
-        width: 0%;
+        width: 100%;
     }
 }
 
 /* Ajustement pour les petits écrans */
 @media (max-width: 767px) {
     .dashboard-container {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto 1fr;
-        grid-template-areas:
-            "header"
-            "map"
-            "robots";
-        height: calc(100vh - 64px);
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
         padding: 0.5rem;
         gap: 0.5rem;
-        overflow: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .header-controls {
@@ -289,17 +295,13 @@ mat-card-title {
     }
 
     .main-content {
-        grid-area: map / robots;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-        grid-template-areas:
-            "map"
-            "robots";
+        display: flex;
+        flex-direction: column;
         gap: 0.5rem;
         min-height: 0;
         position: relative;
         z-index: 1;
+        width: 100%;
     }
 
     .main-content.show-history {
@@ -308,33 +310,34 @@ mat-card-title {
     }
 
     .map-container {
-            grid-area: map;
-            justify-self: center;
-            align-self: center;
-            width: 100%;
-            height: auto;
-            position: relative;
-            z-index: 1;
-            background-color: transparent;
-            border-radius: 4px;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: visible;
-        }
+        grid-area: map;
+        justify-self: center;
+        align-self: center;
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+        max-height: 400px;
+        position: relative;
+        z-index: 1;
+        background-color: transparent;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
 
     .robots-container {
-        grid-area: robots;
         width: 100%;
         max-width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.75rem;
         position: relative;
         z-index: 1;
         background-color: transparent;
-        overflow-y: auto;
+        margin-bottom: 2rem;
     }
 
     .robot-card {
@@ -348,12 +351,28 @@ mat-card-title {
     .mission-controls {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.25rem;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
     }
 
     button {
-        font-size: 0.8em;
-        padding: 0 4px;
-        line-height: 28px;
+        font-size: 0.95em;
+        padding: 0 8px;
+        line-height: 42px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 6px !important;
+    }
+
+    .status-indicator {
+        padding: 8px;
+        font-size: 1em;
+    }
+
+    .status-indicator .status-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
     }
 }

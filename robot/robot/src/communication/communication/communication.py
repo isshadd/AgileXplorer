@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 from nav_msgs.msg import Odometry
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 import json
@@ -258,15 +258,27 @@ class PhysicalCommunicationController(BaseCommunicationController):
 
     def odom_callback(self, msg):
         try:
-            # Transmission des données brutes d'odométrie
+            current_pose = msg.pose.pose
+            
+            # Calcul de la distance par rapport à la position initiale
+            if self.initial_position is None:
+                self.initial_position = current_pose
+                self.current_distance = 0
+            else:
+                dx = current_pose.position.x - self.initial_position.position.x
+                dy = current_pose.position.y - self.initial_position.position.y
+                self.current_distance = math.sqrt(dx**2 + dy**2)
+
+            # Transmission des données d'odométrie avec la distance
             odom_data = {
                 "robot_id": self.robot_id,
                 "odom": {
                     "position": {
-                        "x": msg.pose.pose.position.x,
-                        "y": msg.pose.pose.position.y
+                        "x": current_pose.position.x,
+                        "y": current_pose.position.y
                     }
-                }
+                },
+                "distance": self.current_distance
             }
             
             position_msg = String()
@@ -333,7 +345,7 @@ def main(args=None):
             try:
                 node = PhysicalCommunicationController()
                 print("[INFO] Contrôleur physique créé avec succès")
-                asyncio.run(main_async(node))
+                rclpy.spin(node)
             except Exception as e:
                 print(f"[ERROR] Erreur lors de l'initialisation du contrôleur physique: {str(e)}")
                 raise
@@ -347,32 +359,6 @@ def main(args=None):
             except Exception as e:
                 print(f"[ERROR] Erreur lors de la destruction du nœud: {str(e)}")
         rclpy.shutdown()
-
-async def main_async(node):
-    from gi.repository import GLib
-    # Gestion du SIGINT (Ctrl+C)
-    signal.signal(signal.SIGINT, signal.default_int_handler)
-    
-    # Création de la boucle principale GTK
-    main_loop = GLib.MainLoop()
-
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
-
-async def spin_ros_node(node, sleep_interval: float = 0.1):
-    """Fait tourner le noeud ROS de manière asynchrone"""
-    while rclpy.ok():
-        try:
-            rclpy.spin_once(node, timeout_sec=0)
-            await asyncio.sleep(sleep_interval)
-        except Exception as e:
-            node.get_logger().error(f"Erreur dans la boucle principale: {str(e)}")
-            break
 
 if __name__ == '__main__':
     main()

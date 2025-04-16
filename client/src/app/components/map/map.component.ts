@@ -175,11 +175,16 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
         imageData.data[idx + 3] = 50;  // A - semi-transparent
         unknownCells++;
       } else if (value === 0) {
-        // Libre - légèrement bleu pour mieux voir
-        imageData.data[idx] = 0;       // R
-        imageData.data[idx + 1] = 0;   // G
-        imageData.data[idx + 2] = 200; // B - bleu
-        imageData.data[idx + 3] = 20;  // A - légèrement visible
+        //Libre - légèrement bleu pour mieux voir
+        // imageData.data[idx] = 0;       // R
+        // imageData.data[idx + 1] = 0;   // G
+        // imageData.data[idx + 2] = 200; // B - bleu
+        // imageData.data[idx + 3] = 20;  // A - légèrement visible
+        imageData.data[idx] = 51;   // R
+        imageData.data[idx + 1] = 181; // G
+        imageData.data[idx + 2] = 255; // B
+        imageData.data[idx + 3] = 255; // A - opaque
+        unknownCells++;
         freeCells++;
       } else {
         // Occupé - dégradé du gris clair au noir
@@ -226,7 +231,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       scale: this.scale
     });
     
-    this.mapCtx.translate(originX, originY);
+    this.mapCtx.translate(originX + 200.0, originY);
+    this.mapCtx.rotate(-Math.PI/2);
+
     this.mapCtx.scale(scaledResolution, -scaledResolution);
     this.mapCtx.drawImage(tmpCanvas, 0, 0);
     

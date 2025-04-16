@@ -1,9 +1,10 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String, Bool, Empty
+from std_msgs.msg import String, Bool
 from nav_msgs.msg import Odometry
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 import json
+from std_msgs.msg import Empty
 import os
 import math
 import gi
@@ -79,14 +80,14 @@ class GazeboCommunicationController(BaseCommunicationController):
                     }
                 }
             }
-
+            
             position_msg = String()
             position_msg.data = json.dumps(odom_data)
             self.position_publisher.publish(position_msg)
-
+            
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
-
+            
     # Le mode P2P n'est pas disponible en simulation
     def p2p_command_callback(self, msg):
         self.get_logger().warn("Le mode P2P n'est pas disponible en simulation")
@@ -102,9 +103,10 @@ class PhysicalCommunicationController(BaseCommunicationController):
         gi.require_version('AppIndicator3', '0.1')
         gi.require_version('Gtk', '3.0')
         gi.require_version('GLib', '2.0')
-        from gi.repository import AppIndicator3, Gtk, GLib, Gdk
+        from gi.repository import AppIndicator3, Gtk, GLib
         from .display_controller import DisplayWindow
-
+        
+        # Sauvegarde des classes GTK nécessaires
         self.AppIndicator3 = AppIndicator3
         self.Gtk = Gtk
         self.GLib = GLib
@@ -116,49 +118,46 @@ class PhysicalCommunicationController(BaseCommunicationController):
         self.initial_position = None
         self.current_distance = 0
         self.other_distance = 0
-        self.has_initial_position = False  # Flag pour savoir si le point de départ est enregistré
-
+        self.last_update_time = None
+        
         # Interface d'affichage
-        self.get_logger().info("Initialisation de l'interface graphique...")
         self.display = DisplayWindow()
-        self.get_logger().info("Interface graphique initialisée")
 
         # Configuration des topics P2P et des autres fonctionnalités
         self._setup_p2p()
-        # Initialisation de GTK dans le thread principal
-        if not Gtk.main_level():
-            self.get_logger().info("Initialisation de GTK...")
-            Gtk.init(None)
-
-        # Création d'un contexte GTK
-        self.gtk_context = GLib.MainContext.default()
-        
         self._setup_gtk()
-        
-        # Démarrer une boucle d'événements GTK en arrière-plan
-        def gtk_iteration():
-            while self.gtk_context.pending():
-                self.gtk_context.iteration(False)
-            return True
-            
-        GLib.timeout_add(100, gtk_iteration)  # Exécuter toutes les 100ms
 
     def _setup_p2p(self):
         # Topics P2P
         p2p_command_topic = f'/{self.robot_id}/p2p_command'
-        self.p2p_command_sub = self.create_subscription(Bool, p2p_command_topic, self.p2p_command_callback, 10)
+        self.p2p_command_sub = self.create_subscription(
+            Bool,
+            p2p_command_topic,
+            self.p2p_command_callback,
+            10
+        )
 
         p2p_odom_relay_topic = f'/{self.robot_id}/p2p_odom_relay'
         self.p2p_odom_pub = self.create_publisher(String, p2p_odom_relay_topic, 10)
-
+        
         other_p2p_odom_topic = f'/{self.other_robot_id}/p2p_odom_relay'
-        self.p2p_odom_sub = self.create_subscription(String, other_p2p_odom_topic, self.p2p_odom_callback, 10)
+        self.p2p_odom_sub = self.create_subscription(
+            String,
+            other_p2p_odom_topic,
+            self.p2p_odom_callback,
+            10
+        )
 
         p2p_status_topic = f'/{self.robot_id}/p2p_status'
         self.p2p_status_pub = self.create_publisher(String, p2p_status_topic, 10)
-
+        
         other_p2p_status_topic = f'/{self.other_robot_id}/p2p_status'
-        self.p2p_status_sub = self.create_subscription(String, other_p2p_status_topic, self.p2p_status_callback, 10)
+        self.p2p_status_sub = self.create_subscription(
+            String,
+            other_p2p_status_topic,
+            self.p2p_status_callback,
+            10
+        )
 
     def _setup_gtk(self):
         self.indicator = self.AppIndicator3.Indicator.new(
@@ -178,11 +177,12 @@ class PhysicalCommunicationController(BaseCommunicationController):
 
             self.p2p_active = msg.data
             self.get_logger().debug(f"État P2P mis à jour: {self.p2p_active}")
-
+            
             if self.p2p_active:
                 self.get_logger().info("Mode P2P activé")
                 self.indicator.set_status(self.AppIndicator3.IndicatorStatus.ACTIVE)
                 self._update_display()
+                # Publier le statut P2P
                 self.publish_p2p_status()
             else:
                 self.get_logger().info("Mode P2P désactivé")
@@ -200,22 +200,26 @@ class PhysicalCommunicationController(BaseCommunicationController):
             data = json.loads(msg.data)
             self.get_logger().debug(f"Reçu statut P2P de {data['robot_id']}: {data['p2p_active']}")
             self.get_logger().debug(f"État actuel - P2P: {self.p2p_active}, Relais: {self.is_relay}")
-
+            
+            # Si l'autre robot active P2P
             if data['p2p_active']:
-                if not self.p2p_active:
+                if not self.p2p_active:  # Seulement si on n'est pas déjà en mode P2P
                     self.is_relay = True
+                    self.initial_position = None  # Réinitialisation du point de référence
                     self.get_logger().info(f"Robot {self.robot_id} devient relais pour {data['robot_id']}")
                     self._update_display()
                     self.get_logger().debug("Configuration du relais terminée")
-            else:
-                if self.is_relay:
+            else:  # Si l'autre robot désactive P2P
+                if self.is_relay:  # Si on était en mode relais
                     self.is_relay = False
                     self.other_robot_odom = None
                     self.get_logger().info(f"Mode relais désactivé pour {self.robot_id}")
                     self._update_display()
+                    self.initial_position = None
+                    self.current_distance = 0
                     self.other_distance = 0
                     self.get_logger().debug("Nettoyage du mode relais terminé")
-
+            
             self.get_logger().debug(f"Nouvel état - P2P: {self.p2p_active}, Relais: {self.is_relay}")
         except Exception as e:
             self.get_logger().error(f"Erreur dans p2p_status_callback: {str(e)}")
@@ -239,17 +243,15 @@ class PhysicalCommunicationController(BaseCommunicationController):
             data = json.loads(msg.data)
             self.get_logger().debug(f"Reçu données P2P de {data['robot_id']}")
             self.other_robot_odom = data
-
+            
             if self.is_relay:
                 self.get_logger().debug(f"Mode relais actif: republication des données de {data['robot_id']}")
+                # Publier les données au serveur
                 self.position_publisher.publish(msg)
             else:
                 self.get_logger().debug(f"Mode relais inactif: données P2P ignorées")
-
-            self.get_logger().debug(
-                f"Position reçue - X: {data['odom']['position']['x']:.2f}, "
-                f"Y: {data['odom']['position']['y']:.2f}"
-            )
+                
+            self.get_logger().debug(f"Position reçue - X: {data['odom']['position']['x']:.2f}, Y: {data['odom']['position']['y']:.2f}")
             self._update_display()
         except Exception as e:
             self.get_logger().error(f"Erreur dans le traitement de l'odom P2P: {str(e)}")
@@ -257,19 +259,17 @@ class PhysicalCommunicationController(BaseCommunicationController):
     def odom_callback(self, msg):
         try:
             current_pose = msg.pose.pose
-
-            # Calcul de la distance par rapport à la position initiale
-            if not self.has_initial_position:
+            
+            # Calcul de la distance
+            if self.initial_position is None:
                 self.initial_position = current_pose
-                self.has_initial_position = True
                 self.current_distance = 0
-                self.get_logger().info("Point de départ enregistré")
             else:
                 dx = current_pose.position.x - self.initial_position.position.x
                 dy = current_pose.position.y - self.initial_position.position.y
                 self.current_distance = math.sqrt(dx**2 + dy**2)
 
-            # Transmission des données d'odométrie avec la distance
+            # Préparation des données d'odométrie
             odom_data = {
                 "robot_id": self.robot_id,
                 "odom": {
@@ -280,93 +280,78 @@ class PhysicalCommunicationController(BaseCommunicationController):
                 },
                 "distance": self.current_distance
             }
-
+            
             position_msg = String()
             position_msg.data = json.dumps(odom_data)
 
             # Toujours publier sur le topic P2P pour maintenir la communication
             self.p2p_odom_pub.publish(position_msg)
-
+            
             # Publication selon le mode
             if not self.p2p_active and not self.is_relay:
+                # En mode normal, publication directe au serveur
                 self.position_publisher.publish(position_msg)
-
+                
             # Mise à jour de l'affichage
             self._update_display()
+            
         except Exception as e:
             self.get_logger().error(f"Erreur lors du traitement de l'odométrie: {str(e)}")
 
     def _update_display(self):
-        """Met à jour l'affichage en fonction des distances depuis le point de départ"""
+        """Met à jour l'affichage en fonction des distances actuelles"""
         try:
             if not hasattr(self, 'display'):
-                self.get_logger().error("Pas d'affichage disponible")
                 return
-
-            if not self.has_initial_position:
-                self.get_logger().debug("Point de départ non encore enregistré")
-                self.get_logger().info("Affichage de l'icône par défaut")
-                try:
-                    self.display.set_default_icon()
-                    self.display.show_all()
-                    self.get_logger().info("Icône par défaut affichée avec succès")
-                except Exception as e:
-                    self.get_logger().error(f"Erreur lors de l'affichage de l'icône: {str(e)}")
-                return
-
+                
             if self.other_robot_odom is None:
-                self.get_logger().debug("Pas d'information de l'autre robot")
+                self.get_logger().debug("Pas d'information de l'autre robot, affichage par défaut")
                 self.display.set_default_icon()
-                self.display.show_all()
                 return
-
+                
             other_distance = self.other_robot_odom.get('distance', 0)
-            self.get_logger().info(
-                f"Comparaison des distances - Moi: {self.current_distance:.2f}m, "
-                f"Autre robot: {other_distance:.2f}m"
-            )
-
+            
+            self.get_logger().debug(f"Distance actuelle: {self.current_distance}, autre robot: {other_distance}")
+            
             if self.current_distance > other_distance:
-                self.get_logger().info("Je suis plus loin de mon point de départ")
-                try:
-                    self.display.set_far_icon()
-                    self.get_logger().info("Icône 'plus loin' affichée")
-                except Exception as e:
-                    self.get_logger().error(f"Erreur lors de l'affichage de l'icône 'plus loin': {str(e)}")
+                self.display.set_far_icon()
+                self.get_logger().debug("Je suis plus loin du point de départ")
             else:
-                self.get_logger().info("Je suis plus proche de mon point de départ")
-                try:
-                    self.display.set_near_icon()
-                    self.get_logger().info("Icône 'plus proche' affichée")
-                except Exception as e:
-                    self.get_logger().error(f"Erreur lors de l'affichage de l'icône 'plus proche': {str(e)}")
-
-            self.display.show_all()  # Force le rafraîchissement après chaque mise à jour
+                self.display.set_near_icon()
+                self.get_logger().debug("Je suis plus proche du point de départ")
         except Exception as e:
             self.get_logger().error(f"Erreur lors de la mise à jour de l'affichage: {str(e)}")
 
 def main(args=None):
     try:
         rclpy.init(args=args)
+        
+        # Utiliser la variable d'environnement SIMULATION pour déterminer le mode
         is_simulation = os.environ.get('SIMULATION', 'false').lower() == 'true'
         print(f"[DEBUG] Variable SIMULATION = {os.environ.get('SIMULATION')}")
         print(f"[DEBUG] Mode simulation activé: {is_simulation}")
-
+        
         if is_simulation:
             print("[INFO] Démarrage du contrôleur en mode simulation (Gazebo)")
-            node = GazeboCommunicationController()
-            print("[INFO] Contrôleur Gazebo créé avec succès")
+            try:
+                node = GazeboCommunicationController()
+                print("[INFO] Contrôleur Gazebo créé avec succès")
+                rclpy.spin(node)
+            except Exception as e:
+                print(f"[ERROR] Erreur lors de l'initialisation du contrôleur Gazebo: {str(e)}")
+                raise
         else:
             print("[INFO] Démarrage du contrôleur en mode robot physique")
-            node = PhysicalCommunicationController()
-            print("[INFO] Contrôleur physique créé avec succès")
-
-        rclpy.spin(node)
-
+            try:
+                node = PhysicalCommunicationController()
+                print("[INFO] Contrôleur physique créé avec succès")
+                asyncio.run(main_async(node))
+            except Exception as e:
+                print(f"[ERROR] Erreur lors de l'initialisation du contrôleur physique: {str(e)}")
+                raise
     except Exception as e:
         print(f"[ERROR] Erreur fatale: {str(e)}")
         raise
-
     finally:
         if 'node' in locals():
             try:
@@ -374,6 +359,42 @@ def main(args=None):
             except Exception as e:
                 print(f"[ERROR] Erreur lors de la destruction du nœud: {str(e)}")
         rclpy.shutdown()
+
+async def main_async(node):
+    from gi.repository import GLib
+    # Gestion du SIGINT (Ctrl+C)
+    signal.signal(signal.SIGINT, signal.default_int_handler)
+    
+    # Création de la boucle principale GTK
+    main_loop = GLib.MainLoop()
+
+    try:
+        # Obtention de la boucle asyncio
+        loop = asyncio.get_event_loop()
+        # Création de la tâche pour le noeud ROS
+        loop.create_task(spin_ros_node(node))
+        # Exécution de la boucle GTK de manière asynchrone
+        await loop.run_in_executor(None, main_loop.run)
+    except KeyboardInterrupt:
+        node.get_logger().info("Arrêt du noeud...")
+    finally:
+        try:
+            main_loop.quit()
+            node.display.destroy()  # Fermer la fenêtre GTK
+            node.destroy_node()
+            rclpy.shutdown()
+        except Exception as e:
+            print(f"Erreur lors de l'arrêt: {str(e)}")
+
+async def spin_ros_node(node, sleep_interval: float = 0.1):
+    """Fait tourner le noeud ROS de manière asynchrone"""
+    while rclpy.ok():
+        try:
+            rclpy.spin_once(node, timeout_sec=0)
+            await asyncio.sleep(sleep_interval)
+        except Exception as e:
+            node.get_logger().error(f"Erreur dans la boucle principale: {str(e)}")
+            break
 
 if __name__ == '__main__':
     main()

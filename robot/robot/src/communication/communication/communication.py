@@ -102,7 +102,7 @@ class PhysicalCommunicationController(BaseCommunicationController):
         gi.require_version('AppIndicator3', '0.1')
         gi.require_version('Gtk', '3.0')
         gi.require_version('GLib', '2.0')
-        from gi.repository import AppIndicator3, Gtk, GLib
+        from gi.repository import AppIndicator3, Gtk, GLib, Gdk
         from .display_controller import DisplayWindow
 
         self.AppIndicator3 = AppIndicator3
@@ -119,11 +119,29 @@ class PhysicalCommunicationController(BaseCommunicationController):
         self.has_initial_position = False  # Flag pour savoir si le point de départ est enregistré
 
         # Interface d'affichage
+        self.get_logger().info("Initialisation de l'interface graphique...")
         self.display = DisplayWindow()
+        self.get_logger().info("Interface graphique initialisée")
 
         # Configuration des topics P2P et des autres fonctionnalités
         self._setup_p2p()
+        # Initialisation de GTK dans le thread principal
+        if not Gtk.main_level():
+            self.get_logger().info("Initialisation de GTK...")
+            Gtk.init(None)
+
+        # Création d'un contexte GTK
+        self.gtk_context = GLib.MainContext.default()
+        
         self._setup_gtk()
+        
+        # Démarrer une boucle d'événements GTK en arrière-plan
+        def gtk_iteration():
+            while self.gtk_context.pending():
+                self.gtk_context.iteration(False)
+            return True
+            
+        GLib.timeout_add(100, gtk_iteration)  # Exécuter toutes les 100ms
 
     def _setup_p2p(self):
         # Topics P2P
@@ -287,8 +305,13 @@ class PhysicalCommunicationController(BaseCommunicationController):
 
             if not self.has_initial_position:
                 self.get_logger().debug("Point de départ non encore enregistré")
-                self.display.set_default_icon()
-                self.display.show_all()
+                self.get_logger().info("Affichage de l'icône par défaut")
+                try:
+                    self.display.set_default_icon()
+                    self.display.show_all()
+                    self.get_logger().info("Icône par défaut affichée avec succès")
+                except Exception as e:
+                    self.get_logger().error(f"Erreur lors de l'affichage de l'icône: {str(e)}")
                 return
 
             if self.other_robot_odom is None:
@@ -305,10 +328,18 @@ class PhysicalCommunicationController(BaseCommunicationController):
 
             if self.current_distance > other_distance:
                 self.get_logger().info("Je suis plus loin de mon point de départ")
-                self.display.set_far_icon()
+                try:
+                    self.display.set_far_icon()
+                    self.get_logger().info("Icône 'plus loin' affichée")
+                except Exception as e:
+                    self.get_logger().error(f"Erreur lors de l'affichage de l'icône 'plus loin': {str(e)}")
             else:
                 self.get_logger().info("Je suis plus proche de mon point de départ")
-                self.display.set_near_icon()
+                try:
+                    self.display.set_near_icon()
+                    self.get_logger().info("Icône 'plus proche' affichée")
+                except Exception as e:
+                    self.get_logger().error(f"Erreur lors de l'affichage de l'icône 'plus proche': {str(e)}")
 
             self.display.show_all()  # Force le rafraîchissement après chaque mise à jour
         except Exception as e:

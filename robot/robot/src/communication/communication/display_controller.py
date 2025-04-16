@@ -7,10 +7,16 @@ import os
 
 class DisplayWindow(Gtk.Window):
     def __init__(self):
+        # S'assurer que GTK est initialisé
+        if not Gtk.main_level():
+            print("Initialisation de GTK...")
+            Gtk.init(None)
+            
         Gtk.Window.__init__(self, title="Robot Status")
+        self.set_keep_above(True)  # Garder la fenêtre au premier plan
         
-        # Configurer la fenêtre en plein écran
-        self.fullscreen()
+        # Activer la capture des touches avant la réalisation
+        self.set_events(Gdk.EventMask.KEY_PRESS_MASK)
         
         # Créer une boîte verticale pour organiser les widgets
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -28,10 +34,9 @@ class DisplayWindow(Gtk.Window):
         
         # Connecter le gestionnaire de touches
         self.connect('key-press-event', self.on_key_press)
-
-        # Activer la capture des touches
-        self.set_events(self.get_events() | Gdk.EventMask.KEY_PRESS_MASK)
         
+        # Mettre en plein écran et afficher
+        self.fullscreen()
         self.show_all()
 
     def on_key_press(self, widget, event):

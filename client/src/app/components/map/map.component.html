@@ -3,11 +3,20 @@
   <div class="map-controls">
     <div class="view-controls">
       <span class="control-label">Vue:</span>
-      <button (click)="toggleDisplayMode()"
-             [matTooltip]="displayMode === 'background' ? 'Afficher la cartographie' : 'Afficher la carte'"
-             class="control-button toggle-view">
-        {{ displayMode === 'background' ? 'Carte' : 'SLAM' }}
-      </button>
+      <div class="view-buttons">
+        <button (click)="setDisplayMode('background')"
+               [class.active]="displayMode === 'background'"
+               [matTooltip]="'Afficher la carte'"
+               class="control-button toggle-view">
+          Carte
+        </button>
+        <button (click)="setDisplayMode('mapping')"
+               [class.active]="displayMode === 'mapping'"
+               [matTooltip]="'Afficher la cartographie SLAM'"
+               class="control-button toggle-view">
+          SLAM
+        </button>
+      </div>
     </div>
     <div class="zoom-group">
       <span class="control-label">Zoom:</span>

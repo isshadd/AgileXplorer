@@ -15,7 +15,7 @@ L'opérateur interagit via une interface web unifiée pour démarrer, superviser
 - Démarrage/arrêt de mission depuis l'interface web
 - Navigation autonome avec évitement d'obstacles
 - Cartographie 2D en temps réel visible sur l'interface
-- Sauvegarde des missions en base de données (PostgreSQL)
+- Sauvegarde des missions en base de données (MongoDB)
 - Communication directe inter-robots (P2P)
 
 ## 🗂️ Structure du projet
@@ -23,7 +23,7 @@ L'opérateur interagit via une interface web unifiée pour démarrer, superviser
 ```
 .
 ├── client/                     # Interface utilisateur Angular
-├── server/                     # Serveur NestJS + PostgreSQL
+├── server/                     # Serveur NestJS
 ├── robot/
 │   ├── common/                 # Fichiers partagés entre robots (son, images, ...)
 │   ├── gazebo/                 # Modèles et monde Gazebo

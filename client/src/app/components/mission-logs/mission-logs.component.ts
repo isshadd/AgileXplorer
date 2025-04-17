@@ -99,11 +99,17 @@ export class MissionLogsComponent implements OnInit, OnDestroy {
           return log.data.command;
       }
     } else if (log.type === 'SENSOR') {
-      let logMessage = '';
-      logMessage += log.data.message ? `${log.data.message}` : '';
-      logMessage += log.data.distance ? `Distance: ${log.data.distance}` : '';
-      logMessage += log.data.position ? ` Position: x:${log.data.position.x}, y:${log.data.position.y}, z:${log.data.position.z}` : '';
-      return logMessage;
+      const parts = [];
+      if (log.data.message) {
+        parts.push(log.data.message);
+      }
+      if (log.data.position) {
+        parts.push(`Position: x:${log.data.position.x.toFixed(2)}, y:${log.data.position.y.toFixed(2)}`);
+      }
+      if (log.data.distance) {
+        parts.push(`Distance: ${log.data.distance.toFixed(2)}`);
+      }
+      return parts.join(' | ');
     }
     return '';
   }

@@ -91,4 +91,8 @@ npm install
 npx generate-ros-messages
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/../robot/limo/install/limo_msgs/lib
+
+# Définir explicitement SIMULATION=false pour les robots physiques
+export SIMULATION=false
+
 npm run start:dev &

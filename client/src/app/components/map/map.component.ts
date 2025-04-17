@@ -55,10 +55,18 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private isDragging = false;
   private draggedRobotId: string | null = null;
   private dragStartPos = { x: 0, y: 0 };
+  private isMapDragging = false;
+  private mapDragStartPos = { x: 0, y: 0 };
+  private mapDragStartCenter = { x: 0, y: 0 };
   public displayMode: 'background' | 'mapping' = 'background';
 
   public toggleDisplayMode(): void {
     this.displayMode = this.displayMode === 'background' ? 'mapping' : 'background';
+    this.drawMap();
+  }
+  
+  public setDisplayMode(mode: 'background' | 'mapping'): void {
+    this.displayMode = mode;
     this.drawMap();
   }
 
@@ -250,6 +258,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
+    // Vérifier si on clique sur un robot
+    let robotClicked = false;
     for (const [robotId, trail] of this.robotTrails) {
       if (trail.positions.length > 0) {
         const lastPos = trail.positions[trail.positions.length - 1];
@@ -261,36 +271,59 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isDragging = true;
           this.draggedRobotId = robotId;
           this.dragStartPos = { x, y };
+          robotClicked = true;
           break;
         }
       }
     }
+
+    // Si aucun robot n'est cliqué, commencer à déplacer la carte
+    if (!robotClicked) {
+      this.isMapDragging = true;
+      this.mapDragStartPos = { x, y };
+      this.mapDragStartCenter = { x: this.centerX, y: this.centerY };
+      canvas.style.cursor = 'grabbing';
+    }
   }
 
   private handleMouseMove(event: MouseEvent): void {
-    if (!this.isDragging || !this.draggedRobotId) return;
-
     const canvas = this.canvasRef.nativeElement;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    const worldX = (x - this.centerX) / this.scale;
-    const worldY = -(y - this.centerY) / this.scale;
+    // Gérer le déplacement d'un robot
+    if (this.isDragging && this.draggedRobotId) {
+      const worldX = (x - this.centerX) / this.scale;
+      const worldY = -(y - this.centerY) / this.scale;
 
-    const trail = this.robotTrails.get(this.draggedRobotId);
-    if (trail) {
-      trail.positions = [{
-        x: worldX,
-        y: worldY,
-        timestamp: Date.now()
-      }];
+      const trail = this.robotTrails.get(this.draggedRobotId);
+      if (trail) {
+        trail.positions = [{
+          x: worldX,
+          y: worldY,
+          timestamp: Date.now()
+        }];
+      }
+    }
+    
+    // Gérer le déplacement de la carte
+    else if (this.isMapDragging) {
+      const deltaX = x - this.mapDragStartPos.x;
+      const deltaY = y - this.mapDragStartPos.y;
+      
+      this.centerX = this.mapDragStartCenter.x + deltaX;
+      this.centerY = this.mapDragStartCenter.y + deltaY;
+      
+      this.drawMap(); // Redessiner la carte avec la nouvelle position
     }
   }
 
   private handleMouseUp(event: MouseEvent): void {
+    const canvas = this.canvasRef.nativeElement;
+    
+    // Gérer la fin du déplacement d'un robot
     if (this.isDragging && this.draggedRobotId) {
-      const canvas = this.canvasRef.nativeElement;
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
@@ -304,8 +337,15 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
 
+    // Réinitialiser les états de glissement
     this.isDragging = false;
     this.draggedRobotId = null;
+    
+    // Gérer la fin du déplacement de la carte
+    if (this.isMapDragging) {
+      this.isMapDragging = false;
+      canvas.style.cursor = 'default';
+    }
   }
 
   public zoomIn(): void {

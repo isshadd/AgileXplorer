@@ -2,6 +2,7 @@
 
 export ROS_DOMAIN_ID=102
 source /opt/ros/humble/setup.bash
+export SIMULATION=true
 
 cd gazebo || exit 1
 source install/setup.bash

@@ -577,7 +577,7 @@ class MissionNode(Node):
 
     def play_sound(self, sound_id):
         sound_dir = '/home/equipe102/Desktop/INF3995-102/robot/common'
-        sound_file = f'{sound_dir}/{sound_id}.mp3'
+        sound_file = f'{sound_dir}/{sound_id}.wav'
         if os.path.exists(sound_file):
             subprocess.Popen(['aplay', sound_file])
         else:

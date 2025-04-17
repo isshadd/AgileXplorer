@@ -18,7 +18,7 @@ class IdentifyNode(Node):
         self.get_logger().info(f"Identification demandée pour {self.robot_id} : lancement du son.")
         sound_dir = '/home/equipe102/Desktop/INF3995-102/robot/common'
         sound_id = random.randint(1, 4)
-        sound_file = f'{sound_dir}/id{sound_id}.mp3'
+        sound_file = f'{sound_dir}/id{sound_id}.wav'
         if os.path.exists(sound_file):
             subprocess.Popen(['aplay', sound_file])
         else:

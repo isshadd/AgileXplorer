@@ -1,0 +1,52 @@
+<div class="configuration-container">
+    <mat-card class="wheel-mode-section">
+        <mat-card-header>
+            <mat-card-title>Configuration des Modes de Roues</mat-card-title>
+            <mat-card-subtitle>Sélectionnez le mode de roues pour chaque robot</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div class="robot-list">
+                <div *ngFor="let robot of robots" class="robot-config-item">
+                    <div class="robot-info">
+                        <div class="robot-status" [class.active]="robot.state.status === 'on_mission'">
+                            <div class="status-indicator">
+                                <mat-icon>{{robot.state.status === 'on_mission' ? 'play_arrow' : 'stop'}}</mat-icon>
+                                <span>{{robot.state.status === 'on_mission' ? 'En mission' : 'En attente'}}</span>
+                            </div>
+                        </div>
+
+                        <div class="wheel-mode-selector">
+                            <mat-form-field class="wheel-mode-select">
+                                <mat-label>Mode de Roues</mat-label>
+                                <mat-select [value]="getCurrentWheelMode(robot)"
+                                    (selectionChange)="onWheelModeChange(robot.id, $event.value)"
+                                    [disabled]="robot.state.status === 'on_mission'">
+                                    <mat-option *ngFor="let mode of wheelModes"
+                                        [value]="mode.value">
+                                        {{mode.label}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint>Le changement de mode n'est pas possible pendant une mission</mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Information sur les Modes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>
+                <strong>Mode Ackerman:</strong> Adapté pour les mouvements en ligne droite et les virages à grande vitesse.
+            </p>
+            <p>
+                <strong>Mode Différentiel:</strong> Idéal pour les manœuvres précises et les rotations sur place.
+            </p>
+        </mat-card-content>
+    </mat-card>
+</div>

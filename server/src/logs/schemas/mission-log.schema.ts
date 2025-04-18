@@ -14,10 +14,16 @@ interface LogEntry {
     [key: string]: any;
   };
 }
-interface MapData {
+@Schema()
+class MapData {
+  @Prop({ type: Date, required: true })
   timestamp: Date;
+
+  @Prop({ type: String, required: true })
   data: string; // Base64 encoded map data or JSON string
 }
+
+const MapDataSchema = SchemaFactory.createForClass(MapData);
 
 @Schema({ collection: 'MissionLogs', timestamps: true })
 export class MissionLog {
@@ -30,7 +36,7 @@ export class MissionLog {
   @Prop()
   endTime?: Date;
 
-  @Prop()
+  @Prop({ type: MapDataSchema })
   map?: MapData;
 
   @Prop({ type: [Object], default: [] })

@@ -12,6 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Mission } from '../../models/mission.model';
 import { MissionService } from '../../services/mission.service';
 import { MissionLogsDialogComponent } from '../mission-logs-dialog/mission-logs-dialog.component';
+import { MissionMapDialogComponent } from '../mission-map-dialog/mission-map-dialog.component';
 
 @Component({
     selector: 'app-mission-history',
@@ -31,7 +32,7 @@ import { MissionLogsDialogComponent } from '../mission-logs-dialog/mission-logs-
     styleUrl: './mission-history.component.css'
 })
 export class MissionHistoryComponent implements OnInit, OnDestroy, AfterViewInit {
-    displayedColumns: string[] = ['id', 'startTime', 'endTime', 'status', 'totalDistance', 'duration'];
+    displayedColumns: string[] = ['id', 'startTime', 'endTime', 'status', 'totalDistance', 'duration', 'map'];
     missions: Mission[] = [];
     private destroy$ = new Subject<void>();
 
@@ -82,5 +83,17 @@ export class MissionHistoryComponent implements OnInit, OnDestroy, AfterViewInit
                     maxHeight: '80vh'
                 });
             });
+    }
+
+    showMissionMap(mission: Mission) {
+        if (mission.map?.data) {
+            this.dialog.open(MissionMapDialogComponent, {
+                data: {
+                    mapData: mission.map.data
+                },
+                width: '800px',
+                maxHeight: '90vh'
+            });
+        }
     }
 }

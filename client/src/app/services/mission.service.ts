@@ -98,14 +98,30 @@ export class MissionService {
         );
     }
 
-    public endCurrentMission(): Observable<void> {
+    public endCurrentMission(mapDataBase64?: string): Observable<void> {
         return this.http.post<void>(`${this.apiUrl}/current/end`, {}).pipe(
             tap(() => {
                 const mission = this.currentMission$.value;
                 if (mission) {
+                    if (mapDataBase64){
+                        mission.map = {
+                            timestamp: new Date().toISOString(),
+                            data: mapDataBase64
+                        };
+                    }
+
                     mission.endTime = new Date().toISOString();
                     mission.status = 'completed';
                     mission.duration = this.calculateDuration(mission.startTime, mission.endTime);
+                    
+                    // Save map data if available
+                    if (mapDataBase64) {
+                        const mapData: MapData = {
+                            timestamp: new Date().toISOString(),
+                            data: mapDataBase64
+                        };
+                        this.saveMap(mission.id, mapData).subscribe();
+                    }
                     
                     // Update mission history
                     const history = this.missionHistory$.value;

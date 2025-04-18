@@ -1,7 +1,7 @@
 # 🤖 Système d’exploration multi‑robot - AgileXplorer
-[![Python 39.0%](https://img.shields.io/badge/Python-3.11-3776ab?style=flat&logo=python&logoColor=white)](#)  
-[![TypeScript 33.0%](https://img.shields.io/badge/TypeScript-91.2%25-3178c6?style=flat&logo=typescript&logoColor=white)](#) 
-[![SCSS](https://img.shields.io/badge/SCSS-5.0%25-cc6699?style=flat&logo=sass&logoColor=white)](#) 
+[![Python](https://img.shields.io/badge/Python-3.11-3776ab?style=flat&logo=python&logoColor=white)](#)  
+[![TypeScript](https://img.shields.io/badge/TypeScript-25-3178c6?style=flat&logo=typescript&logoColor=white)](#) 
+[![SCSS](https://img.shields.io/badge/SCSS-25-cc6699?style=flat&logo=sass&logoColor=white)](#) 
 [![HTML](https://img.shields.io/badge/HTML-3.7%25-e34f26?style=flat&logo=html5&logoColor=white)](#) 
 [![Angular](https://img.shields.io/badge/Angular-v17-dd0031?style=flat&logo=angular&logoColor=white)](#) 
 [![NestJS](https://img.shields.io/badge/NestJS-v10-e0234e?style=flat&logo=nestjs&logoColor=white)](#) 

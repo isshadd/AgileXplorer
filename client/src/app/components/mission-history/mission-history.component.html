@@ -49,6 +49,19 @@
                     <td mat-cell *matCellDef="let mission">{{mission.duration}}</td>
                 </ng-container>
 
+                <!-- Map Colonne -->
+                <ng-container matColumnDef="map">
+                    <th mat-header-cell *matHeaderCellDef>Carte</th>
+                    <td mat-cell *matCellDef="let mission" (click)="$event.stopPropagation()">
+                        <button mat-icon-button
+                                [disabled]="!mission.map?.data"
+                                (click)="showMissionMap(mission)"
+                                matTooltip="{{mission.map?.data ? 'Voir la carte' : 'Pas de carte disponible'}}">
+                            <mat-icon>map</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="showMissionLogs(row)" class="clickable-row"></tr>
             </table>

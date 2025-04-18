@@ -15,6 +15,7 @@ export interface Mission {
     startTime: string;
     endTime?: string;
     status: 'ongoing' | 'completed' | 'aborted';
+    map?: MapData;
     robots: string[]; // array of robot IDs
     logs: MissionLog[];
     totalDistance?: number; // Total distance traveled by all robots in meters

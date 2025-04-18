@@ -533,4 +533,26 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ctx.font = '12px Arial';
     this.ctx.fillText(trail.robotId, x + 10, y - 10);
   }
+
+  private convertMapDataToBase64(): string | null {
+    if (!this.mapData) {
+      return null;
+    }
+
+    // Convert map data to a JSON string that includes all necessary properties
+    const mapDataToSave = {
+      resolution: this.mapData.resolution,
+      width: this.mapData.width,
+      height: this.mapData.height,
+      origin: this.mapData.origin,
+      data: this.mapData.data
+    };
+
+    // Convert to base64
+    return btoa(JSON.stringify(mapDataToSave));
+  }
+
+  public getCurrentMapBase64(): string | null {
+    return this.convertMapDataToBase64();
+  }
 }

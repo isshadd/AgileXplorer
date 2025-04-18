@@ -1,36 +1,30 @@
 .mission-history-container {
-    padding: 16px;
+    padding: 20px;
 }
 
 .mission-table {
     width: 100%;
+    margin-bottom: 20px;
 }
 
 .clickable-row {
     cursor: pointer;
-    transition: background-color 0.2s;
 }
 
 .clickable-row:hover {
     background-color: rgba(0, 0, 0, 0.04);
 }
 
-mat-card {
-    margin-bottom: 16px;
+/* Map button styling */
+.mat-column-map {
+    width: 80px;
+    text-align: center;
 }
 
-mat-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+.mat-column-map button[disabled] {
+    opacity: 0.5;
 }
 
-mat-card-content {
-    overflow: auto;
-}
-
-.mat-mdc-row .mat-mdc-cell {
-    border-bottom: 1px solid transparent;
-    border-top: 1px solid transparent;
+.mat-column-map button:not([disabled]):hover {
+    background-color: rgba(0, 0, 0, 0.04);
 }

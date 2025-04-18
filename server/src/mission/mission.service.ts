@@ -379,6 +379,10 @@ export class MissionService {
           duration,
           status: log.endTime ? 'completed' : 'ongoing',
           totalDistance: log.totalDistance ? Number(log.totalDistance).toFixed(2) : undefined,
+          map: log.map ? {
+            timestamp: log.map.timestamp,
+            data: log.map.data
+          } : undefined,
           robots: log.logs
             .filter(
               (entry) =>

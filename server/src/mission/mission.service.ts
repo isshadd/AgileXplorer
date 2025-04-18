@@ -6,6 +6,8 @@ import { LogsService } from '../logs/logs.service';
 import * as rclnodejs from 'rclnodejs';
 import { Server } from 'socket.io';
 import { stringify } from 'querystring';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class MissionService {
@@ -129,6 +131,17 @@ export class MissionService {
     this.logger.verbose(`Mise à jour de l'état du robot ${robotId}: ${state}`);
   }
 
+  private getBaseMapImage(): string {
+    try {
+      const mapPath = path.join(process.cwd(), 'client', 'public', 'map.png');
+      const imageBuffer = fs.readFileSync(mapPath);
+      return `data:image/png;base64,${imageBuffer.toString('base64')}`;
+    } catch (error) {
+      this.logger.error('Error reading base map image:', error);
+      return null;
+    }
+  }
+
   async startMission(robotId: string) {
     await this.initPromise;
     this.activeMissionId = uuidv4();
@@ -137,9 +150,20 @@ export class MissionService {
     );
 
     try {
+      // Initialize mission log first
+      await this.logsService.initializeMissionLog(this.activeMissionId);
+
+      // Add base map image
+      const baseMapData = this.getBaseMapImage();
+      if (baseMapData) {
+        await this.logsService.updateMissionMap(this.activeMissionId, {
+          timestamp: new Date().toISOString(),
+          data: baseMapData
+        });
+      }
+
       // Mettre à jour l'état du robot
       this.updateRobotState(robotId, 'en mission');
-      await this.logsService.initializeMissionLog(this.activeMissionId);
 
       await this.logsService.addLog(this.activeMissionId, {
         type: 'COMMAND',
@@ -299,7 +323,17 @@ export class MissionService {
     const responses: string[] = [];
     this.activeMissionId = uuidv4();
 
+    // Initialize mission log first
     await this.logsService.initializeMissionLog(this.activeMissionId);
+
+    // Add base map image
+    const baseMapData = this.getBaseMapImage();
+    if (baseMapData) {
+      await this.logsService.updateMissionMap(this.activeMissionId, {
+        timestamp: new Date().toISOString(),
+        data: baseMapData
+      });
+    }
 
     for (const [key, publisher] of this.publishers.entries()) {
       if (key.endsWith('_mission')) {

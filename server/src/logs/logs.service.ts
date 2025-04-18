@@ -130,4 +130,31 @@ export class LogsService {
       throw error;
     }
   }
+
+  async updateMissionMap(missionId: string, mapData: { timestamp: string; data: string }): Promise<void> {
+    this.logger.debug(`Updating map for mission: ${missionId}`);
+    try {
+      const updatedLog = await this.missionLogModel.findOneAndUpdate(
+        { missionId },
+        {
+          $set: {
+            map: {
+              timestamp: new Date(mapData.timestamp),
+              data: mapData.data
+            }
+          }
+        },
+        { new: true }
+      );
+
+      if (!updatedLog) {
+        throw new NotFoundException(`No log found for mission ID: ${missionId}`);
+      }
+
+      this.logger.debug(`✅ Map updated for mission ${missionId}`);
+    } catch (error) {
+      this.logger.error(`Error updating mission map: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 }

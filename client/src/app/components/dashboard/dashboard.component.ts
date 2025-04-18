@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RobotService } from '../../services/robot.service';
 import { NotificationService } from '../../services/notification.service';
+import { MissionService } from '../../services/mission.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 import { RobotState } from '../../interfaces/robot-state.interface';
@@ -87,11 +88,14 @@ export class DashboardComponent {
         }
     }
 
+    @ViewChild(MapComponent) mapComponent!: MapComponent;
+
     constructor(
         private robotService: RobotService,
         private notificationService: NotificationService,
         private dialog: MatDialog,
         private websocketService: WebSocketService,
+        private missionService: MissionService
     ) {
         this.websocketService.onBatteryData().subscribe((data: { robotId: string, battery_level: number }) => {
             if (this.robotStates[data.robotId]) {
@@ -135,10 +139,17 @@ export class DashboardComponent {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                // Get map data before stopping mission
+                const mapData = this.mapComponent.getCurrentMapBase64();
+                
                 this.robotService.stopMission(robotId).subscribe(({ stoppedMissionId }) => {
                     this.robotStates[robotId].isMissionActive = false;
                     this.robotStates[robotId].isIdentified = false;
-                    this.notificationService.missionEnded();
+                    
+                    // End current mission with map data if available
+                    this.missionService.endCurrentMission(mapData || undefined).subscribe(() => {
+                        this.notificationService.missionEnded();
+                    });
                 });
             }
         });

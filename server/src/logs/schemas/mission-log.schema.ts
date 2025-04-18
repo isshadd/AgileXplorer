@@ -14,6 +14,10 @@ interface LogEntry {
     [key: string]: any;
   };
 }
+interface MapData {
+  timestamp: Date;
+  data: string; // Base64 encoded map data or JSON string
+}
 
 @Schema({ collection: 'MissionLogs', timestamps: true })
 export class MissionLog {
@@ -25,6 +29,9 @@ export class MissionLog {
 
   @Prop()
   endTime?: Date;
+
+  @Prop()
+  map?: MapData;
 
   @Prop({ type: [Object], default: [] })
   logs: LogEntry[];

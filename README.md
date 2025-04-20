@@ -2,7 +2,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11-3776ab?style=flat&logo=python&logoColor=white)](#)  
 [![TypeScript](https://img.shields.io/badge/TypeScript-25-3178c6?style=flat&logo=typescript&logoColor=white)](#) 
 [![SCSS](https://img.shields.io/badge/SCSS-25-cc6699?style=flat&logo=sass&logoColor=white)](#) 
-[![HTML](https://img.shields.io/badge/HTML-3.7%25-e34f26?style=flat&logo=html5&logoColor=white)](#) 
+[![HTML](https://img.shields.io/badge/HTML-25-e34f26?style=flat&logo=html5&logoColor=white)](#) 
 [![Angular](https://img.shields.io/badge/Angular-v17-dd0031?style=flat&logo=angular&logoColor=white)](#) 
 [![NestJS](https://img.shields.io/badge/NestJS-v10-e0234e?style=flat&logo=nestjs&logoColor=white)](#) 
 [![ROS 2 Humble](https://img.shields.io/badge/ROS%202-Humble-22314e?style=flat&logo=ros&logoColor=white)](#) 
@@ -10,7 +10,8 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169e1?style=flat&logo=postgresql&logoColor=white)](#)
 
 > Projet réalisé dans le cadre du cours **INF3995 – Hiver 2025** à l'École Polytechnique de Montréal.  
-> Objectif : démontrer la faisabilité technique d’une mission d’exploration autonome par **deux robots AgileX Limo** se coordonnant via une station au sol et une simulation Gazebo.
+> **Objectif** : démontrer la faisabilité technique d’une mission d’exploration autonome par **deux robots AgileX Limo** se coordonnant via une station au sol et une simulation Gazebo.  
+> **Mise en situation** : Appel d'offre de la **NASA** et réponse à ce dernier avec des processus identiques en industrie.
 
 ---
 
@@ -35,7 +36,7 @@ Le système complète trois environnements :
 | Composante | Rôle | Pile techno |
 |------------|------|-------------|
 | **Robots** | Navigation, cartographie, P2P | ROS 2 Humble + Python |
-| **Station** | Orchestration, API, stockage | NestJS · PostgreSQL · Socket.IO |
+| **Station** | Orchestration, API, stockage | NestJS · MongoDB · Socket.IO |
 | **Simulation** | Tests sans matériel | Gazebo Fortress · ros_gz_bridge |
 
 Une **interface Angular** unifie le contrôle, la visualisation temps réel (≥ 1 Hz) et l’historique des missions.
@@ -85,7 +86,7 @@ Une **interface Angular** unifie le contrôle, la visualisation temps réel (�
 flowchart LR
     subgraph Station au sol
         A[NestJS API & Socket.IO]
-        B[(PostgreSQL)]
+        B[(MongoDB)]
     end
     subgraph UI
         C[Angular 17]
@@ -105,11 +106,11 @@ flowchart LR
 ### Pile principale
 | Couche   | Technologie                       | Raison                                   |
 |----------|-----------------------------------|------------------------------------------|
-| Frontend | **Angular 17**, SCSS             | SPA réactive, responsive                 |
+| Frontend | **Angular 17**, SCSS             | SPA réactive                             |
 | Backend  | **NestJS 10**, TypeScript        | API REST + WebSocket modulaire           |
-| Données  | **PostgreSQL 15**                | Intégrité & requêtes spatiales           |
+| Données  | **MongoDB 15**                   | Intégrité & journalisation               |
 | Embarqué | **ROS 2 Humble**, Python 3.11    | Standard robotique, modularité par nœuds |
-| CI/CD    | GitLab CI, Docker Compose        | Reproductibilité, déploiement 1‑click    |
+| CI/CD    | GitLab CI, Docker Compose        | Reproductibilité, lancement 1‑click      |
 
 ---
 
@@ -147,9 +148,9 @@ flowchart LR
 
 ### Démarrage rapide
 ```bash
-git clone https://gitlab.com/etu/inf3995-multi-robot.git
-cd inf3995-multi-robot
-./start_docker.sh                               # Station au sol + UI + DB
+git clone https://gitlab.com/polytechnique-montr-al/inf3995/20251/equipe-102/INF3995-102.git
+cd inf3995
+./start_base.sh                               # Station au sol + UI + DB
 ./robot/limo_launch_scripts/start-all-1.sh      # Robot 1
 ./robot/limo_launch_scripts/start-all-2.sh      # Robot 2
 ```
@@ -192,10 +193,10 @@ Le pipeline GitLab exécute l’ensemble des tests à chaque *merge request*.
 ---
 
 ## Feuille de route
-- [ ] 🔧 Algorithme d’exploration coopérative (planification de couverture)  
-- [ ] 📱 Mode hors‑ligne de l’interface avec replay de mission  
-- [ ] 🛡️ Zone de sécurité dynamique (geo‑fence) `R.F.20`  
-- [ ] 🎮 Support ≥ 3 robots et coordination par rôles  
+-  🔧 Algorithme d’exploration coopérative (planification de couverture)  
+-  📱 Mode hors‑ligne de l’interface avec replay de mission  
+-  🛡️ Zone de sécurité dynamique (geo‑fence) `R.F.20`  
+-  🎮 Support ≤ 2 robots et coordination par rôles  
 
 ---
 
@@ -204,7 +205,7 @@ Le pipeline GitLab exécute l’ensemble des tests à chaque *merge request*.
 |-----------------|-------------------------------------------------------------|
 | Scrum Master    | **Kevin Santiago Gratton Fournier**                         |
 | Product Owner   | **Issam Haddadi**                                           |
-| Dev & Robotique | Amine Zerouali · Rafik Hachemi Boumila · Yassine Abassi · Mario Junior Milord |
+| Dev & Robotique | Issam Haddadi · Kevin Santiago Gratton Fournier · Amine Zerouali · Rafik Hachemi Boumila · Yassine Abassi · Mario Junior Milord |
 
 ---
 

@@ -148,7 +148,7 @@ flowchart LR
 
 ### Démarrage rapide
 ```bash
-git clone https://gitlab.com/polytechnique-montr-al/inf3995/20251/equipe-102/INF3995-102.git
+git clone https://github.com/isshadd/AgileXplorer.git
 cd inf3995
 ./start_base.sh                               # Station au sol + UI + DB
 ./robot/limo_launch_scripts/start-all-1.sh      # Robot 1
